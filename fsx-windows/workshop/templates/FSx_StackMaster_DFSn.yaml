@@ -1,0 +1,128 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Stack will create AWS resources to test Amazon FSx for Windows File Server in an isolated test environment.
+
+Metadata:
+
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Virtual Private Cloud
+      Parameters:
+        - VpcCidr
+        - AvailabilityZones
+    - Label:
+        default: Directory
+      Parameters:
+        - MadDnsName
+        - MadEdition
+        - MadAdminPassword
+    - Label:
+        default: Amazon EC2 DFSn Windows Instances
+      Parameters:
+        - KeyName
+        - InstanceType
+    ParameterLabels:
+      AvailabilityZones:
+        default: Availability Zones (select 2)
+      KeyName:
+        default: EC2 key pair
+      InstanceType:
+        default: EC2 instance type
+      MadAdminPassword:
+        default: Admin Password
+      MadDnsName:
+        default: Directory DNS Name
+      MadEdition:
+        default: Directory Edition
+      VpcCidr:
+        default: VPC CIDR
+
+Parameters:
+
+  AvailabilityZones:
+    Description: Select two (2) Availability Zones. One public subnet will be created in each.
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  KeyName:
+    Description: An existing Amazon EC2 key pair
+    Type: AWS::EC2::KeyPair::KeyName
+  InstanceType:
+    AllowedValues: 
+    - t3.small
+    - t3.medium
+    - t3.large
+    - m5.large
+    - m5.xlarge
+    Default: t3.small
+    Description: Amazon EC2 instance type for the two DFSn servers.
+    Type: String
+  MadAdminPassword:
+    Description: The password for the default administrative user named Admin.
+    Type: String
+    NoEcho: true
+  MadDnsName:
+    Default: example.com
+    Description: A fully qualified domain name. This name will resolve inside your VPC only. It does not need to be publicly resolvable (e.g. corp.example.com)
+    Type: String
+  MadEdition:
+    AllowedValues: 
+    - Standard
+    - Enterprise
+    Default: Enterprise
+    Description: Standard or Enterprise edition of Microsoft Active Directory
+    Type: String
+  VpcCidr:
+    AllowedValues: 
+    - 10.0.0.0/16
+    - 173.31.0.0/16
+    - 192.168.0.0/16
+    Default: 10.0.0.0/16
+    Description: Select the private IPv4 CIDR for the VPC.
+    Type: String
+
+Resources:
+
+  Vpc:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        AvailabilityZones:
+          !Join [ ',', !Ref AvailabilityZones ]
+        VpcCidr:
+          !Ref VpcCidr
+      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/fsx-workshop/windows/current/templates/FSx_CreateVPC.yaml
+  Mad:
+    DependsOn: [ Vpc ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        MadAdminPassword:
+          !Ref MadAdminPassword
+        MadDnsName:
+          !Ref MadDnsName
+        MadEdition:
+          !Ref MadEdition
+        SubnetIds:
+          !Join [ ',', [ !GetAtt [ Vpc, Outputs.PublicSubnet0 ], !GetAtt [ Vpc, Outputs.PublicSubnet1 ] ] ]
+        VpcId:
+          !GetAtt [ Vpc, Outputs.Vpc ]
+      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/fsx-workshop/windows/current/templates/FSx_SetupAWSManagedMAD.yaml
+  DfsN:
+    DependsOn: [ Vpc ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        DirectoryId:
+          !GetAtt [ Mad, Outputs.DirectoryId ]
+        KeyName:
+          !Ref KeyName
+        InstanceType:
+          !Ref InstanceType
+        SecurityGroup:
+          !GetAtt [ Vpc, Outputs.DefaultSecurityGroup ]
+        SubnetIds:
+          !Join [ ',', [ !GetAtt [ Vpc, Outputs.PublicSubnet0 ], !GetAtt [ Vpc, Outputs.PublicSubnet1 ] ] ]
+      TemplateURL: https://s3.amazonaws.com/aws-us-east-1/fsx-workshop/windows/current/templates/FSx_SetupDFSNamespaceServers.yaml
+
+    

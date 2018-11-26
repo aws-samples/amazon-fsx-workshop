@@ -1,0 +1,175 @@
+
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates an Amazon CloudWatch dashboard with Metric Math expressions to monitor an Amazon FSx file system.
+
+Metadata:
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  License:
+    Description: 'Copyright 2018 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+      Licensed under the Amazon Software License (the "License"). You may not use this file
+      except in compliance with the License. A copy of the License is located at
+      http://aws.amazon.com/asl/
+      or in the "license" file accompanying this file. This file is distributed on an "AS IS"
+      BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+      License for the specific language governing permissions and limitations under the License.'
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: File System Parameters
+      Parameters:
+        - FileSystemId
+    ParameterLabels:
+      ElasticFileSystem:
+        default: Amazon FSx File System
+
+Parameters:
+  FileSystemId:
+    AllowedPattern: ^(fs-)([a-z0-9]{17})$
+    Description: Amazon FSx file system id
+    Type: String
+
+Resources:
+  FSxCwDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Join [ '_', [ !Ref 'AWS::Region', !Ref FileSystemId ] ]
+      DashboardBody:
+        {"Fn::Join":["",['{
+              "widgets": [
+                  {
+                      "type": "text",
+                      "x": 18,
+                      "y": 0,
+                      "width": 6,
+                      "height": 3,
+                      "properties": {
+                          "markdown": "\n# Amazon FSx file system: ',!Ref 'FileSystemId','\n## Region: ',!Ref 'AWS::Region','\n"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 3,
+                      "width": 18,
+                      "height": 9,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "SUM(METRICS())/1048576/PERIOD(readBytes)", "label": "Total Data Throughput (MiB/s)", "id": "totalThroughputMiBps", "yAxis": "left", "color": "#2ca02c" } ],
+                              [ { "expression": "writeBytes/1048576/PERIOD(writeBytes)", "label": "Data Write Throughput (MiB/s)", "id": "writeThroughputMiBps", "yAxis": "left", "color": "#1f77b4" } ],
+                              [ { "expression": "readBytes/1048576/PERIOD(readBytes)", "label": "Data Read Throughput (MiB/s)", "id": "readThroughputMiBps", "yAxis": "left", "color": "#ff7f0e" } ],
+                              [ "AWS/FSx", "DataWriteBytes", "FileSystemId", "',!Ref 'FileSystemId','", { "period": 60, "stat": "Sum", "id": "writeBytes", "yAxis": "right", "visible": false } ],
+                              [ ".", "DataReadBytes", ".", ".", { "period": 60, "stat": "Sum", "id": "readBytes", "yAxis": "right", "visible": false } ]
+                          ],
+                          "region": "',!Ref 'AWS::Region','",
+                          "period": 60,
+                          "title": "Throughput (MiB/s)",
+                          "legend": {
+                              "position": "right"
+                          }
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 18,
+                      "y": 3,
+                      "width": 6,
+                      "height": 9,
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "writeBytes*100/SUM(METRICS())", "label": "Data Write (%)__", "id": "percentWriteThroughput", "stat": "Sum", "color": "#1f77b4" } ],
+                              [ { "expression": "readBytes*100/SUM(METRICS())", "label": "Data Read (%)__", "id": "percentReadThroughput", "stat": "Sum", "color": "#ff7f0e" } ],
+                              [ "AWS/FSx", "DataWriteBytes", "FileSystemId", "',!Ref 'FileSystemId','", { "id": "writeBytes", "visible": false } ],
+                              [ ".", "DataReadBytes", ".", ".", { "id": "readBytes", "visible": false } ]
+                          ],
+                          "view": "timeSeries",
+                          "region": "',!Ref 'AWS::Region','",
+                          "stacked": false,
+                          "title": "Percent Throughput (%)",
+                          "period": 60,
+                          "legend": {
+                              "position": "right"
+                          },
+                          "stat": "Sum"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 12,
+                      "width": 18,
+                      "height": 9,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ { "expression": "SUM(METRICS())/PERIOD(metadataOperations)", "label": "Total Operations (iops)", "id": "totalIOPS", "yAxis": "left", "color": "#2ca02c" } ],
+                              [ { "expression": "dataWriteOperations/PERIOD(dataWriteOperations)", "label": "Data Write Operations (iops)", "id": "writeIOPS", "yAxis": "left", "color": "#1f77b4" } ],
+                              [ { "expression": "dataReadOperations/PERIOD(dataReadOperations)", "label": "Data Read Operations (iops)", "id": "readIOPS", "yAxis": "left", "color": "#ff7f0e" } ],
+                              [ { "expression": "metadataOperations/PERIOD(metadataOperations)", "label": "Metadata Operations (iops)", "id": "metadataIOPS", "yAxis": "left", "color": "#d62728" } ],
+                              [ "AWS/FSx", "DataWriteOperations", "FileSystemId", "',!Ref 'FileSystemId','", { "period": 60, "stat": "Sum", "id": "dataWriteOperations", "visible": false } ],
+                              [ ".", "DataReadOperations", ".", ".", { "period": 60, "stat": "Sum", "id": "dataReadOperations", "visible": false } ],
+                              [ ".", "MetadataOperations", ".", ".", { "period": 60, "stat": "Sum", "id": "metadataOperations", "visible": false } ]
+                          ],
+                          "region": "',!Ref 'AWS::Region','",
+                          "period": 60,
+                          "title": "Operations per Second (iops)",
+                          "legend": {
+                              "position": "right"
+                          }
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 18,
+                      "y": 12,
+                      "width": 6,
+                      "height": 9,
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "dataWriteOperations*100/SUM(METRICS())", "label": "Data Write (%)__", "id": "percentWriteIOPS", "color": "#1f77b4" } ],
+                              [ { "expression": "dataReadOperations*100/SUM(METRICS())", "label": "Data Read (%)__", "id": "percentReadIOPS", "color": "#ff7f0e" } ],
+                              [ { "expression": "metadataOperations*100/SUM(METRICS())", "label": "Metadata (%)__", "id": "percentMetadataIOPS", "color": "#d62728" } ],
+                              [ "AWS/FSx", "DataWriteOperations", "FileSystemId", "',!Ref 'FileSystemId','", { "stat": "Sum", "id": "dataWriteOperations", "visible": false } ],
+                              [ ".", "DataReadOperations", ".", ".", { "stat": "Sum", "id": "dataReadOperations", "visible": false } ],
+                              [ ".", "MetadataOperations", ".", ".", { "stat": "Sum", "id": "metadataOperations", "visible": false } ]
+                          ],
+                          "view": "timeSeries",
+                          "region": "',!Ref 'AWS::Region','",
+                          "stacked": false,
+                          "title": "Percent Operations per Second (%)",
+                          "period": 60,
+                          "legend": {
+                              "position": "right"
+                          },
+                          "stat": "Average"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 0,
+                      "width": 18,
+                      "height": 3,
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "freeDataStorageCapacity/1073741824", "label": "Available Storage (TiB)", "id": "availableStorageTiB", "color": "#2ca02c" } ],
+                              [ "AWS/FSx", "FreeDataStorageCapacity", "FileSystemId", "',!Ref 'FileSystemId','", { "id": "freeDataStorageCapacity", "visible": false } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "',!Ref 'AWS::Region','",
+                          "stat": "Sum",
+                          "period": 60,
+                          "title": "Available Storage Capacity (TiB)",
+                          "legend": {
+                              "position": "right"
+                          }
+                      }
+                  }
+              ]
+          }
+        ']]}
