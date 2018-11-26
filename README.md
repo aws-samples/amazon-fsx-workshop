@@ -9,7 +9,7 @@
 
 ### Version 2018.11
 
-fsx.w.wrkshp.2018.11
+fsx.wrkshp.2018.11
 
 ---
 
