@@ -107,7 +107,7 @@ parallel --will-cite --version
 - The output should be similar to this:
 
 ```sh
-GNU parallel 20160722
+GNU parallel 20160222
 Copyright (C) 2007,2008,2009,2010,2011,2012,2013,2014,2015,2016
 Ole Tange and Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
@@ -117,7 +117,7 @@ GNU parallel comes with no warranty.
 Web site: http://www.gnu.org/software/parallel
 
 When using programs that use GNU Parallel to process data for publication
-please cite as described in 'parallel --citation'.
+please cite as described in 'parallel --bibtex'.
 ```
 
 #### Verify smallfile
@@ -178,7 +178,7 @@ fio --version
 - The output should be similar to this:
 
 ```sh
-fio-3.12-19-g41dd
+fio-3.12-20-g4cf3
 ```
 
 
@@ -243,9 +243,6 @@ Finished            : Mon Nov 19 02:02:51 2018
 
 - There are separate instructions for each Linux distribution. Following the appropriate instructions based on the Linux distribution you used to launch the EC2 instance in the previous section.
 
-
-#### CentOS 7.5 or RedHat 7.5 (or 7.6)
-
 - Run the following commands to install Lustre client 2.10.5
 
 ```sh
@@ -253,61 +250,46 @@ wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/el7.5.1804/clie
 wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/el7.5.1804/client/RPMS/x86_64/lustre-client-2.10.5-1.el7.x86_64.rpm
 
 sudo yum localinstall -y *lustre-client-2.10.5*.rpm
+
 ```
 
-- You may need to reboot your compute instance for the client to finish installing.
+- Reboot your instance
 
-#### CentOS 7.0 or RedHat 7.0
-
-- Run the following commands to install Lustre client 2.10.5
 
 ```sh
-wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/el7/client/RPMS/x86_64/kmod-lustre-client-2.10.5-1.el7.x86_64.rpm
-wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/el7/client/RPMS/x86_64/lustre-client-2.10.5-1.el7.x86_64.rpm
+sudo reboot
 
-sudo yum localinstall -y *lustre-client-2.10.5*.rpm
 ```
 
-- You may need to reboot your compute instance for the client to finish installing.
-
-#### SUSE Linus 12 SP3
-
-- Run the following commands to install Lustre client 2.10.5
-
-```sh
-wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/sles12sp3/client/RPMS/x86_64/lustre-client-2.10.5-1.x86_64.rpm
-wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/sles12sp3/client/RPMS/x86_64/lustre-client-kmp-default-2.10.5_k4.4.132_94.33-1.x86_64.rpm
-
-sudo yum localinstall -y *lustre-client-2.10.5*.rpm
-```
-
-- You may need to reboot your compute instance for the client to finish installing.
-
+- Log back into the **Amazon Linux - FSx Workshop** instance 
 
 ### Step 4.5: Mount the file system
 
-> Complete the following steps SSH'd in to the **Amazon Linux - FSx Workshop** instance
-
-- Run the following script to create a local mount point and mount the file system
-
-- Replace <file-system-dns-name> and <region> with values specific to your environment. You can find the file system's DNS name by viewing it on the **Network & Security** tab of the FSx Console or using the CLI command below, substituting the appropriate <region> parameter based on your environment.
-
+> Run this command on your local laptop using your terminal application
 
 ```sh
-aws fsx describe-file-systems --output json --region <region>
+aws fsx describe-file-systems --output json --region ${region}
+
 ```
+
+- Replace <dnsname> with the **DNS Name** of your file system. You can find the file system's DNS name by viewing it on the **Network & Security** tab of the FSx Console or running the CLI command below on your local laptop.
+
+
+> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
 ```sh
 sudo mkdir -p /mnt/fsx
 sudo chmod 777 /mnt/fsx
 # for example: sudo mount -t cifs //fs-0123456789abcdef.example.com/share /mnt/fsx/share --verbose -o vers=2.0,user=admin@example.com
 sudo mount -t lustre <file-system-dns-name>@tcp:/fsx /mnt/fsx
+
 ```
 
 - Run **df** to verify mount
 
 ```sh
 lfs df
+
 ```
 
 ---
