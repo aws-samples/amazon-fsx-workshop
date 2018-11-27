@@ -27,7 +27,7 @@ If a key pair has not been previously created in your account, please refer to [
 
 Verify that the key pair is created in the same AWS region you will use for the tutorial.
 
-WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
+WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the S3 bucket that were created during this tutorial and delete the CloudFormation stack(s) so you don’t continue to incur additional compute and storage charges.
 
 ---
 ### 2.1 Create Amazon CloudWatch dashboard for your FSx for Lustre file system
