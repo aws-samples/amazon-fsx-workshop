@@ -20,19 +20,14 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 ### Prerequisites
 
 * An AWS account with administrative level access
-* An Amazon EC2 key pair
 * An Amazon FSx for Lustre file system
 
-If a key pair has not been previously created in your account, please refer to [Creating a Key Pair Using Amazon EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) from the AWS EC2 User's Guide.  
-
-Verify that the key pair is created in the same AWS region you will use for the tutorial.
-
-WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
+WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
 
 ---
-### 2.1 Create Amazon CloudWatch dashboard for your FSx for Lustre file system
+### 2.1 Create an Amazon CloudWatch dashboard for your FSx for Lustre file system
 
-The link below will help launch a CloudFormation stack that will crate a CloudWatch dashboard for your FSx for Luster file system.
+The link below will help launch a CloudFormation stack that will create a CloudWatch dashboard for your FSx for Luster file system.
 
 #### Parameters
 
@@ -41,7 +36,7 @@ The link below will help launch a CloudFormation stack that will crate a CloudWa
 - You can find the file system id using FSx Console or by running the CLI command below, substituting the appropriate region parameter based on your environment.
 
 ```sh
-aws fsx describe-file-systems --output json --region <region>
+aws fsx describe-file-systems --output json --region ${region}
 ```
 
 ---
@@ -56,15 +51,15 @@ This CloudFormation template will launch a CloudFormation stack that will create
 | Throughput (MiB/s) | Data Read Throughput (MiB/s) | readBytes/1048576/PERIOD(readBytes) |
 | Percent Throughput (%) | Percent Write Throughput (%) | writeBytes*100/SUM(METRICS()) |
 | Percent Throughput (%) | Percent Read Throughput (%)  | readBytes*100/SUM(METRICS()) |
-| Operations per Second (iops) | Total Operations per second (iops) | SUM(METRICS())/PERIOD(metadataOperations) |
-| Operations per Second (iops) | Data Write Operations per second (iops) | dataWriteOperations/PERIOD(dataWriteOperations) |
-| Operations per Second (iops) | Data Read Operations per second (iops) | dataReadOperations/PERIOD(dataReadOperations) |
-| Operations per Second (iops) | Metadata Operations per second (iops) | metadataOperations/PERIOD(metadataOperations) |
+| Operations per Second (ops) | Total Operations per second (ops) | SUM(METRICS())/PERIOD(metadataOperations) |
+| Operations per Second (ops) | Data Write Operations per second (ops) | dataWriteOperations/PERIOD(dataWriteOperations) |
+| Operations per Second (ops) | Data Read Operations per second (ops) | dataReadOperations/PERIOD(dataReadOperations) |
+| Operations per Second (ops) | Metadata Operations per second (ops) | metadataOperations/PERIOD(metadataOperations) |
 | Percent Operations per Second (%) | Percent Write Operations per second (%) | dataWriteOperations*100/SUM(METRICS()) |
 | Percent Operations per Second (%) | Percent Read Operations per second (%) | dataReadOperations*100/SUM(METRICS()) |
 | Percent Operations per Second (%) | Percent Metadata Operations per second (%) | metadataOperations*100/SUM(METRICS()) |
 
-- Click on the link below in the same AWS region where you created your FSx for Lustre file system. 
+- Click on the link below in the same AWS region where you created your FSx for Lustre file system. Accept all the default CloudFormation settings and create the Stack.
 
 | AWS Region Code | Region Name |
 | :--- | :--- 
