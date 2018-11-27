@@ -42,8 +42,6 @@ You must wait for the file system you created in section 1 **Create file system*
 aws fsx describe-file-systems --output json --region ${region}
 ```
 
-WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and completing the steps below.
-
 ### Step 4.1: Log on to the Linux EC2 instance
 
 - From the Amazon EC2 Console, select the **Lustre client - FSx Workshop** instance
