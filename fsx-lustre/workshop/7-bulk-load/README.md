@@ -17,7 +17,20 @@ fsx.l.wrkshp.2018.11
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
+### Prerequisites
 
+* An AWS account with administrative level access
+* An Amazon FSx for Lustre file system
+* An Amazon EC2 instance
+* An Amazon EC2 key pair
+
+If a key pair has not been previously created in your account, please refer to [Creating a Key Pair Using Amazon EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) from the AWS EC2 User's Guide.  
+
+Verify that the key pair is created in the same AWS region you will use for the tutorial.
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
+---
 ### Bulk load
 
 You must first complete [**Prerequisites**](../0-prerequisites) and the previous step [**Mount the file system**](../4-mount-file-system)
@@ -32,17 +45,17 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 ### Step 7.2: Bulk load files
 
-> Complete the following steps SSH'd in to the **Lustre client - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
 - These commands assume you linked the file system to the entire NASA NEX bucket (s3://nasanex). If you selected a specific prefix from this bucket or used a different bucket, you'll need to adjust your examination criteria based on your dataset.
 
-- Based on your examination of the file system in an earlier section, you know that object data is not loaded into the file system that's liked to an S3 bucket when the file system is created. Only metadata is loaded when the file system is created. There is no need to per-warm a file system with data. You access the file system like any other POSIX compliant file system. When a file is first accessed, the file's data is lazy loaded into the file system from the S3 bucket. While is this very convenient and requires not change to existing applications, you may decide to reduce latencies by loading file data prior to running your workload. FSx for Lustre allows you to bulk load data from a linked S3 bucket.
+- Based on your examination of the file system in an earlier section, you know that object data is not loaded into the file system that's linked to an S3 bucket when the file system is created. Only metadata is loaded when the file system is created. There is no need to per-warm a file system with data. You access the file system like any other POSIX compliant file system. When a file is first accessed, the file's data is lazy loaded into the file system from the S3 bucket. While is this very convenient and requires no change to existing applications, you may decide to reduce latencies by loading file data prior to running your workload. FSx for Lustre allows you to bulk load data from a linked S3 bucket using simple operations.
 
 - Decide what data you want to bulk load. This could be by file type, size, subdirectory, or all of the above. Or you could have other criteria.
 
 - Construct a find command to return the data you want to bulk load.
 
-- Run the command below to load 2048 .tif files. This command uses GNU parallel to parallelize load (restore) commands to the file system. Data isn't loaded through Lustre client issuing the command. The parallel design of Lustre allows data to be loaded in parallel directly from S3 into the file system's object storage targets (OSTs). This results is fast, high throughput data loads. 
+- Run the command below to load 2048 .tif files. This command uses GNU parallel to parallelize load (restore) operations. Data isn't loaded through the Lustre client issuing the command. The parallel design of Lustre allows data to be loaded in parallel directly from S3 into the file system's object storage targets (OSTs). This results is fast, high throughput data loads. 
 
 For more information about GNU Parallel, pleae refer to GNU Parallel - https://www.gnu.org/software/parallel/ - used to parallelize single-threaded commands; O. Tange (2018): GNU Parallel 2018, March 2018, https://doi.org/10.5281/zenodo.1146014
 
@@ -53,10 +66,11 @@ time lfs find /mnt/fsx --type f --name *.tif | head -2048 | parallel --will-cite
 ```
 
 
-- While this is running, verify data isn't being loaded through the client by running nload to monitor network throughput in real time on the client.  Monitor the throughput for a few seconds then exit nload by using Control+Z.
+- The command will completed within seconds, but data is being loaded from the linked S3 bucket directly to the file system. At this point the client is done, it issued the restore command and now the FSx for Lustre file system takes over. While the data load is running, verify data isn't being loaded through the client by running **nload** to monitor network throughput in real time on the client.  Monitor the throughput for a few seconds then exit nload by using Ctrl+Z.
 
 ```sh
 nload -u M
+
 ```
 
 - Access the CloudWatch dashboard you created earlier and monitor file system performance during the data load.
@@ -68,6 +82,7 @@ nload -u M
 
 ```sh
 lfs df -h
+
 ```
 - How much data was loaded?
 - How much available storage is there?

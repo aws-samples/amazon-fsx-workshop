@@ -31,7 +31,6 @@ Verify that the key pair is created in the same AWS region you will use for the 
 WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
 
 ---
-
 ### Lazy load
 
 You must first complete [**Prerequisites**](../0-prerequisites) and the previous step [**Mount the file system**](../4-mount-file-system).
