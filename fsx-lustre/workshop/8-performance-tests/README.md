@@ -171,7 +171,7 @@ sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
 time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
 ```
 
-- Monitor network throughput for ~30 seconds using **nload** then exist using Control+Z
+- Monitor network throughput for ~30 seconds using **nload** then exit using Ctrl+Z
 
 
 ```sh
@@ -179,7 +179,7 @@ nload -u M
 
 ```
 
-- Monitor the throughput for a few seconds then exit nload by using Control+Z.
+- Monitor the throughput for a few seconds then exit nload by using Ctrl+Z.
 - How long did it take to generate 64 GiB of data?
 - Calculate the average throughput for this test?
 
