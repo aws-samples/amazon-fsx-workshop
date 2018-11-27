@@ -26,7 +26,7 @@ If a key pair has not been previously created in your account, please refer to [
 
 Verify that the key pair is created in the same AWS region you will use for the tutorial.
 
-WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
 
 ---
 ### Launch a client
