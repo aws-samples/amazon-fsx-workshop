@@ -201,9 +201,9 @@ time cat ${file} >/dev/shm/fsx
 - My results are below.
 
 ```sh
-real	0m3.854s
-user	0m0.000s
-sys	    0m0.167s
+real    0m3.854s
+user    0m0.000s
+sys     0m0.167s
 ```
 
 - And subsequent reads show my file is loaded into the file system and cached on my client.
