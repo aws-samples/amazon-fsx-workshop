@@ -106,17 +106,17 @@ Resources:
                           "view": "timeSeries",
                           "stacked": false,
                           "metrics": [
-                              [ { "expression": "SUM(METRICS())/PERIOD(metadataOperations)", "label": "Total Operations (iops)", "id": "totalIOPS", "yAxis": "left", "color": "#2ca02c" } ],
-                              [ { "expression": "dataWriteOperations/PERIOD(dataWriteOperations)", "label": "Data Write Operations (iops)", "id": "writeIOPS", "yAxis": "left", "color": "#1f77b4" } ],
-                              [ { "expression": "dataReadOperations/PERIOD(dataReadOperations)", "label": "Data Read Operations (iops)", "id": "readIOPS", "yAxis": "left", "color": "#ff7f0e" } ],
-                              [ { "expression": "metadataOperations/PERIOD(metadataOperations)", "label": "Metadata Operations (iops)", "id": "metadataIOPS", "yAxis": "left", "color": "#d62728" } ],
+                              [ { "expression": "SUM(METRICS())/PERIOD(metadataOperations)", "label": "Total Operations (ops)", "id": "totalIOPS", "yAxis": "left", "color": "#2ca02c" } ],
+                              [ { "expression": "dataWriteOperations/PERIOD(dataWriteOperations)", "label": "Data Write Operations (ops)", "id": "writeIOPS", "yAxis": "left", "color": "#1f77b4" } ],
+                              [ { "expression": "dataReadOperations/PERIOD(dataReadOperations)", "label": "Data Read Operations (ops)", "id": "readIOPS", "yAxis": "left", "color": "#ff7f0e" } ],
+                              [ { "expression": "metadataOperations/PERIOD(metadataOperations)", "label": "Metadata Operations (ops)", "id": "metadataIOPS", "yAxis": "left", "color": "#d62728" } ],
                               [ "AWS/FSx", "DataWriteOperations", "FileSystemId", "',!Ref 'FileSystemId','", { "period": 60, "stat": "Sum", "id": "dataWriteOperations", "visible": false } ],
                               [ ".", "DataReadOperations", ".", ".", { "period": 60, "stat": "Sum", "id": "dataReadOperations", "visible": false } ],
                               [ ".", "MetadataOperations", ".", ".", { "period": 60, "stat": "Sum", "id": "metadataOperations", "visible": false } ]
                           ],
                           "region": "',!Ref 'AWS::Region','",
                           "period": 60,
-                          "title": "Operations per Second (iops)",
+                          "title": "Operations per Second (ops)",
                           "legend": {
                               "position": "right"
                           }
