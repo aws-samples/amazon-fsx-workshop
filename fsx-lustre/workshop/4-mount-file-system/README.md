@@ -50,7 +50,7 @@ aws fsx describe-file-systems --output json --region ${region}
 
 ### Step 4.2: Install linux applications
 
-> Complete the following steps SSH'd in to the **Lustre client - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
 - Run the following script
 
@@ -94,7 +94,7 @@ cd
 
 ### Step 4.3: Verify applications were installed correctly
 
-> Complete the following steps SSH'd in to the **Lustre client - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
 #### Verify parallel
 
@@ -239,7 +239,7 @@ Finished            : Mon Nov 19 02:02:51 2018
 
 ### Step 4.4: Install Lustre client
 
-> Complete the following steps SSH'd in to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
 - There are separate instructions for each Linux distribution. Following the appropriate instructions based on the Linux distribution you used to launch the EC2 instance in the previous section.
 
