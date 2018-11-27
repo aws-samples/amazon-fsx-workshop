@@ -22,7 +22,8 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 * An AWS account with administrative level access
 * An Amazon FSx for Lustre file system
 
-WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
 
 ---
 ### 2.1 Create an Amazon CloudWatch dashboard for your FSx for Lustre file system

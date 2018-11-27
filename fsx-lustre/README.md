@@ -24,7 +24,7 @@ fsx.l.wrkshp.2018.11
 
 This will show solutions architects how to take advantage of a fully-managed Lustre file system with Amazon S3 integration that links the file system to an existing data repository.
 
-This workshop will cover how to create a file system and load metadata from an Amazon S3 bucket. Learn how to lazy load objects from Amazon S3 to an FSx for Lustre file system or review some sample scripts to bulk load all objects with a single operation.  FSx for Lustre file systems are designed for compute-intense workloads and can achieve high levels of throughput and operations per second with consistent low latencies. Test read and write performance as you walk through these step-by-step instructions and monitor how hard your tests are driving the file system by creating an Amazon CloudWatch dashboard.
+This workshop will cover how to create a file system and load metadata from an Amazon S3 bucket. Learn how to lazy load objects from Amazon S3 to an FSx for Lustre file system or review some sample scripts to bulk load all objects with a single operation.  FSx for Lustre file systems are designed for compute-intensive workloads and can achieve high levels of throughput and operations per second with consistent low latencies. Test read and write performance as you walk through these step-by-step instructions and monitor how hard your tests are driving the file system by creating an Amazon CloudWatch dashboard.
 
 ### Informational
 
