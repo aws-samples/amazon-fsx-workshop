@@ -112,14 +112,14 @@ time lfs df -h
 | Query | Results |
 | :--- | :--- |
 | How long did it take to load file metadata from the linked S3 bucket during file system creation? | ~14m |
-| What was the max operations per second (ops) during metadata load? | 4,890 ops |
-| How long does it take to list the entire file system? | ~1m18.229s |
+| What was the max operations per second (ops) during metadata load? | ~5,000 ops |
+| How long does it take to list the entire file system? | ~2 minutes |
 | What file types did you see? | .hdf  .nc  .gz  .tif  .json  .md5  .txt  .pdf |
 | How many files? | 373572 |
 | How many directories? | 42242 |
 | How many small files (< 512 KiB)? | 23692 |
 | How many large files (> 100 MiB)? | 169617 |
-| How many .nc, .hdf, .tif, .gz files? | .hdf = 207552 <br> .tif = 11095 <br> .nc = 87002 <br> .gz = 42009|
+| How many .nc, .hdf, .tif, .gz files? | .nc = 87002 <br> .hdf = 207552 <br> .tif = 11095 <br> .gz = 42009|
 | How much metadata (MDT) has been loaded into the file system? | 4.4G |
 | How much data (all the OSTs) has been loaded into the file system? | 13.5M | 
 | How much data storage capacity is available? | 3.3T |
