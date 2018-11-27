@@ -265,6 +265,8 @@ sudo reboot
 
 ### Step 4.5: Mount the file system
 
+- Find the DNS name of the file system. You can find the file system's DNS name by viewing it on the **Network & Security** tab of the FSx Console or running the CLI command below on your local laptop.
+
 > Run this command on your local laptop using your terminal application
 
 ```sh
@@ -272,24 +274,38 @@ aws fsx describe-file-systems --output json --region ${region}
 
 ```
 
-- Replace <dnsname> with the **DNS Name** of your file system. You can find the file system's DNS name by viewing it on the **Network & Security** tab of the FSx Console or running the CLI command below on your local laptop.
-
-
 > Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
+- Copy the script below into your favorite text editor
+
 ```sh
+dnsname=<file-system-dns-name>
+
 sudo mkdir -p /mnt/fsx
 sudo chmod 777 /mnt/fsx
-# for example: sudo mount -t cifs //fs-0123456789abcdef.example.com/share /mnt/fsx/share --verbose -o vers=2.0,user=admin@example.com
-sudo mount -t lustre <file-system-dns-name>@tcp:/fsx /mnt/fsx
+sudo mount -t lustre ${dnsname}@tcp:/fsx /mnt/fsx
 
 ```
+
+- Replace <file-system-dns-name> with the **DNS Name** of your file system.
 
 - Run **df** to verify mount
 
 ```sh
 lfs df
 
+```
+
+- The output should be similar to this:
+
+```sh
+UUID                   1K-blocks        Used   Available Use% Mounted on
+fsx-MDT0000_UUID       107838464     4578048   103258368   4% /mnt/fsx[MDT:0]
+fsx-OST0000_UUID      1182566272        4608  1182559616   0% /mnt/fsx[OST:0]
+fsx-OST0001_UUID      1182566272        4608  1182559616   0% /mnt/fsx[OST:1]
+fsx-OST0002_UUID      1182566272        4608  1182559616   0% /mnt/fsx[OST:2]
+
+filesystem_summary:   3547698816       13824  3547678848   0% /mnt/fsx
 ```
 
 ---
