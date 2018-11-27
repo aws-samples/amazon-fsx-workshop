@@ -62,10 +62,7 @@ sudo yum update -y
 sudo yum install -y tree git wget
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -P /tmp
 sudo yum install -y /tmp/epel-release-latest-7.noarch.rpm
-sudo yum install -y nload ioping
-
-# install parallel
-(wget -O - pi.dk/3 || curl pi.dk/3/ || fetch -o - http://pi.dk/3) | bash
+sudo yum install -y parallel nload ioping
 
 # install smallfile
 git clone https://github.com/bengland2/smallfile.git
