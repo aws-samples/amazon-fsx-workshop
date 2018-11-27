@@ -48,9 +48,9 @@ aws fsx create-file-system \
 --output json
 ```
 
-- Replace the variable values <subnet_id> and <region> with the appropriate values for your environment. If you completed the prerequisites section, look at the output of the CloudFormation stack to find the subnet_id value. Use the same region where you created your VPC. We highly recommend you use the "nasanex" bucket. NASA NEX is a part of the **Registry of Open Data on AWS** project and is a collection of Earth science datasets maintained by NASA, including climate change projections and satellite images of the Earth's surface. We will be using some objects in this bucket for some of the other workshop sections. If you have another data repository you would like to use during the workshop, please replace the "nasanex" variable value with the bucket name and prefix (e.g. mybucket/prefix).
+- Replace the variable values <subnet> and <region> with the appropriate values for your environment. If you completed the prerequisites section, look at the output of the CloudFormation stack to find the subnet_id value. Use the same region where you created your VPC. We highly recommend you use the "nasanex" bucket. NASA NEX is a part of the **Registry of Open Data on AWS** project and is a collection of Earth science datasets maintained by NASA, including climate change projections and satellite images of the Earth's surface. We will be using some objects in this bucket for some of the other workshop sections. If you have another data repository you would like to use during the workshop, please replace the "nasanex" variable value with the bucket name and prefix (e.g. mybucket/prefix).
 
-- Run the script, with the updated variable values, from the command line.
+- Run the script with the appropriate values from the command line.
 
 ---
 ## Next section
