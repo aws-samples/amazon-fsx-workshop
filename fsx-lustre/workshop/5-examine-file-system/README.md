@@ -49,10 +49,12 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 - These commands assume you linked the file system to the entire NASA NEX bucket (s3://nasanex). If you selected a specific prefix from this bucket or used a different bucket, you'll need to adjust your examination criteria based on your dataset.
 
 - How long did it take to load file metadata from the linked S3 bucket during file system creation?
-**Hint** - Go to the CloudWatch dashboard created earlier and look at the **Operations per second (ops)** widget. Look at the start and end times of the heavy metadata operations period.
+
+**Hint** - Go to the CloudWatch dashboard created earlier. The name of the dashboard is <region>_<file-system-id>. Look at the **Operations per second (ops)** widget and move your cursor around the line graph and find the start and end times of the heavy metadata operations period.
 
 - What was the max operations per second (ops) during metadata load?
-**Hint** - Go to the CloudWatch dashboard created earlier and look at the **Operations per second (ops)** widget. Move your cursor to find the max ops achieved.
+
+**Hint** - Look at the **Operations per second (ops)** widget and move your cursor to find the max ops achieved.
 
 
 - How long does it take to list the entire file system?
