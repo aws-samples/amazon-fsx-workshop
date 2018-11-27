@@ -54,15 +54,20 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 - Generate a list of some .tif files
 
 ```sh
-time lfs find /mnt/fsx --type f --name *.tif | head 100
+time lfs find /mnt/fsx --type f --name *.tif | head -100
 ```
 
-- Copy the full path of one of the .tif files and paste it into the commands below, replacing the <file> placeholder.
+- Copy the full path of one of the .tif files and paste it into the command below, replacing the \<fullfilepath\> placeholder. This variable will be used in the subsequent commands.
+
+```sh
+file=<fullfilepath> # e.g. /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+```
 
 - First, verify the data of this file isn't loaded into the file system. Run the command below to get the state of the file.
 
 ```sh
-time lfs hsm_state <file> # time lfs hsm_state /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+time lfs hsm_state ${file}
+
 ```
 
 - My results are below. The file's state is **"released"** or not loaded.
@@ -72,10 +77,10 @@ time lfs hsm_state <file> # time lfs hsm_state /mnt/fsx/NAIP/ca_1m_2012/36117/m_
 /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif: (0x0000000d) released exists archived, archive_id:1
 ```
 
-- How large is the file? Run an ls -la against the file to find out the size.
+- How large is the file? Run an ls -lah against the file to find out the size.
 
 ```sh
-time ls -lah <file> # time ls -lah /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+time ls -lah ${file}
 ```
 
 - My results are below. The file I'm using is 183MB.
@@ -86,7 +91,7 @@ time ls -lah <file> # time ls -lah /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_1
 - Read the file and measure the time it takes to load it from the linked S3 bucket. This command will load the file by reading it from S3 and writing it to tempfs.
 
 ```sh
-time cat <file> >/dev/shm/fsx # time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
+time cat ${file} >/dev/shm/fsx
 ```
 
 - How long did it take? My results are below.
@@ -97,7 +102,7 @@ user	0m0.000s
 sys	    0m0.152s
 ```
 
-- Now run the same **"time cat..."** command again and see how long it takes? My results are below.
+- Now run the same **"time cat ${file}"** command again and see how long it takes? My results are below.
 
 ```sh
 real	0m0.110s
@@ -105,8 +110,8 @@ user	0m0.000s
 sys	    0m0.108s
 ```
 
-- If I think the file system returned the same results that fast, would I be **right** or **wrong**?
-- If you guessed **wrong** you are **right**. The data was cached on my EC2 instance. Lets flush the cache and run the command again, this time getting the data from the FSx for Lustre file system.
+- Did the file system return the same results that fast?
+- If you guessed **no** you are **right**. The data was cached on the EC2 instance. Lets drop the cache of the instanceand run the command again, this time getting the data from the FSx for Lustre file system.
 - Run this command to flush cache
 
 ```sh
@@ -116,7 +121,7 @@ exit
 
 ```
 
-- Now run the same **"time cat..."** command again and see how long it takes? My results are below.
+- Now run the same **"time cat ${file}"** command again and see how long it takes? My results are below.
 
 ```sh
 real	0m0.389s
@@ -127,7 +132,8 @@ sys	    0m0.170s
 - Run the **lfs hsm_state** command again to verify the file's data has been loaded into the file system.
 
 ```sh
-time lfs hsm_state <file> # e.g. time lfs hsm_state /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+time lfs hsm_state ${file}
+
 ```
 
 - My results are below. See the difference? This file is no longer **released** so the data has been loaded.
@@ -163,7 +169,7 @@ filesystem_summary:         3.3T      196.0M        3.3T   0% /mnt/fsx
 - Run the **lfs hsm_release** command below to release the file's data and free up storage.
 
 ```sh
-time lfs hsm_release <file> # e.g. time lfs hsm_release /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+time sudo lfs hsm_release ${file}
 
 ```
 
@@ -188,7 +194,8 @@ filesystem_summary:         3.3T       13.5M        3.3T   0% /mnt/fsx
 - Access the same file again and see how long it takes to access it.
 
 ```sh
-time cat <file> >/dev/shm/fsx # time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
+time cat ${file} >/dev/shm/fsx
+
 ```
 
 - My results are below.
