@@ -99,7 +99,7 @@ time cat ${file} >/dev/shm/fsx
 ```sh
 real	0m4.702s
 user	0m0.000s
-sys	    0m0.152s
+sys	0m0.152s
 ```
 
 - Now run the same **"time cat ${file}"** command again and see how long it takes? My results are below.
@@ -107,7 +107,7 @@ sys	    0m0.152s
 ```sh
 real	0m0.110s
 user	0m0.000s
-sys	    0m0.108s
+sys	0m0.108s
 ```
 
 - Did the file system return the same results that fast?
@@ -126,7 +126,7 @@ exit
 ```sh
 real	0m0.389s
 user	0m0.000s
-sys	    0m0.170s
+sys	0m0.170s
 ```
 
 - Run the **lfs hsm_state** command again to verify the file's data has been loaded into the file system.
@@ -201,9 +201,9 @@ time cat ${file} >/dev/shm/fsx
 - My results are below.
 
 ```sh
-real    0m3.854s
-user    0m0.000s
-sys     0m0.167s
+real	0m3.854s
+user	0m0.000s
+sys	0m0.167s
 ```
 
 - And subsequent reads show my file is loaded into the file system and cached on my client.
