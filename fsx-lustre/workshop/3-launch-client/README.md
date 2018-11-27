@@ -57,7 +57,7 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 | |
 | Add tags | Key=Name; Value=Lustre client - FSx Workshop  |
 | |
-| Security group | Select the default VPC security group  |
+| Security group | Select the existing default VPC security group  |
 | |
 | EC2 key pair | Select an existing EC2 key pair you have access to  |
 
