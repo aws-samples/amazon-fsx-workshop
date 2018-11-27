@@ -50,7 +50,7 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 
 - How long did it take to load file metadata from the linked S3 bucket during file system creation?
 
-**Hint** - Go to the CloudWatch dashboard created earlier. The name of the dashboard is <region>_<file-system-id>. Look at the **Operations per second (ops)** widget and move your cursor around the line graph and find the start and end times of the heavy metadata operations period.
+**Hint** - Go to the CloudWatch dashboard created earlier. The name of the dashboard is <<region><_<<file-system-id>>. Look at the **Operations per second (ops)** widget and move your cursor around the line graph and find the start and end times of the heavy metadata operations period.
 
 - What was the max operations per second (ops) during metadata load?
 
