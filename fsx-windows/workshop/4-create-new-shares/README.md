@@ -38,7 +38,7 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 
 | Username | Password |
 | :--- | :--- 
-| admin@domain.name (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack|
+| admin@domain.name (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack |
 
 ### Step 4.2: Create file shares
 
@@ -57,7 +57,7 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 - Complete the **Create A Shared Folder Wizard** creating new shares based on the following information.
 
 | Share name | Folder path | Create new path | Shared folder permissions
-| :--- | :--- |
+| :--- | :--- | :--- | :--- |
 | data | D:\data | Yes | Customize permissions > Everyone Full Control |
 | finance | D:\finance | Yes | Administrators have full access; other users have no access |
 | sales | D:\sales | Yes | All users have read-only access |
