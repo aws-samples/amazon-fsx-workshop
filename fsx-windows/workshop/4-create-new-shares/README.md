@@ -71,7 +71,7 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 
 - Open **File Explorer**
 - Type the UNC path to one of the new shares using the file system's DNS name (e.g. **\\\\fs-0123456789abcdef.example.com\data**)
-- Access all the new shares created above (e.g. \data, \finance, \sales, marketing)
+- Access all the new shares created above (e.g. \data, \finance, \sales, \marketing)
 - Can you read and write to all shares?
 
 ---

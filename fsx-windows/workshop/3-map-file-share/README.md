@@ -111,11 +111,11 @@ C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -b16K -c4G -o4 -t8 -w25 -r -L -d30 -Z
 
 | Parameter | Description |
 | :--- | :--- |
-| `-b<size>[K\|M\|G]` | Block size in bytes or KiB, MiB, or GiB (default = 64K). |
-| `-c<size>[K\|M\|G\|b]` | Create files of the specified size. Size can be stated in bytes or KiBs, MiBs, GiBs, or blocks. |
-| `-o<count>` | Number of outstanding I/O requests per-target per-thread. (1 = synchronous I/O, unless more than one thread is specified with by using `-F`.) (default = 2) |
-| `-t<count>` | Number of threads per target. Conflicts with `-F`, which specifies the total number of threads. |
-| `-w<percentage>` | Percentage of write requests to issue (default = 0, 100% read). The following are equivalent and result in a 100% read-only workload: omitting `-w`, specifying `-w` with no percentage and `-w0`. **CAUTION**: A write test will destroy existing data without issuing a warning. |
+| ```-b<size>[K\|M\|G]``` | Block size in bytes or KiB, MiB, or GiB (default = 64K). |
+| ```-c<size>[K\|M\|G\|b]``` | Create files of the specified size. Size can be stated in bytes or KiBs, MiBs, GiBs, or blocks. |
+| ```-o<count>``` | Number of outstanding I/O requests per-target per-thread. (1 = synchronous I/O, unless more than one thread is specified with by using `-F`.) (default = 2) |
+| ```-t<count>``` | Number of threads per target. Conflicts with `-F`, which specifies the total number of threads. |
+| ```-w<percentage>``` | Percentage of write requests to issue (default = 0, 100% read). The following are equivalent and result in a 100% read-only workload: omitting `-w`, specifying `-w` with no percentage and `-w0`. **CAUTION**: A write test will destroy existing data without issuing a warning. |
 
 - What different parameters did you test?
 - How did the different parameter options alter the results?
