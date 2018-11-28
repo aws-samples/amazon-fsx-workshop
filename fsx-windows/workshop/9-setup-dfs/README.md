@@ -17,12 +17,18 @@ fsx.w.wrkshp.2018.11
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
+### Prerequisites
 
+* An AWS account with administrative level access
+* An Amazon FSx for Windows File Server
+* Windows EC2 instances running the DFS namespaces role
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
+---
 ### Setup DFS
 
 You must first complete [**Prerequisites**](../0-prerequisites) and the previous step [**Restore backup**](../7-restore-backup)
-
-WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and completing the steps below.
 
 ### Step 9.1: Setup a DFS Namespace for consolidation
 
@@ -32,7 +38,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 | Username | Password |
 | :--- | :--- 
-| admin@<<directory>> (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack|
+| admin@domain.name (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack|
 
 - Make a note of the computer name of the instance (e.g. $NSS1 = "EC2AMAZ-")
 
@@ -42,7 +48,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 | Username | Password |
 | :--- | :--- 
-| admin@<<directory>> (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack|
+| admin@domain.name (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack|
 
 - Make a note of the computer name of the instance (e.g. $NSS2 = "EC2AMAZ-")
 
@@ -155,13 +161,13 @@ Set-DfsrMembership –GroupName ${Group} –FolderName ${Folder} –ContentPath 
 
 ```sh
 Add-DfsrConnection -GroupName ${Group} -SourceComputerName ${FirstFSComputerName} -DestinationComputerName ${RestoredFSComputerName}
+
 ```
 
 - Map a drive to the default file shares of both file systems
 - Open each mapped drive in a separate **File Explorer** window
 - It may take 10-15 minutes for replication to start.
 - Once the replication is complete, test creating files on one file system and see them get replicated to the other.
-
 
 ---
 ## Tear-down

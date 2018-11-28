@@ -17,12 +17,18 @@ fsx.w.wrkshp.2018.11
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
+### Prerequisites
 
+* An AWS account with administrative level access
+* An Amazon FSx for Windows File Server
+* Amazon WorkSpaces
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
+---
 ### Map from WorkSpaces
 
-You must first complete [**Prerequisites**](../0-prerequisites) and the previous step [**Create a file system**](../2-launch-clients)
-
-WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and completing the steps below.
+You must first complete [**Prerequisites**](../0-prerequisites) and the previous step [**Launch clients**](../2-launch-clients)
 
 ### Step 8.1: Log on to the Windows WorkSpace
 
@@ -177,7 +183,7 @@ time seq 1 ${threads} | sudo parallel --will-cite -j ${threads} dd if=/dev/zero 
 ```
 
 - While the parallel dd command is running, run the **nload** command below for 10-20 seconds to monitor network throughput in real time
-- Exit **nload** by pressing **Control+z**
+- Exit **nload** by pressing **Ctrl+Z**
 - How long did it take to generate 32 GiB of data across 128 files?
 - What was the average throughput of this test?
 
