@@ -17,6 +17,20 @@ fsx.l.wrkshp.2018.11
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
+### Prerequisites
+
+* An AWS account with administrative level access
+* An Amazon FSx for Lustre file system
+* An Amazon EC2 instance
+* An Amazon EC2 key pair
+
+If a key pair has not been previously created in your account, please refer to [Creating a Key Pair Using Amazon EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) from the AWS EC2 User's Guide.  
+
+Verify that the key pair is created in the same AWS region you will use for the tutorial.
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
+---
 
 ### Performance tests
 
@@ -32,9 +46,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 ### Step 9.2: Performance tests
 
-> Complete the following steps SSH'd in to the **Lustre client - FSx Workshop** instance
-
-- These commands assume you linked the file system to the entire NASA NEX bucket (s3://nasanex). If you selected a specific prefix from this bucket or used a different bucket, you'll need to adjust your examination criteria based on your dataset.
+> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
 - Use smallfile to write, read, stat, append, rename, and delete a large number of smallfiles. Run these commands in order and review the results.
 
@@ -62,7 +74,8 @@ sudo python ~/smallfile/smallfile_cli.py \
 --prefix ${prefix} \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
---top ${path} &
+--top ${path}
+
 ```
 
 - Read 32,000 4KiB files
@@ -80,7 +93,8 @@ sudo python ~/smallfile/smallfile_cli.py \
 --prefix ${prefix} \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
---top ${path} &
+--top ${path}
+
 ```
 
 - Stat 32,000 4KiB files
@@ -98,7 +112,8 @@ sudo python ~/smallfile/smallfile_cli.py \
 --prefix ${prefix} \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
---top ${path} &
+--top ${path}
+
 ```
 
 - Append 4KiB to 32,000 4KiB files
@@ -117,7 +132,8 @@ sudo python ~/smallfile/smallfile_cli.py \
 --prefix ${prefix} \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
---top ${path} &
+--top ${path}
+
 ```
 
 - Rename 32,000 4KiB files
@@ -135,7 +151,8 @@ sudo python ~/smallfile/smallfile_cli.py \
 --prefix ${prefix} \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
---top ${path} &
+--top ${path}
+
 ```
 
 - Delete 32,000 4KiB files
@@ -153,25 +170,27 @@ sudo python ~/smallfile/smallfile_cli.py \
 --prefix ${prefix} \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
---top ${path} &
+--top ${path}
+
 ```
 
 
-- Use dd to generate 64 GiB of data using 16 threads and a 1MiB block size
+- Use dd to generate 128 GiB of data using 16 threads and a 1MiB block size
 
 ```sh
 job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 bs=1024K
-count=4096
+count=8192
 sync=oflag=sync
 threads=16
 
-sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
+sudo mkdir -p /mnt/fsx/${job_name}/{1..16}
 
 time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+
 ```
 
-- Monitor network throughput for ~30 seconds using **nload** then exit using Ctrl+Z
+- While the above dd operation is running, monitor network throughput for ~30 seconds using **nload**. Use Ctrl+Z to exit nload.
 
 
 ```sh
@@ -179,8 +198,8 @@ nload -u M
 
 ```
 
-- Monitor the throughput for a few seconds then exit nload by using Ctrl+Z.
-- How long did it take to generate 64 GiB of data?
+- Monitor throughput and operations per second using the CloudWatch dashboard you created earlier.
+- How long did it take to generate 128 GiB of data?
 - Calculate the average throughput for this test?
 
 
@@ -188,7 +207,8 @@ nload -u M
 
 ```sh
 cd /mnt/fsx
-time seq 1 2 | parallel --will-cite -j2 'ior -b 32g -t 8m -w -r -F -B -o /mnt/fsx/test{}.txt' &
+time seq 1 2 | parallel --will-cite -j2 'sudo ior -b 32g -t 8m -w -r -F -B -o /mnt/fsx/test{}.txt' &
+
 ```
 
 - Monitor throughput using nload and the CloudWatch dashboard.

@@ -283,6 +283,7 @@ dnsname=<file-system-dns-name>
 
 sudo mkdir -p /mnt/fsx
 sudo chmod 777 /mnt/fsx
+sudo chown ec2-user:ec2-user /mnt/fsx
 sudo mount -t lustre ${dnsname}@tcp:/fsx /mnt/fsx
 
 ```
