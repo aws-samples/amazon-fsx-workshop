@@ -28,7 +28,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 ---
 ### 2.1 Create an Amazon CloudWatch dashboard for your FSx for Lustre file system
 
-The link below will help launch a CloudFormation stack that will create a CloudWatch dashboard for your FSx for Luster file system.
+The link below will help launch a CloudFormation stack that will create a CloudWatch dashboard for your FSx for Lustre file system.
 
 #### Parameters
 
