@@ -46,7 +46,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 ### Step 9.2: Performance tests
 
-> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Lustre client - FSx Workshop** instance
 
 - Use smallfile to write, read, stat, append, rename, and delete a large number of smallfiles. Run these commands in order and review the results.
 
