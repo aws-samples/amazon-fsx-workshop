@@ -17,12 +17,23 @@ fsx.w.wrkshp.2018.11
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
+### Prerequisites
+
+* An AWS account with administrative level access
+* An Amazon EC2 key pair
+
+If a key pair has not been previously created in your account, please refer to [Creating a Key Pair Using Amazon EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) from the AWS EC2 User's Guide.  
+
+Verify that the key pair is created in the same AWS region you will use for the tutorial.
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
+---
 
 ### Launch clients
 
 You must first complete [**Prerequisites**](../0-prerequisites) and the previous step [**Create a file system**](../1-create-file-system)
 
-WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and completing the steps below.
 
 ### Step 2.1: Launch a Windows EC2 instance
 
@@ -50,7 +61,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 | |
 | Add tags | Key=Name; Value=Windows Server 2016 - FSx Workshop  |
 | |
-| Security group | Select the default VPC security group  |
+| Security group | Select the existing default VPC security group  |
 | |
 | EC2 key pair | Select an existing EC2 key pair you have access to  |
 
@@ -80,7 +91,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 | |
 | Add tags | Key=Name; Value=Amazon Linux - FSx Workshop  |
 | |
-| Security group | Select the default VPC security group  |
+| Security group | Select the existing default VPC security group  |
 | |
 | EC2 key pair | Select an existing EC2 key pair you have access to  |
 
