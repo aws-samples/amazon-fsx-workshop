@@ -66,14 +66,14 @@ time lfs find /mnt/fsx --type f --name *.tif | head -2048 | parallel --will-cite
 ```
 
 
-- The command will completed within seconds, but data is being loaded from the linked S3 bucket directly to the file system. At this point the client is done, it issued the restore command and now the FSx for Lustre file system takes over. While the data load is running, verify data isn't being loaded through the client by running **nload** to monitor network throughput in real time on the client.  Monitor the throughput for a few seconds then exit nload by using Ctrl+Z.
+- The command will finish within seconds, but data is being loaded from the linked S3 bucket directly to the file system. At this point the client is done, it issued the restore command and now the FSx for Lustre file system takes over. While the data load is running, verify data isn't being loaded through the client by running **nload** to monitor network throughput in real time on the client.  Monitor the throughput for a few seconds then exit nload by using Ctrl+Z.
 
 ```sh
 nload -u M
 
 ```
 
-- Access the CloudWatch dashboard you created earlier and monitor file system performance during the data load.
+- Access the CloudWatch dashboard you created earlier and monitor file system performance during the load.
 
 - How much throughput are you achieving?  Read throughput? Write throughput? Total throughput?
 - How many operations per second are you seeing? Reads? Writes? Metadata?
@@ -95,7 +95,7 @@ time lfs find /mnt/fsx --type f --name *.tif | head -2048 | parallel --will-cite
 
 ```
 
-- After a few minutes the bulk load (hsm_restore) should stop.
+- The command will finish within seconds But it may take a few minutes for the bulk load (hsm_restore) to stop.
 
 - Verify the state of the .tif files by running the command below.
 - Are they how many are loaded vs. how many are "released"?
@@ -111,6 +111,7 @@ time lfs find /mnt/fsx --type f --name *.tif | head -2048 | parallel --will-cite
 
 ```sh
 lfs df -h
+
 ```
 
 
