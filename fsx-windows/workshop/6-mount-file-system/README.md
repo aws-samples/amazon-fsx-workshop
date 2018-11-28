@@ -21,7 +21,7 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 * An AWS account with administrative level access
 * An Amazon FSx for Windows File Server
-* An Windows EC2 instance
+* An Amazon Linux EC2 instance
 
 WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
 
@@ -117,7 +117,7 @@ touch amazon_linux_test.txt
 
 ### Step 6.4: Run performance tests
 
-> Complete the following steps SSH'd in to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
 - Run scripts below to evaluate file share performance. Change the path to access any of the file shares you've created (e.g. of=/mnt/fsx/share, of=/mnt/fsx/data, of=/mnt/fsx/marketing, etc.)
 
@@ -137,10 +137,11 @@ threads=128
 sudo mkdir -p /mnt/fsx/share/${job_name}/{1..128}
 
 time seq 1 ${threads} | sudo parallel --will-cite -j ${threads} dd if=/dev/zero of=/mnt/fsx/share/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+
 ```
 
 - While the parallel dd command is running, run the **nload** command below for 10-20 seconds to monitor network throughput in real time
-- Exit **nload** by pressing **Control+z**
+- Exit **nload** by pressing **Ctrl+Z**
 - How long did it take to generate 32 GiB of data across 128 files?
 - What was the average throughput of this test?
 
@@ -174,7 +175,7 @@ sudo python ~/smallfile/smallfile_cli.py \
 ```
 
 - While the script above is running, press the return/enter key a few times to return a prompt. Run the **nload** command below for 30-40 seconds to monitor network throughput in real time.
-- Exit **nload** by pressing **Control+z**
+- Exit **nload** by pressing **Ctrl+Z**
 - How long did it take to generate 32 GiB of data across 16 threads?
 - What was the average throughput of this test?
 
