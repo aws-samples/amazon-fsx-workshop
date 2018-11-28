@@ -45,7 +45,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 ### Step 7.2: Bulk load files
 
-> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Lustre client - FSx Workshop** instance
 
 - These commands assume you linked the file system to the entire NASA NEX bucket (s3://nasanex). If you selected a specific prefix from this bucket or used a different bucket, you'll need to adjust your examination criteria based on your dataset.
 
