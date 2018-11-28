@@ -21,7 +21,7 @@ fsx.wrkshp.2018.11
 
 ### Overview
 
-These workshops are designed to show solutions architects how to take advantage of our fully-managed 3rd party file systems. for various application workloads like home directories, web serving & content management, enterprise applications, analytics, and media & entertainment.
+These workshops are designed to show solutions architects how to take advantage of our fully-managed 3rd party file systems for various application workloads like home directories, web serving & content management, enterprise applications, analytics, and media & entertainment.
 
 Select the appropriate workshop below.
 
