@@ -23,7 +23,7 @@ fsx.w.wrkshp.2018.11
 
 This will show solutions architects how to take advantage of a fully-managed Windows native file system for various application workloads like home directories, web serving & content management, enterprise applications, analytics, and media & entertainment.
 
-This workshop will cover how to create and initiate an incremental file-system-consistent backup of a file system, as well as how to access the file system from a broad range of clients from Windows and Linux EC2 instances to Amazon WorkSpaces. We will also restore a backup as a new file system and setup Microsoft Distributed File System (DFS) Replication between two file systems across Availability Zones. For those of you who want to consolidate multiple file systems under a single namespace, we'll spend time setting up DFS Namespaces to consolidate muliptle shares under a single namespace.
+This workshop will cover how to create FSx for Windows file systems and initiate an incremental file-system-consistent backup, as well as how to access the file system from a broad range of clients, from Windows and Linux EC2 instances to Amazon WorkSpaces. We will also restore a backup as a new file system and setup Microsoft Distributed File System (DFS) Replication between two file systems across Availability Zones. For those of you who want to consolidate multiple file shares under a single namespace, we'll spend time setting up DFS Namespaces to consolidate multiple shares under a single namespace.
 
 ### Informational
 
@@ -32,7 +32,7 @@ WARNING!! This workshop will exceed your free-usage tier. You will incur charges
 
 ### Prerequisites
 
-Click on the link below to go to the Amazon FSx for Windows File Server prerequisites section. Start this section at the start of the workshop, as soon as you sit down. The referenced Amazon CloudFormation template will create a stack that contains all the prerequisites for the next section of the workshop and it will take 20-30 minutes for the CloudFormation stack to  automatically build out the environment. You must complete this section before moving to **The Workshop**.
+Click on the link below to go to the Amazon FSx for Windows File Server prerequisites section. Start this section at the start of the workshop, as soon as you sit down. The referenced Amazon CloudFormation template will create a stack that contains all the prerequisites for the next section of the workshop and it will take 20-30 minutes for the CloudFormation stack to automatically build out the environment. You must complete this section before moving to **The Workshop**.
 
 | Step | Workshop |
 | :--- | :---
