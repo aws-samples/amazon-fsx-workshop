@@ -50,7 +50,7 @@ aws fsx describe-file-systems --output json --region ${region}
 
 ### Step 4.2: Install linux applications
 
-> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Lustre client - FSx Workshop** instance
 
 - Run the following script
 
@@ -94,7 +94,7 @@ cd
 
 ### Step 4.3: Verify applications were installed correctly
 
-> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Lustre client - FSx Workshop** instance
 
 #### Verify parallel
 
@@ -239,7 +239,7 @@ Finished            : Mon Nov 19 02:02:51 2018
 
 ### Step 4.4: Install Lustre client
 
-> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Lustre client - FSx Workshop** instance
 
 - There are separate instructions for each Linux distribution. Following the appropriate instructions based on the Linux distribution you used to launch the EC2 instance in the previous section.
 
@@ -261,7 +261,7 @@ sudo reboot
 
 ```
 
-- Log back into the **Amazon Linux - FSx Workshop** instance 
+- Log back into the **Lustre client - FSx Workshop** instance 
 
 ### Step 4.5: Mount the file system
 
@@ -274,7 +274,7 @@ aws fsx describe-file-systems --output json --region ${region}
 
 ```
 
-> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Lustre client - FSx Workshop** instance
 
 - Copy the script below into your favorite text editor
 
@@ -287,7 +287,7 @@ sudo mount -t lustre ${dnsname}@tcp:/fsx /mnt/fsx
 
 ```
 
-- Replace <file-system-dns-name> with the **DNS Name** of your file system.
+- Replace <file-system-dns-name> with the **DNS Name** of your file system and run the script on the **Lustre client** command line.
 
 - Run **df** to verify mount
 
