@@ -55,7 +55,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 - Construct a find command to return the data you want to bulk load.
 
-- Run the command below to load 2048 .tif files. This command uses GNU parallel to parallelize load (restore) operations. Data isn't loaded through the Lustre client issuing the command. The parallel design of Lustre allows data to be loaded in parallel directly from S3 into the file system's object storage targets (OSTs). This results is fast, high throughput data loads. 
+- Run the command below to load 2048 .tif files. This command uses GNU parallel to initiate parallel load (restore) operations. Data isn't loaded through the Lustre client issuing the command. FSx for Lustre allows data to be loaded in parallel directly from S3 into the file system's object storage targets (OSTs). This results is fast, high throughput data loads. 
 
 For more information about GNU Parallel, pleae refer to GNU Parallel - https://www.gnu.org/software/parallel/ - used to parallelize single-threaded commands; O. Tange (2018): GNU Parallel 2018, March 2018, https://doi.org/10.5281/zenodo.1146014
 
@@ -95,7 +95,7 @@ time lfs find /mnt/fsx --type f --name *.tif | head -2048 | parallel --will-cite
 
 ```
 
-- The command will finish within seconds But it may take a few minutes for the bulk load (hsm_restore) to stop.
+- The command will finish within seconds but it may take a few minutes for the bulk load (hsm_restore) to stop.
 
 - Verify the state of the .tif files by running the command below.
 - Are they how many are loaded vs. how many are "released"?
