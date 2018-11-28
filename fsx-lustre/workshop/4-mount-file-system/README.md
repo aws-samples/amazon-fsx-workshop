@@ -241,8 +241,6 @@ Finished            : Mon Nov 19 02:02:51 2018
 
 > Complete the following steps in your SSH session connected to the **Lustre client - FSx Workshop** instance
 
-- There are separate instructions for each Linux distribution. Following the appropriate instructions based on the Linux distribution you used to launch the EC2 instance in the previous section.
-
 - Run the following commands to install Lustre client 2.10.5
 
 ```sh
