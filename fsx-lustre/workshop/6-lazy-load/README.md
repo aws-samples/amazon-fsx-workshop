@@ -110,7 +110,7 @@ sys	0m0.108s
 ```
 
 - Did the file system return the same results that fast?
-- If you guessed **no** you are **right**. The data was cached on the EC2 instance. Lets drop the cache of the instanceand run the command again, this time getting the data from the FSx for Lustre file system.
+- If you guessed **no** you are **right**. The data was cached on the EC2 instance. Lets drop the cache of the instance and run the command again, this time getting the data from the FSx for Lustre file system.
 - Run this command to flush cache
 
 ```sh
@@ -120,7 +120,7 @@ exit
 
 ```
 
-- Now run the same **"time cat ${file}"** command again and see how long it takes? My results are below.
+- Now run the same **"time cat ${file}"** command again and see how long it takes. My results are below.
 
 ```sh
 real	0m0.389s
@@ -142,7 +142,7 @@ time lfs hsm_state ${file}
 /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif: (0x00000009) exists archived, archive_id:1
 ```
 
-- Run the **lfs df -h** command again to see now how much data is being used?
+- Run the **lfs df -h** command again to see how much data is now being used
 
 ```sh
 time lfs df -h
@@ -172,7 +172,7 @@ time sudo lfs hsm_release ${file}
 
 ```
 
-- Run the **lfs df -h** command again to see now how much data is being used? It may take a few seconds for the data to be released.
+- Run the **lfs df -h** command again to see how much data is now being used. It may take a few seconds for the data to be released.
  
 ```sh
 time lfs df -h
