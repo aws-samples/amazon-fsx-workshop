@@ -17,6 +17,14 @@ fsx.w.wrkshp.2018.11
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
+### Prerequisites
+
+* An AWS account with administrative level access
+* An Amazon FSx for Windows File Server
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
+---
 
 ### Map file share
 
@@ -32,7 +40,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 | Username | Password |
 | :--- | :--- 
-| admin@<<directory>> (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack|
+| admin@domain.name (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack|
 
 ### Step 3.2: Copy the DNS name of the FSx for Windows file system
 
@@ -48,12 +56,12 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 - Context-click **This PC** and click **Map network drive...**
 - Map the file share using the following information, 
 
-| Configuraiton detail | Value 
-| :--- | :--- 
-| Drive | Z:
-| Folder | UNC path of the file system's default file share using the DNS name you copied above - **\\\\<file system's DNS name>\share** - (e.g. **\\\\fs-0123456789abcdef.example.com\share**)
-| Reconnect at sign-in | Leave **checked**
-| Connect using different credentials | Leave **unchecked**
+| Configuraiton detail | Value |
+| :--- | :--- |
+| Drive | Z: |
+| Folder | UNC path of the file system's default file share using the DNS name you copied above - **\\\\<file system's DNS name>\share** - (e.g. **\\\\fs-0123456789abcdef.example.com\share**) |
+| Reconnect at sign-in | Leave **checked** |
+| Connect using different credentials | Leave **unchecked** |
 
 ### Step 3.3: Access a file share
 
@@ -101,8 +109,8 @@ C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -b16K -c4G -o4 -t8 -w25 -r -L -d30 -Z
 
 - Experiment with different DiskSpd parameter settings. Use the table below was a guide. Test with different block sizes (-b), file sizes (-c), number of outstanding I/O requests (-o), number of threads per file (-t), and read/write ratio (-w).
 
-| Parameter | Description 
-| :--- | :--- 
+| Parameter | Description |
+| :--- | :--- |
 | `-b<size>[K\|M\|G]` | Block size in bytes or KiB, MiB, or GiB (default = 64K). |
 | `-c<size>[K\|M\|G\|b]` | Create files of the specified size. Size can be stated in bytes or KiBs, MiBs, GiBs, or blocks. |
 | `-o<count>` | Number of outstanding I/O requests per-target per-thread. (1 = synchronous I/O, unless more than one thread is specified with by using `-F`.) (default = 2) |

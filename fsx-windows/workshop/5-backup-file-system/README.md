@@ -17,7 +17,14 @@ fsx.w.wrkshp.2018.11
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
+### Prerequisites
 
+* An AWS account with administrative level access
+* An Amazon FSx for Windows File Server
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
+---
 ### Backup file system
 
 You must first complete [**Prerequisites**](../0-prerequisites) and the previous step [**Map a file share**](../4-create-new-shares)

@@ -17,22 +17,28 @@ fsx.w.wrkshp.2018.11
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
+### Prerequisites
 
+* An AWS account with administrative level access
+* An Amazon FSx for Windows File Server
+* An Windows EC2 instance
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
+---
 ### Create new shares
 
 You must first complete [**Prerequisites**](../0-prerequisites) and the previous step [**Map a file share**](../3-map-file-share)
-
-WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and completing the steps below.
 
 ### Step 4.1: Log on to the Windows EC2 instance
 
 - From the Amazon EC2 Console, select the **Public DNS (IPv4)** name of the **Windows Server 2016 - FSx Workshop** instance
 - Launch your remote desktop application to log on to the Windows EC2 instance you created in the previous workshop
-- Log on to the **Windows Server 2016 - FSx Workshop** instance using following AD credentials
+- Log on to the **Windows Server 2016 - FSx Workshop** instance using the following AD credentials
 
 | Username | Password |
 | :--- | :--- 
-| admin@<directory> (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack|
+| admin@domain.name (e.g. admin@example.com) | The Microsoft Active Directory (MAD) password you entered as a parameter when you launched the prerequisites CloudFormation stack|
 
 ### Step 4.2: Create file shares
 
@@ -44,7 +50,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 - Click **Browse...**
 - Click **Advanced...**
 - Click **Find Now**
-- Select the AWS Managed instance hosting the FSx for Windows file system (e.g. AMZNFSX...) you created in the **Create file system** workshop.
+- Select the FSx for Windows file server hosting the FSx for Windows file system (e.g. AMZNFSX...) you created in the **Create file system** workshop.
 - Click **OK** until you're back to the **Shared Folders** window
 - Double-click the **Shares** folder
 - With the **Shares** folder selected, click **Action > New Share...** from the menu.
@@ -66,7 +72,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 - Open **File Explorer**
 - Type the UNC path to one of the new shares using the file system's DNS name (e.g. **\\\\fs-0123456789abcdef.example.com\data**)
 - Access all the new shares created above (e.g. \data, \finance, \sales, marketing)
-- Can we read and write to all shares?
+- Can you read and write to all shares?
 
 ---
 ## Next section

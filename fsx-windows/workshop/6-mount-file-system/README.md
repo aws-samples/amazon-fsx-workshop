@@ -17,12 +17,18 @@ fsx.w.wrkshp.2018.11
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
+### Prerequisites
 
+* An AWS account with administrative level access
+* An Amazon FSx for Windows File Server
+* An Windows EC2 instance
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
+---
 ### Mount file system
 
 You must first complete [**Prerequisites**](../0-prerequisites) and the previous step [**Backup file system**](../5-backup-file-system)
-
-WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and completing the steps below.
 
 ### Step 6.1: Log on to the Linux EC2 instance
 
@@ -32,10 +38,10 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 ### Step 6.2: Install linux applications
 
-> Complete the following steps SSH'd in to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
 - Run the following script
-- **cifs-utils** is the only utility needed to mount the FSX for Windows file system on Amazon Linux, the other utilites will be used for testing and monitoring performance
+- **cifs-utils** is the only utility needed to mount the FSx for Windows file system on Amazon Linux, the other utilites will be used for testing and monitoring performance
 
 ```sh
 sudo yum update -y
@@ -47,7 +53,7 @@ git clone https://github.com/bengland2/smallfile.git
 
 ### Step 6.3: Mount the file system's default file share
 
-> Complete the following steps SSH'd in to the **Amazon Linux - FSx Workshop** instance
+> Complete the following steps in your SSH session connected to the **Amazon Linux - FSx Workshop** instance
 
 - Run the following script to create a local mount point and mount the file system
 - You will be prompted to enter the password of the AD user **admin** (e.g. admin@example.com)
@@ -55,7 +61,7 @@ git clone https://github.com/bengland2/smallfile.git
 ```sh
 sudo mkdir -p /mnt/fsx/share
 # for example: sudo mount -t cifs //fs-0123456789abcdef.example.com/share /mnt/fsx/share --verbose -o vers=2.0,user=admin@example.com
-sudo mount -t cifs //<file-system-dns-name>/share /mnt/fsx/share --verbose -o vers=2.0,user=admin@<domain>
+sudo mount -t cifs //<file-system-dns-name>/share /mnt/fsx/share --verbose -o vers=2.0,user=admin@domain.name
 ```
 
 - Run **df** to verfify the file share has been mounted correctly
@@ -82,12 +88,12 @@ df
 df
 ```
 
-- Can you mount a single file share and gain access all the sub-shares?
+- Can you mount a single file share and gain access to all the sub-shares?
 - Try this
 
 ```sh
 sudo mkdir -p /mnt/fsx
-# for example: sudo mount -t cifs //fs-0123456789abcdef.example.com/share /mnt/fsx/share --verbose -o vers=2.0,user=admin@example.com
+# for example: sudo mount -t cifs //fs-0123456789abcdef.example.com/d$ /mnt/fsx/share --verbose -o vers=2.0,user=admin@example.com
 sudo mount -t cifs //<file-system-dns-name>/d$ /mnt/fsx --verbose -o vers=2.0,user=admin@<domain>
 ```
 
