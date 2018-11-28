@@ -25,7 +25,7 @@ If a key pair has not been previously created in your account, please refer to [
 
 Verify that the key pair is created in the same AWS region you will use for the tutorial.
 
-WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
 
 ---
 ### Create Amazon Virtual Private Clouds (Amazon VPC)
@@ -45,7 +45,7 @@ Click on the link below in the desired AWS region to create the AWS Cloudformati
 
 ---
 
-Click on the link below in the desired AWS region to create the AWS CloudFormation stack that will create an Amazon VPC, AWS Manageed Microsoft AD (enterprise), and two Windows EC2 instances running the Distributed File System Namespaces role.
+Click on the link below in the desired AWS region to create the AWS CloudFormation stack that will create an Amazon VPC, AWS Managed Microsoft AD (enterprise), and two Windows EC2 instances running the Distributed File System Namespaces role.
 
 | AWS Region Code | Region Name |
 | :--- | :--- 
