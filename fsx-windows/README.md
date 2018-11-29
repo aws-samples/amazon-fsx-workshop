@@ -40,7 +40,7 @@ Click on the link below to go to the Amazon FSx for Windows File Server prerequi
 
 ### The Workshop
 
-Click on the links below to go to the FSx for Windows workshop. You must first complete **Prerequisites** above before moving on to the steps in**The Workshop** below. These steps must be completed in order.
+Click on the links below to go to the FSx for Windows workshop. You must first complete **Prerequisites** above before moving on to the steps in **The Workshop** below. These steps must be completed in order.
 
 
 | Step | Workshop |
