@@ -129,7 +129,7 @@ New-DfsReplicatedFolder -GroupName ${Group} -FolderName ${Folder}
 $FirstFSDnsName = "DNS Name of the source file system" # e.g. "fs-abcdef0123456789.example.com"
 $RestoredFSDnsName = "DNS Name of the restored file system" # e.g. "fs-0123456789abcdef.example.com"
 $FirstFSComputerName = (Resolve-DnsName ${FirstFSDnsName} -Type CNAME).NameHost
-$ResotredFSComputerName = (Resolve-DnsName ${RestoredFSDnsName} -Type CNAME).NameHost
+$RestoredFSComputerName = (Resolve-DnsName ${RestoredFSDnsName} -Type CNAME).NameHost
 
 ```
 
