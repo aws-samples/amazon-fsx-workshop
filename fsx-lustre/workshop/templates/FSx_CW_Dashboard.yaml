@@ -156,7 +156,7 @@ Resources:
                       "height": 3,
                       "properties": {
                           "metrics": [
-                              [ { "expression": "freeDataStorageCapacity/1073741824", "label": "Available Storage (TiB)", "id": "availableStorageTiB", "color": "#2ca02c" } ],
+                              [ { "expression": "freeDataStorageCapacity/1048576", "label": "Available Storage (TiB)", "id": "availableStorageTiB", "color": "#2ca02c" } ],
                               [ "AWS/FSx", "FreeDataStorageCapacity", "FileSystemId", "',!Ref 'FileSystemId','", { "id": "freeDataStorageCapacity", "visible": false } ]
                           ],
                           "view": "timeSeries",

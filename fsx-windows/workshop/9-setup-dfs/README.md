@@ -118,7 +118,7 @@ $Folder = "Folder" # e.g. "folder"
 
 New-DfsReplicationGroup -GroupName ${Group}
 Grant-DfsrDelegation -GroupName ${Group} –AccountName "FSxAdmins" –Force
-New-DfsReplicationFolder -GroupName ${Group} -FolderName ${Folder}
+New-DfsReplicatedFolder -GroupName ${Group} -FolderName ${Folder}
 
 ```
 
