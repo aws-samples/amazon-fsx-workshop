@@ -49,7 +49,7 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 
 | Configuration detail | Value |
 | :--- | :--- 
-| Amazon Machine Image (AMI) | Microsoft Windows Server 2016 Base |
+| Amazon Machine Image (AMI) | Microsoft Windows Server 2019 Base |
 | |
 | Instance Type | c5.2xlarge |
 | |
@@ -58,7 +58,7 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 | Domain join directory | Select the Directory Id created in the prerequisites section (to verify the the Directory Id, view the output of the AWS CloudFormation stack) |
 | IAM role | Select fsx-workshop-prerequisites... |
 | |
-| Add tags | Key=Name; Value=Windows Server 2016 - FSx Workshop  |
+| Add tags | Key=Name; Value=Windows Server 2019 - FSx Workshop  |
 | |
 | Security group | Select the existing default VPC security group  |
 | |
