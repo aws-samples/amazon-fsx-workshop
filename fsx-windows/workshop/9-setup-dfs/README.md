@@ -86,7 +86,7 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 
 - Enter the DNS name of the file system share in UNC format (e.g. \\fs-0123456789abcdef.example.com\share) and choose OK.
 
-- Use the table below and repeat the steps above for the other shares for the other shares. 
+- Use the table below and repeat the steps above for the other shares you created in previous steps. 
 
 | Share name |
 | :--- |
