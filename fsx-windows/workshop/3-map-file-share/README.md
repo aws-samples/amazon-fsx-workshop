@@ -34,9 +34,9 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 ### Step 3.1: Log on to the Windows EC2 instance
 
-- From the Amazon EC2 Console, copy the **Public DNS (IPv4)** name of the **Windows Server 2016 - FSx Workshop** instance
+- From the Amazon EC2 Console, copy the **Public DNS (IPv4)** name of the **Windows Server 2019 - FSx Workshop** instance
 - Launch your remote desktop application to log on to the Windows EC2 instance you created in the previous workshop
-- Log on to the **Windows Server 2016 - FSx Workshop** instance using following AD credentials
+- Log on to the **Windows Server 2019 - FSx Workshop** instance using following AD credentials
 
 | Username | Password |
 | :--- | :--- 
@@ -50,7 +50,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 ### Step 3.3: Map the file system's default share
 
-> Complete the following steps logged on to the **Windows Server 2016 - FSx Workshop** instance
+> Complete the following steps logged on to the **Windows Server 2019 - FSx Workshop** instance
 
 - Open **File Explorer**
 - Context-click **This PC** and click **Map network drive...**
@@ -65,7 +65,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 ### Step 3.3: Access a file share
 
-> Complete the following steps logged on to the **Windows Server 2016 - FSx Workshop** instance
+> Complete the following steps logged on to the **Windows Server 2019 - FSx Workshop** instance
 
 - In the **File Explorer** window of the **Z:**
 - Create new empty files on the **Z:** drive
@@ -74,7 +74,7 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 
 ### Step 3.3: Test the performance of the new file share
 
-> Complete the following steps logged on to the **Windows Server 2016 - FSx Workshop** instance
+> Complete the following steps logged on to the **Windows Server 2019 - FSx Workshop** instance
 
 - Open a **PowerShell** window as an **Administrator**
 - Install DiskSpeed using the script below. Copy >> Paste >> Execute the script in the PowerShell window
