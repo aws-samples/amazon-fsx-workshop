@@ -89,7 +89,7 @@ You must first complete [**Prerequisites**](../0-prerequisites) and the previous
 ## Next section
 ### Click on the link below to go to the next section
 
-| [**Mount file system**](../6-mount-file-system) |
+| [**Mount file system**](../8-workspaces-access) |
 | :---
 ---
 
