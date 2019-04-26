@@ -114,9 +114,7 @@ sys	0m0.108s
 - Run this command to flush cache
 
 ```sh
-sudo su
-sync && echo 3 > /proc/sys/vm/drop_caches
-exit
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
 
 ```
 
