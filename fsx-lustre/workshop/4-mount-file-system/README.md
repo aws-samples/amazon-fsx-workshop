@@ -178,7 +178,7 @@ fio --version
 - The output should be similar to this:
 
 ```sh
-fio-3.12-20-g4cf3
+fio-3.13-37-g0513
 ```
 
 
@@ -241,13 +241,11 @@ Finished            : Mon Nov 19 02:02:51 2018
 
 > Complete the following steps in your SSH session connected to the **Lustre client - FSx Workshop** instance
 
-- Run the following commands to install Lustre client 2.10.5
+- Run the following commands to install Lustre client 2.10.6
 
 ```sh
-wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/el7.5.1804/client/RPMS/x86_64/kmod-lustre-client-2.10.5-1.el7.x86_64.rpm
-wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/el7.5.1804/client/RPMS/x86_64/lustre-client-2.10.5-1.el7.x86_64.rpm
-
-sudo yum localinstall -y *lustre-client-2.10.5*.rpm
+sudo yum -y install https://downloads.whamcloud.com/public/lustre/lustre-2.10.6/el7/client/RPMS/x86_64/kmod-lustre-client-2.10.6-1.el7.x86_64.rpm
+sudo yum -y install https://downloads.whamcloud.com/public/lustre/lustre-2.10.6/el7/client/RPMS/x86_64/lustre-client-2.10.6-1.el7.x86_64.rpm
 
 ```
 
