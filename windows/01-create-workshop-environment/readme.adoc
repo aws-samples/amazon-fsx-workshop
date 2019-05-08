@@ -32,7 +32,7 @@ image::create-environment.gif[align="left", width=600]
 +
 TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS Console.
 +
-NOTE: Amazon FSx is currently available in 6 regions.
+NOTE: Amazon FSx is currently available in 6 regions. If launching in Sydney (ap-southeast-2), file system creation is currently not supported for Availability Zone ID *apse2-az3*. Open the link:https://ap-southeast-2.console.aws.amazon.com/vpc/home?region=ap-southeast-2#subnets:[Amazon VPC] console *Subnets* window to see your *Availability Zone* to *Availability Zone ID* mapping.
 +
 |===
 |Region | Launch template with a new VPC
