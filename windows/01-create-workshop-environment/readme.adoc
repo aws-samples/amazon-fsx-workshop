@@ -26,13 +26,35 @@ IMPORTANT: Read through all steps below and watch the quick video before *_click
 
 image::create-environment.gif[align="left", width=600]
 
-
-
 . Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin.
 +
-TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS Console.
+Amazon FSx is currently available in 6 regions.
 +
-NOTE: Amazon FSx is currently available in 6 regions. If launching in Sydney (ap-southeast-2), file system creation is currently not supported for Availability Zone ID *apse2-az3*. Open the link:https://ap-southeast-2.console.aws.amazon.com/vpc/home?region=ap-southeast-2#subnets:[Amazon VPC] console *Subnets* window to see your *Availability Zone* to *Availability Zone ID* mapping.
+File system creation is currently not supported in the following Availability Zones:
++
+[cols="1,1,2", options="header"]
+|===
+|Region | Availability Zone ID | Mapping
+| *N. Virginia* (us-east-1)
+| *use1-az3*
+| Open the link:https://us-east-1.console.aws.amazon.com/vpc/home?region=us-east-1#subnets:[us-east-1 VPC] console for AZ mapping.
+
+| *Oregon* (us-west-2)
+| *usw2-az4*
+| Open the link:https://us-west-2.console.aws.amazon.com/vpc/home?region=us-west-2#subnets:[us-west-2 VPC] console for AZ mapping.
+
+| *Sydney* (ap-southeast-2)
+| *apse2-az3*
+| Open the link:https://ap-southeast-2.console.aws.amazon.com/vpc/home?region=ap-southeast-2#subnets:[ap-southeast-2 VPC] console for AZ mapping.
+
+| *Tokyo* (ap-northeast-1)
+| *apne1-az3*
+| Open the link:https://ap-northeast-1.console.aws.amazon.com/vpc/home?region=ap-northeast-1#subnets:[ap-northeast-1 VPC] console for AZ mapping.
+|===
++
+When selecting availability zones in the CloudFormation create stack wizard, take care not to select an availability zone mapped to one of the Availability Zone IDs listed above.
++
+TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS Console.
 +
 |===
 |Region | Launch template with a new VPC
