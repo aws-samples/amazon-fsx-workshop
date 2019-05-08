@@ -1,0 +1,86 @@
+= Create file system from backup
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+== Summary
+
+This section will create a new file system from a backup.
+
+You can use an available backup to create a new file system, effectively restoring a point-in-time snapshot of another file system.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Diagram
+
+image::create-file-system-from-backup.png[align="left", width=600]
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::create-file-system-from-backup.gif[align="left", width=600]
+
+. Open the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and Amazon FSx console.
++
+. Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
+. *_Select_* the *File system name* or the *File system ID* of file system created by the CloudFormation template. The file system name is "*Amazon FSx for Windows File Server 0*".
+. From the *Details* view and the *Overview* tab, make a note of the *Availability Zone*.
+. *_Select_* the *Backups* tab.
+. *_Click_* the check box next to the *Automatic* backup taken of the file system after it was created.
+. *_Select_* the *Restore backup* button.
+. *_Complete_* the *Create file system from backup...* wizard with the following settings:
++
+[cols="3,10"]
+|===
+| *File system name*
+a| Amazon FSx for Windows File Server 1
+| *Storage capacity*
+a| Immutable when restoring a backup
+| *Throughput capacity*
+a| 64 MB/s
+| *Virtual private cloud (VPC)*
+a| Accept the default - *VPC \| fsx-windows-workshop-Vpc...*
+| *Availability Zone*
+a| Remember the availability zone you noted above? From the dropdown menu *_select_* the other availability zone.
+| *Subnet*
+a| Accept the default - *Private Subnet 1 \| fsx-windows-workshop-Vpc...*
+| *VPC Security Groups*
+a| *_Click_* the *X* to remove the default security group. From the dropdown menu *_select_* the *File system security group...*
+| *Microsoft Active Directory ID*
+a| From the dropdown menu *_select_* the *example.com (d-...)* directory
+| *Encryption key*
+a| Accept the default - *(default)aws/fsx*
+| *Daily automatic backup window*
+a| *_Select_* *No preferences*
+| *Automatic backup retention period*
+a| *_Enter_* *0* days
+| *Weekly maintenance window*
+a| *_Select_* *No preferences*
+|===
++
+. *_Select_* *Next*
+
+. *_Review_* the file system summary and *_select_* *Create file system*.
+
+NOTE: It will take approximately 15 minutes to restore a backup as a new file system. Continue with the next section while the new file system is created in the background.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::03-create-new-file-share.png[link=../03-create-new-file-share/, align="left",width=420]
+
+
+
+

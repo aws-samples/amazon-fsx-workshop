@@ -1,0 +1,235 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Launches two Amazon EC2 Windows instances as DFS samespace servers that auto joins an Active Directory
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Microsoft Active Directory
+      Parameters:
+        - DirectoryId
+    - Label:
+        default: Amazon EC2 Windows Instance
+      Parameters:
+        - WindowsVersion
+        - InstanceType
+        - SubnetId
+        - SecurityGroupId
+    ParameterLabels:
+      DirectoryId:
+        default: Directory
+      InstanceType:
+        default: EC2 instance type
+      SecurityGroupId:
+        default: Security group
+      SubnetId:
+        default: Subnet
+      WindowsVersion:
+        default: Windows version
+Parameters:
+  DirectoryId:
+    AllowedPattern: ^(d-)([a-z0-9]{10})$
+    Description: Enter the directory ID of the AWS Managed Microsoft Active Directory (e.g. d-0123456789)
+    Type: String
+  InstanceType:
+    AllowedValues: 
+    - t3.small
+    - t3.medium
+    - t3.large
+    - m5.large
+    - m5.xlarge
+    Default: t3.small
+    Description: Select the instance type
+    Type: String
+  SecurityGroupId:
+    Description: Select the security group
+    Type: AWS::EC2::SecurityGroup::Id
+  SubnetId:
+    Description: Select two subnets
+    Type: List<AWS::EC2::Subnet::Id>
+  WindowsVersion:
+    AllowedValues:
+    - Windows Server 2019 English 64-bit
+    - Windows Server 2016 English 64-bit
+    - Windows Server 2012 R2 English 64-bit
+    - Windows Server 2012 RTM English 64-bit
+    Description: Select the Windows version
+    Type: String
+    Default: Windows Server 2019 English 64-bit
+Resources:
+  Instance0:
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !GetAtt AmiInfo.Id
+      Monitoring: true
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds: 
+        - !Ref SecurityGroupId
+      SubnetId: !Select [ 0, !Ref SubnetId ]
+      Tags:
+        - Key: Name
+          Value: "Namespace Server 0"
+  Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !GetAtt AmiInfo.Id
+      Monitoring: true
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds: 
+        - !Ref SecurityGroupId 
+      SubnetId: !Select [ 1, !Ref SubnetId ]
+      Tags:
+        - Key: Name
+          Value: "Namespace Server 1"
+  FSxDomainJoinInstallDFS:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        schemaVersion: "2.2"
+        description: Join instances to an AWS Directory Service domain
+        parameters:
+          directoryId:
+            type: String
+            description: (Required) ID of the AWS Managed Microsoft AD (i.e. d-0123456789)
+          directoryName:
+            type: String
+            description: (Required) Directory name (i.e. example.com)
+          dnsIpAddresses:
+            type: StringList
+            default: []
+            description: "(Optional) AWS Managed Microsoft AD DNS IP addresses (i.e. 172.31.0.11, 172.31.0.12)
+              Required when DHCP is not configured. Learn more at http://docs.aws.amazon.com/directoryservice/latest/simple-ad/join_get_dns_addresses.html"
+        mainSteps:
+        - action: aws:domainJoin
+          name: joinDomain
+          inputs:
+            directoryId: "{{ directoryId }}"
+            directoryName: "{{ directoryName }}"
+            dnsIpAddresses: "{{ dnsIpAddresses }}"
+        - action: aws:runPowerShellScript
+          name: installDfsMgmt
+          inputs:
+            runCommand:
+              - Install-WindowsFeature -Name FS-FileServer, FS-DFS-namespace -IncludeManagementTools;
+              - Install-WindowsFeature -Name RSAT-DFS-Mgmt-Con
+              - New-Item -Type Directory -Path "C:\DFS"
+  Association:
+    Type: AWS::SSM::Association
+    Properties:
+      Name: !Ref FSxDomainJoinInstallDFS
+      Parameters:
+        directoryId: [!Ref DirectoryId]
+        directoryName: [!GetAtt ActiveDirectory.Name]
+        dnsIpAddresses:
+        - !Select [ 0, !GetAtt ActiveDirectory.DnsIpAddrs ]
+        - !Select [ 1, !GetAtt ActiveDirectory.DnsIpAddrs ]        
+      Targets:
+      - Key: InstanceIds
+        Values: [ !Ref Instance0, !Ref Instance1 ]
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: '/'
+      Roles:
+      - !Ref InstanceRole
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AWSLambdaExecute'
+        - 'arn:aws:iam::aws:policy/AWSDirectoryServiceReadOnlyAccess'
+      Path: "/"
+      Policies:
+      - PolicyName: root
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - ec2:DescribeImages
+            Resource: "*"
+  ActiveDirectoryFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: fsx/dfs/ActiveDirectoryCustomResource.zip
+      Handler: ad.handler
+      Runtime: nodejs8.10
+      Timeout: 30
+      Role: !GetAtt LambdaExecutionRole.Arn
+  ActiveDirectory:
+    Type: Custom::ActiveDirectory
+    Properties:
+      ServiceToken: !GetAtt ActiveDirectoryFunction.Arn
+      Region: !Ref 'AWS::Region'
+      ID: !Ref DirectoryId
+  AmiInfoFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: fsx/dfs/amilookup-win.zip
+      Handler: amilookup-win.handler
+      Runtime: nodejs8.10
+      Timeout: 30
+      Role: !GetAtt LambdaExecutionRole.Arn
+  AmiInfo:
+    Type: Custom::AmiInfo
+    Properties:
+      ServiceToken: !GetAtt AmiInfoFunction.Arn
+      Region: !Ref 'AWS::Region'
+      OSName: !Ref WindowsVersion
+
+Outputs:
+  Instance0:
+    Description: Amazon EC2 Windows DFS Namespace Server Instance 0
+    Value: !Ref Instance0
+  Instance0DnsName:
+    Description: Amazon EC2 Windows DFS Namespace Server Instance 0 DNS name
+    Value: !GetAtt Instance0.PublicDnsName
+  Instance1:
+    Description: Amazon EC2 Windows DFS Namespace Server Instance 1
+    Value: !Ref Instance1
+  Instance1DnsName:
+    Description: Amazon EC2 Windows DFS Namespace Server Instance 1 DNS name
+    Value: !GetAtt Instance1.PublicDnsName
+  WindowsVersion:
+    Description: Amazon EC2 instance Windows Version
+    Value: !Ref WindowsVersion
+  InstanceAmi:
+    Description: Amazon EC2 instance AMI ID
+    Value: !GetAtt AmiInfo.Id
+

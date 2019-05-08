@@ -1,0 +1,256 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Launches one Amazon EC2 Windows instance that auto joins an Active Directory
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Microsoft Active Directory
+      Parameters:
+        - DirectoryId
+    - Label:
+        default: Amazon EC2 Windows Instance
+      Parameters:
+        - WindowsVersion
+        - InstanceType
+        - SubnetId
+        - SecurityGroupId
+    ParameterLabels:
+      DirectoryId:
+        default: Directory
+      InstanceType:
+        default: EC2 instance type
+      SecurityGroupId:
+        default: Security group
+      SubnetId:
+        default: Subnet
+      WindowsVersion:
+        default: Windows version
+Parameters:
+  DirectoryId:
+    AllowedPattern: ^(d-)([a-z0-9]{10})$
+    Description: Enter the directory ID of the AWS Managed Microsoft Active Directory (e.g. d-0123456789)
+    Type: String
+  InstanceType:
+    AllowedValues: 
+    - t3.large
+    - t3.xlarge
+    - c5.large
+    - c5.xlarge
+    - m5.large
+    - m5.xlarge
+    Default: c5.large
+    Description: Select the instance type
+    Type: String
+  SecurityGroupId:
+    Description: Select the security group
+    Type: AWS::EC2::SecurityGroup::Id
+  SubnetId:
+    Description: Select the subnet
+    Type: AWS::EC2::Subnet::Id
+  WindowsVersion:
+    AllowedValues:
+    - Windows Server 2019 English 64-bit
+    - Windows Server 2016 English 64-bit
+    - Windows Server 2012 R2 English 64-bit
+    - Windows Server 2012 RTM English 64-bit
+    Description: Select the Windows version
+    Type: String
+    Default: Windows Server 2019 English 64-bit
+Resources:
+  Instance0:
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !GetAtt AmiInfo.Id
+      Monitoring: true
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds: 
+        - !Ref SecurityGroupId
+      SubnetId: !Ref SubnetId
+      Tags:
+        - Key: Name
+          Value: "Windows Server 0"
+      UserData:
+        Fn::Base64:
+          !Sub |
+            <powershell>
+
+            # disable ie security (windows)
+            function Disable-ieESC {
+                $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+                $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+                Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
+                Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
+                Stop-Process -Name Explorer
+                Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -ForegroundColor Green
+            }
+            Disable-ieESC
+
+            # install vdbench (windows)
+            $path = "C:\Tools\DiskSpd-2.0.21a"
+            $url = "https://gallery.technet.microsoft.com/DiskSpd-A-Robust-Storage-6ef84e62/file/199535/2/DiskSpd-2.0.21a.zip"
+            $destination = "C:\Tools\DiskSpd-2.0.21a.zip"
+            $download = New-Object -Typename System.Net.WebClient
+            New-Item -Type Directory -Path $path
+            $download.DownloadFile($url,$destination)
+            $extract = New-Object -ComObject Shell.Application
+            $files = $extract.Namespace($destination).Items()
+            $extract.NameSpace($path).CopyHere($files)
+
+            # install fio (windows)
+            $path = "C:\Tools"
+            $url = "https://bluestop.org/files/fio/releases/fio-3.13-x64.zip"
+            $destination = "C:\Tools\fio-3.13-x64.zip"
+            $download = New-Object -Typename System.Net.WebClient
+            New-Item -Type Directory -Path $path
+            $download.DownloadFile($url,$destination)
+            $extract = New-Object -ComObject Shell.Application
+            $files = $extract.Namespace($destination).Items()
+            $extract.NameSpace($path).CopyHere($files)
+            
+            </powershell>
+  FSxDomainJoinInstallDFS:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        schemaVersion: "2.2"
+        description: Join instances to an AWS Directory Service domain
+        parameters:
+          directoryId:
+            type: String
+            description: (Required) ID of the AWS Managed Microsoft AD (i.e. d-0123456789)
+          directoryName:
+            type: String
+            description: (Required) Directory name (i.e. example.com)
+          dnsIpAddresses:
+            type: StringList
+            default: []
+            description: "(Optional) AWS Managed Microsoft AD DNS IP addresses (i.e. 172.31.0.11, 172.31.0.12)
+              Required when DHCP is not configured. Learn more at http://docs.aws.amazon.com/directoryservice/latest/simple-ad/join_get_dns_addresses.html"
+        mainSteps:
+        - action: aws:domainJoin
+          name: joinDomain
+          inputs:
+            directoryId: "{{ directoryId }}"
+            directoryName: "{{ directoryName }}"
+            dnsIpAddresses: "{{ dnsIpAddresses }}"
+        - action: aws:runPowerShellScript
+          name: installDfsMgmt
+          inputs:
+            runCommand:
+              - Install-WindowsFeature -Name FS-FileServer, FS-DFS-namespace -IncludeManagementTools;
+              - Install-WindowsFeature -Name RSAT-DFS-Mgmt-Con
+              - New-Item -Type Directory -Path "C:\DFS"
+  Association:
+    Type: AWS::SSM::Association
+    Properties:
+      Name: !Ref FSxDomainJoinInstallDFS
+      Parameters:
+        directoryId: [!Ref DirectoryId]
+        directoryName: [!GetAtt ActiveDirectory.Name]
+        dnsIpAddresses:
+        - !Select [ 0, !GetAtt ActiveDirectory.DnsIpAddrs ]
+        - !Select [ 1, !GetAtt ActiveDirectory.DnsIpAddrs ]        
+      Targets:
+      - Key: InstanceIds
+        Values: [ !Ref Instance0 ]
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: '/'
+      Roles:
+      - !Ref InstanceRole
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AWSLambdaExecute'
+        - 'arn:aws:iam::aws:policy/AWSDirectoryServiceReadOnlyAccess'
+      Path: "/"
+      Policies:
+      - PolicyName: root
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - ec2:DescribeImages
+            Resource: "*"
+  ActiveDirectoryFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: fsx/dfs/ActiveDirectoryCustomResource.zip
+      Handler: ad.handler
+      Runtime: nodejs8.10
+      Timeout: 30
+      Role: !GetAtt LambdaExecutionRole.Arn
+  ActiveDirectory:
+    Type: Custom::ActiveDirectory
+    Properties:
+      ServiceToken: !GetAtt ActiveDirectoryFunction.Arn
+      Region: !Ref 'AWS::Region'
+      ID: !Ref DirectoryId
+  AmiInfoFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: fsx/dfs/amilookup-win.zip
+      Handler: amilookup-win.handler
+      Runtime: nodejs8.10
+      Timeout: 30
+      Role: !GetAtt LambdaExecutionRole.Arn
+  AmiInfo:
+    Type: Custom::AmiInfo
+    Properties:
+      ServiceToken: !GetAtt AmiInfoFunction.Arn
+      Region: !Ref 'AWS::Region'
+      OSName: !Ref WindowsVersion
+
+Outputs:
+  Instance0:
+    Description: Amazon EC2 Windows instance ID
+    Value: !Ref Instance0
+  InstanceDnsName:
+    Description: Amazon EC2 Windows instance public DNS name
+    Value: !GetAtt Instance0.PublicDnsName
+  WindowsVersion:
+    Description: Amazon EC2 instance Windows Version
+    Value: !Ref WindowsVersion
+  InstanceAmi:
+    Description: Amazon EC2 Windows instance AMI ID
+    Value: !GetAtt AmiInfo.Id
+

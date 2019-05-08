@@ -1,0 +1,124 @@
+= Setup DFS Replication
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+== Summary
+
+This section will setup a DFS Replication.
+
+You use Microsoft PowerShell to setup DFS Replication for Amazon FSx for Windows File Server.
+
+
+== Duration
+
+NOTE: It will take approximately 30 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Connect to the Namespace server 0
+
+IMPORTANT: Read through all steps below before continuing.
+
+You should already have a remote desktop session open for *Namespace Server 0*.
+
+. *_Close_* all open applications, windows, etc.
+
+. *_Open_* a new *PowerShell* window as *Administrator* (e.g. *Start >> *_context-click_* *Window PowerShell* >> *More* >> *Run as Administrator*)
+
+. *_Copy_* the script below and run it in the *Administrator: Windows PowerShell* window.
++
+[source,bash]
+----
+$Group = "Group" # e.g. "ReplicationGroup"
+$Folder = "Folder" # e.g. "folder"
+
+New-DfsReplicationGroup -GroupName ${Group}
+Grant-DfsrDelegation -GroupName ${Group} –AccountName "FSxAdmins" –Force
+New-DfsReplicatedFolder -GroupName ${Group} -FolderName ${Folder}
+
+----
++
+
+. *_Copy_* the script below into your favorite text editor and replace *"Amazon FSx for Windows File Server 0"* with the DNS name of *Amazon FSx Windows File Server 0* and replace *"Amazon FSx for Windows File Server 1"* with the DNS name of *Amazon FSx Windows File Server 1*.  Run the updated script in the *Administrator: Windows PowerShell* window.
++
+[source,bash]
+----
+$FirstFSDnsName = "Amazon FSx for Windows File Server 0" # e.g. "fs-abcdef0123456789.example.com"
+$RestoredFSDnsName = "Amazon FSx for Windows File Server 1" # e.g. "fs-0123456789abcdef.example.com"
+$FirstFSComputerName = (Resolve-DnsName ${FirstFSDnsName} -Type CNAME).NameHost
+$RestoredFSComputerName = (Resolve-DnsName ${RestoredFSDnsName} -Type CNAME).NameHost
+
+----
++
+
+. *_Copy_* the script below and run it in the *Administrator: Windows PowerShell* window.
+
++
+[source,bash]
+----
+Add-DfsrMember -GroupName ${Group} -ComputerName ${FirstFSComputerName}
+Add-DfsrMember -GroupName ${Group} -ComputerName ${RestoredFSComputerName}
+
+----
++
+
+. *_Copy_* the script below and run it in the *Administrator: Windows PowerShell* window.
+
++
+[source,bash]
+----
+$FirstFSReplicationPath = "D:\Share"
+$RestoredFSReplicationPath = "D:\Share"
+
+Set-DfsrMembership –GroupName ${Group} –FolderName ${Folder} –ContentPath ${FirstFSReplicationPath} –ComputerName ${FirstFSComputerName} –PrimaryMember $True -Force
+Set-DfsrMembership –GroupName ${Group} –FolderName ${Folder} –ContentPath ${RestoredFSReplicationPath} –ComputerName ${RestoredFSComputerName} –PrimaryMember $False -Force
+
+----
++
+
+. *_Copy_* the script below and run it in the *Administrator: Windows PowerShell* window.
+
++
+[source,bash]
+----
+Add-DfsrConnection -GroupName ${Group} -SourceComputerName ${FirstFSComputerName} -DestinationComputerName ${RestoredFSComputerName}
+
+----
+
+
+=== Test DFS Replication
+
+
+. *_Open_* a new *File Explorer* window.
+
+. Use the UNC path to connect to the default share of *Amazon FSx for Windows File Server 0* (e.g. \\fs-0123456789abcdef.example.com\share).
+
+. *_Open_* a second *File Explorer* window.
+
+. Use the UNC path to connect to the default share of *Amazon FSx for Windows File Server 1* (e.g. \\fs-9876543210abcdef.example.com\share).
++
+TIP: It may take approximately 5 minutes for replication to start.
++
+
+. Once you see the same files in both file systems, create new files in both file systems (e.g. *_context-click_* >> New >> Text Document.
++
+* How long does it take for the newly created files to show up in the replicated file system?
+
+. Experiment with different techniques to create files on a file system and see them get replicated.
++
+TIP: Use the remote desktop session to the *Windows Server 0* instance to create new files using DiskSpd, fio, or fsutil. Change the path to use the new DFS Namespace (\\example.com\corp\share) or even the UNC path for *Amazon FSx for Windows File Server 1*.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::08-delete-workshop-environment.png[link=../08-delete-workshop-environment/, align="left",width=420]
+
+
+
+

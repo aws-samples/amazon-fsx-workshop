@@ -1,0 +1,134 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates an Amazon FSx for Windows File Server
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: File system configuration
+      Parameters:
+        - FileSystemName
+        - StorageCapacity
+        - ThroughputCapacity
+        - SubnetId
+        - SecurityGroupId
+        - DirectoryId
+        - DailyAutomaticBackupStartTime
+        - CopyTagsToBackups
+        - AutomaticBackupRetentionDays
+        - WeeklyMaintenanceStartTime
+    ParameterLabels:
+      DirectoryId:
+        default: Directory
+      AutomaticBackupRetentionDays:
+        default: Backup retention days
+      CopyTagsToBackups:
+        default: Copy tags to backups
+      DailyAutomaticBackupStartTime:
+        default: Daily backup start time (optional)
+      FileSystemName:
+        default: File system name
+      SecurityGroupId:
+        default: Security group
+      StorageCapacity:
+        default: Storage capacity (GiB)
+      SubnetId:
+        default: Subnet
+      ThroughputCapacity:
+        default: Throughput capacity (MiB/s)
+      WeeklyMaintenanceStartTime:
+        default: Weekly maintenance start time (optional)
+
+Parameters:
+  DirectoryId:
+    AllowedPattern: ^d-[0-9a-f]{10}$
+    Description: Enter the directory ID of the AWS Managed Microsoft Active Directory (e.g. d-0123456789)
+    Type: String    
+  AutomaticBackupRetentionDays:
+    Default: 7
+    Description: Number of days to retain automatic daily backups (0 to 35 days)
+    MaxValue: 35
+    MinValue: 0
+    Type: Number
+  CopyTagsToBackups:
+    AllowedValues:
+    - '' 
+    - true
+    - false
+    Default: ''
+    Description: Stripe set of the files imported from a data repository
+    Type: String
+  DailyAutomaticBackupStartTime:
+    AllowedPattern: ^$|([01]\d|2[0-3]):?([0-5]\d)$
+    Description: Enter the daily automatic backup start time in hour:minute UTC format (e.g. 11:30pm = 23:30)
+    Type: String
+  FileSystemName:
+    Default: fsx-windows-workshop
+    AllowedPattern: ^$|(.*)$
+    Description: Name of file system - name value of key-value pair
+    Type: String     
+  SecurityGroupId:
+    Description: Select an existing security group id
+    Type: AWS::EC2::SecurityGroup::Id          
+  StorageCapacity:
+    Default: 300
+    Description: Storage capacity (GiB)
+    MaxValue: 64000
+    MinValue: 300
+    Type: Number
+  SubnetId:
+    Description: Select an existing subnet id
+    Type: AWS::EC2::Subnet::Id
+  ThroughputCapacity:
+    AllowedValues:
+    - 8
+    - 16
+    - 32
+    - 64
+    - 128
+    - 256
+    - 512
+    - 1024
+    - 2048
+    Default: 64
+    Description: Throughput capacity (MiB/s)
+    Type: String
+  WeeklyMaintenanceStartTime:
+    AllowedPattern: ^$|[1-7]:([01]\d|2[0-3]):?([0-5]\d)$
+    Description: Enter the weekly maintenance start time in day:hour:minute UTC format (e.g. Monday 11:30pm = 1:23:30)
+    Type: String
+
+Conditions:
+  CopyTagsToBackupsProvided:
+    !Not [ !Equals [ '', !Ref CopyTagsToBackups ] ]
+  DailyAutomaticBackupStartTimeProvided:
+    !Not [ !Equals [ '', !Ref DailyAutomaticBackupStartTime ] ]
+  WeeklyMaintenanceStartTimeProvided:
+    !Not [ !Equals [ '', !Ref WeeklyMaintenanceStartTime ] ]
+
+Resources:
+  WindowsFileSystem:
+    Type: AWS::FSx::FileSystem
+    Properties:
+      FileSystemType: WINDOWS
+      StorageCapacity: !Ref StorageCapacity
+      SubnetIds:
+        - !Ref SubnetId
+      SecurityGroupIds:
+        - !Ref SecurityGroupId
+      Tags:
+        - Key: Name
+          Value: !Ref FileSystemName
+      WindowsConfiguration:
+        ActiveDirectoryId: !Ref DirectoryId
+        AutomaticBackupRetentionDays: !Ref AutomaticBackupRetentionDays
+        CopyTagsToBackups: !If [ CopyTagsToBackupsProvided, !Ref CopyTagsToBackups, !Ref 'AWS::NoValue' ]
+        DailyAutomaticBackupStartTime: !If [ DailyAutomaticBackupStartTimeProvided, !Ref DailyAutomaticBackupStartTime, !Ref 'AWS::NoValue' ]
+        ThroughputCapacity: !Ref ThroughputCapacity
+        WeeklyMaintenanceStartTime: !If [ WeeklyMaintenanceStartTimeProvided, !Ref WeeklyMaintenanceStartTime, !Ref 'AWS::NoValue' ]
+
+Outputs:
+  FileSystemId:
+    Value: !Ref WindowsFileSystem

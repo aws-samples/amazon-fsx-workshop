@@ -1,0 +1,156 @@
+= Create DFS Namespace
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+== Summary
+
+This section will create a DFS Namespace.
+
+You can use standard Microsoft tools to create a new DFS Namespace for file shares on Amazon FSx for Windows File Server.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Connect to the Namespace servers
+
+IMPORTANT: Read through all steps below before continuing.
+
+. Open the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
+
+. *_Select_* *Running Instances*.
+
+. *_Select_* the radio button next to the instance with the name *Namespace Server 0*.
+
+. Copy the *Public DNS (IPv4)* name of the *Namespace Server 0* instance.
+
+. Launch your remote desktop application and create a new connection.
+
+. Use the DNS name copied above as the host name of the new connection.
+
+. Start a new remote desktop session to the new connection (you will retrieve the *user name* and *password* from *AWS Secrets Manager*).
+
+. Open the link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. *_Select_* the *Secret name* link for *Password-<GUID>*.
+
+. *_Scroll_* to the *Secret value* section and *_click_* the *Retrieve secret value* button.
+
+. Use the *Secret key/value* pairs of *username* and *password* as the credentials to authenticate to the *Namespace Server 0* instance for the remote desktop session.
+
+. *_Click_* *Start* >> *Windows PowerShell*.
+
+. Run the script below in the *Windows PowerShell* window.
++
+[source,bash]
+----
+$env:computername
+----
++
+. *_Copy_* and *_paste_* the *Computer name* or *Hostname* of *Namespace Server 0* to your favorite editor on your local machine. You will need this name in a few steps.
+
+. *_Repeat_* the steps above for *Namespace Server 1*.
+
+IMPORTANT: Repeat the steps above for *Namespace Server 1*. You must have the *Computer name* or *Hostname* of both *Namespace Server 0* and *Namespace Server 1* before continuing.
+
+=== Create DFS Namespace
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::create-dfs-namespace.gif[align="left", width=600]
+
+. *_Close_* the remote desktop session for *Namespace Server 1*.
+
+Complete the following steps from the remote desktop session for *Namespace Server 0*.
+
+. *_Click_* *Start*.
+
+. *_Type_* *dfsmgmt.msc*.
+
+. From the *DFS Management* Console, *_select_* *Action* >> *New Namespace...*.
+
+. *_Paste_* the computer name or hostname of *Namespace Server 0* in *Server:* text box and *_click_* *Next*.
+
+. *_Enter_* *corp* as the name of the namespace.
+
+. *_Click_* *Next*.
+
+. Accept the defaults of the *Namespace Type* window. *Domain-based namespace* and *Enable Windows Server 2008 mode* should both be selected.
+
+. *_Click_* *Next*.
+
+. *_Click_* *Create*.
+
+. *_Click_* *Close*.
+
+. *_Expand_* *Namespaces* and *_select_* the namespace *\\example.com\corp*.
+
+. From the *DFS Management* Console, *_select_* *Action* >> *New Namespace Server...*.
+
+. *_Paste_* the computer name or hostname of *Namespace Server 1* in *Server:* text box and *_click_* *Ok*.
+
+. *_Select_* the *Namespace Servers* tab and verify both namespace servers are listed.
+
+. From the *DFS Management* Console, *_select_* *Action* >> *New Folder...*.
+
+. *_Enter_* *share* in the Name: text box field and *_click_* *Add*.
+
+. *_Enter_* the UNC path of the default share of *Amazon FSx for Windows File Server 0* (e.g. \\fs-0123456789abcdef.example.com\share).
+
+. *_Click_* *Ok*.
+
+. *_Click_* *Ok*.
++
+You should now have a new folder named *share* listed under the *corp* namespace.
++
+. *_Follow_* the steps above and create new folders for the following shares:
++
+|===
+| *Folder name* | *Folder target*
+| data
+| UNC path of *data* share on *Amazon FSx for Windows File Server 0* (e.g. \\fs-0123456789abcdef.example.com\data)
+
+| finance
+| UNC path of *data* share on *Amazon FSx for Windows File Server 0* (e.g. \\fs-0123456789abcdef.example.com\finance)
+
+| sales
+| UNC path of *data* share on *Amazon FSx for Windows File Server 0* (e.g. \\fs-0123456789abcdef.example.com\sales)
+
+| marketing
+| UNC path of *data* share on *Amazon FSx for Windows File Server 0* (e.g. \\fs-0123456789abcdef.example.com\marketing)
+|===
+
+
+=== Access the new Namespace folders
+
+. *_Open_* a new *File Explorer* window.
+
+. Use UNC paths to connect to the newly created DFS Namespace folders (e.g. *\\example.com\corp\share*, *\\example.com\corp\data*, etc.).
+
+. Create new test files in the *\\example.com\corp\share* folder. *_Context-click_* >> *New* >> *Text Document*. Create a few different types of test files.
+
+. Experiment and create new test files in all Namespace folders.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::07-setup-dfs-replication.png[link=../07-setup-dfs-replication/, align="left",width=420]
+
+
+
+

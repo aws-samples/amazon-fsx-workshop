@@ -1,0 +1,115 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates the Amazon FSx for Windows File Server workshop environment.
+
+Metadata:
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Workshop Environment
+      Parameters:
+        - VpcCidr
+        - AvailabilityZones
+        - EmailAddress
+    ParameterLabels:
+      AvailabilityZones:
+        default: Availability Zones
+      EmailAddress:
+        default: Email Address
+      VpcCidr:
+        default: VPC CIDR
+
+Parameters:
+  AvailabilityZones:
+    Description: Select two (2) Availability Zones (AZ). One public subnet and one private subnet will be created in each AZ.
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  EmailAddress:
+    Description: The email address for CloudWatch alarm notification.
+    Type: String
+  VpcCidr:
+    AllowedValues: 
+    - 10.0.0.0/16
+    - 173.31.0.0/16
+    - 192.168.0.0/16
+    Default: 10.0.0.0/16
+    Description: Select the private IPv4 CIDR for the VPC.
+    Type: String
+
+Resources:
+  Vpc:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        AvailabilityZones:
+          !Join [ ',', !Ref AvailabilityZones ]
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/01-vpc.yaml
+  SecurityGroup:
+    DependsOn: [ Vpc ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        VpcId:
+          !GetAtt [ Vpc, Outputs.VpcId ]
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/02-security-group.yaml
+  ActiveDirectory:
+    DependsOn: [ SecurityGroup ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        SubnetId:
+          !Join [ ',', [ !GetAtt [ Vpc, Outputs.PublicSubnetId0 ], !GetAtt [ Vpc, Outputs.PublicSubnetId1 ] ] ]
+        VpcId:
+          !GetAtt [ Vpc, Outputs.VpcId ]
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/03-active-directory.yaml
+  FileSystem:
+    DependsOn: [ ActiveDirectory ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        DirectoryId:
+          !GetAtt [ ActiveDirectory, Outputs.DirectoryId ]
+        SecurityGroupId:
+          !GetAtt [ SecurityGroup, Outputs.FileSystemSecurityGroupId ]
+        SubnetId:
+          !GetAtt [ Vpc, Outputs.PrivateSubnetId0 ]
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/04-file-system.yaml
+  NamespaceServers:
+    DependsOn: [ FileSystem ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        DirectoryId:
+          !GetAtt [ ActiveDirectory, Outputs.DirectoryId ]
+        SecurityGroupId:
+          !GetAtt [ SecurityGroup, Outputs.WindowsSecurityGroupId ]
+        SubnetId:
+          !Join [ ',', [ !GetAtt [ Vpc, Outputs.PublicSubnetId0 ], !GetAtt [ Vpc, Outputs.PublicSubnetId1 ] ] ]
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/04-namespace-server.yaml
+  WindowsServer:
+    DependsOn: [ NamespaceServers ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        DirectoryId:
+          !GetAtt [ ActiveDirectory, Outputs.DirectoryId ]
+        SecurityGroupId:
+          !GetAtt [ SecurityGroup, Outputs.WindowsSecurityGroupId ]
+        SubnetId:
+          !GetAtt [ Vpc, Outputs.PublicSubnetId0 ]
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/04-windows-instance.yaml
+  Dashboard:
+    DependsOn: [ FileSystem ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        EmailAddress:
+          !Ref EmailAddress
+        FileSystemId:
+          !GetAtt [ FileSystem, Outputs.FileSystemId ]
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/05-dashboard.yaml
+
+
+

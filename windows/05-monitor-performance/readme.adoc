@@ -1,0 +1,82 @@
+= Monitor Performance
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+== Summary
+
+This section will monitor the performance of *Amazon FSx for Windows File Server 0*.
+
+
+== Duration
+
+NOTE: It will take approximately 10 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== CloudWatch dashboard
+
+IMPORTANT: Read through all steps below and watch the quick video.
+
+image::create-high-throughput-alarm.gif[align="left", width=600]
+
+. Open the link:https://console.aws.amazon.com/cloudwatch/[Amazon CloudWatch] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
+* Do you have an *Alarm* for *FSx*?
+* Did your email address receive an alarm notification?
+* What triggered the alarm?
+. *_Select_* *Dashboards* from the left navigation pane.
+. *_Select_* the link of the dashboard created as a part of the workshop environment.
++
+TIP: The name of the dashboard should be the region name (e.g. us-east-1), dash (-), file system id of *Amazon FSx for Windows File Server 0* (e.g. us-east-fs-0123456789abcdef).
+. *_Scroll_* through the dashboard and review all the widgets and their settings.
+. Notice how the vertical time line is in sync across all widgets. This makes it easy to correlate different metric values for a given point in time.
+. *_Zoom_* in on a widget by *_clicking_* and *_dragging_* over a period of time. Notice all widgets also zoom in for the period of time selected.
+. *_Reset_* zoom by *_clicking_* the blue magnifying glass in the top right of any widget.
+
+
+=== CloudWatch alarm
+
+IMPORTANT: Read through all steps below and watch the quick video before *_creating_* the alarm.
+
+image::create-high-throughput-alarm.gif[align="left", width=600]
+
+. *_Copy_* the file system id from the top right dashboard widget.
+. *_Click_* the *Maximize* button of the *Throughput (Bytes per second)* widget.
+. *_Click_* the *View in metrics* link (at the bottom left of the window).
+. *_Find_* the metric labeled *Total Data Throughput (B/s)* and *_click_* the *Create alarm* button in the actions column.
+. *_Scroll_* down to the *Conditions* section and in the *Define the threshold value* field *_enter_* 100000000. This will set an alarm condition that will trigger if the *Total Data Throughput (B/s)* is greater than 100 MB/s.
+. *_Click_* *Next*.
+. *_Scroll_* down to the *Notification* section and select the existing *SNS Topic* that was created as a part of the workshop environment.
++
+TIP: The name of the SNS topic should be the file system id of *Amazon FSx for Windows File Server 0* (e.g. fs-0123456789abcdef), -alarm-notification (e.g. fs-0123456789abcdef-alarm-notification).
++
+. *_Click_* *Next*.
+. In the *Alarm name* text box *_enter_* "High throughput alarm - " then *_paste_* the *file system id* you copied earlier (e.g. High throughput alarm - fs-0123456789abcdef).
+. *_Click_* *Next*.
+. *_Preview_* the alarm graph, make sure the red alarm line is at the 100M mark.
+. *_Scroll_* and *_review_* the *Conditions*, *Actions*, and *Name and description* sections.
+. *_Click_* *Create alarm*.
+. *_Wait_* a few minutes for the alarm state to transition from *Insufficient data* to *OK*.
+. *_Return_* to the previous workshop section *Test performance* and run a few more read and write performance tests against the file system. Make sure the duration of the test is at least 2 minutes.
+* Did your *High throughput alarm* get triggered?
+* Did your email address receive an alarm notification?
+. From the remote desktop session window of the *Windows Server 0* instance, delete all the files you created during the previous workshop section *Test performance*. *_Wait_* a few minutes (approx. 5).
+* What happened to the alarm state of the *Low free storage capacity* alarm?
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::06-create-dfs-namespace.png[link=../06-create-dfs-namespace/, align="left",width=420]
+
+
+
+
