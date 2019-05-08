@@ -120,53 +120,6 @@ When using programs that use GNU Parallel to process data for publication
 please cite as described in 'parallel --bibtex'.
 ```
 
-#### Verify smallfile
-
-- Run the following command
-
-```sh
-python ~/smallfile/smallfile_cli.py
-```
-
-- The output should be similar to this:
-
-
-```sh
-                                 version : 3.1
-                           hosts in test : None
-                   top test directory(s) : ['/var/tmp/smf']
-                               operation : cleanup
-                            files/thread : 200
-                                 threads : 2
-           record size (KB, 0 = maximum) : 0
-                          file size (KB) : 64
-                  file size distribution : fixed
-                           files per dir : 100
-                            dirs per dir : 10
-              threads share directories? : N
-                         filename prefix :
-                         filename suffix :
-             hash file number into dir.? : N
-                     fsync after modify? : N
-          pause between files (microsec) : 0
-             minimum directories per sec : 50
-                    finish all requests? : Y
-                              stonewall? : Y
-                 measure response times? : N
-                            verify read? : Y
-                                verbose? : False
-                          log to stderr? : False
-                           ext.attr.size : 0
-                          ext.attr.count : 0
-host = ip-172-31-21-162,thr = 00,elapsed = 0.604281,files = 200,records = 0,status = ok
-host = ip-172-31-21-162,thr = 01,elapsed = 0.604252,files = 200,records = 0,status = ok
-total threads = 2
-total files = 400
-total IOPS = 0
-100.00% of requested files processed, minimum is  70.00
-elapsed time =     0.604
-files/sec = 661.943755
-```
 
 #### Verify fio
 
@@ -178,7 +131,7 @@ fio --version
 - The output should be similar to this:
 
 ```sh
-fio-3.12-20-g4cf3
+fio-3.13-37-g0513
 ```
 
 
@@ -241,13 +194,11 @@ Finished            : Mon Nov 19 02:02:51 2018
 
 > Complete the following steps in your SSH session connected to the **Lustre client - FSx Workshop** instance
 
-- Run the following commands to install Lustre client 2.10.5
+- Run the following commands to install Lustre client 2.10.6
 
 ```sh
-wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/el7.5.1804/client/RPMS/x86_64/kmod-lustre-client-2.10.5-1.el7.x86_64.rpm
-wget https://downloads.whamcloud.com/public/lustre/lustre-2.10.5/el7.5.1804/client/RPMS/x86_64/lustre-client-2.10.5-1.el7.x86_64.rpm
-
-sudo yum localinstall -y *lustre-client-2.10.5*.rpm
+sudo yum -y install https://downloads.whamcloud.com/public/lustre/lustre-2.10.6/el7/client/RPMS/x86_64/kmod-lustre-client-2.10.6-1.el7.x86_64.rpm
+sudo yum -y install https://downloads.whamcloud.com/public/lustre/lustre-2.10.6/el7/client/RPMS/x86_64/lustre-client-2.10.6-1.el7.x86_64.rpm
 
 ```
 
