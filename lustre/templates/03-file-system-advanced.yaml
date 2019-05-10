@@ -1,0 +1,103 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates an Amazon FSx for Lustre
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: File system configuration
+      Parameters:
+        - Name
+        - StorageCapacity
+        - SubnetId
+        - SecurityGroupId
+        - ImportPath
+        - ExportPath
+        - ImportedFileChunkSize
+        - WeeklyMaintenanceStartTime
+    ParameterLabels:
+      ExportPath:
+        default: Export path (optional)
+      ImportedFileChunkSize:
+        default: Imported file chunk size (MiB) (optional)
+      ImportPath:
+        default: Import path (optional)
+      Name:
+        default: Name tag value
+      SecurityGroupId:
+        default: Security group
+      StorageCapacity:
+        default: Storage capacity (GiB)
+      SubnetId:
+        default: Subnet
+      WeeklyMaintenanceStartTime:
+        default: Weekly maintenance start time (optional)
+
+Parameters:    
+  ExportPath:
+    AllowedPattern: ^$|(s3://)([a-z0-9.-]*)$
+    Description: Export path e.g. s3://my-bucket/export-prefix. Optionally include only if Import Path value is provided. If included, export bucket must match import bucket.
+    Type: String
+  ImportedFileChunkSize:
+    Description: Stripe set of the files imported from a data repository. Optionally include only if Import Path value is provided. Allowed values 1 - 512000.
+    Type: String
+  ImportPath:
+    AllowedPattern: ^$|(s3://)([a-z0-9.-]*)$
+    Default: s3://nasanex
+    Description: Import path e.g. s3://my-bucket/import-prefix
+    Type: String
+  Name:
+    AllowedPattern: ^$|([A-Za-z0-9+-=._:/ ]{0,256})$
+    Description: Name of file system - name value of key-value pair
+    Type: String     
+  SecurityGroupId:
+    Description: Select an existing security group id
+    Type: AWS::EC2::SecurityGroup::Id          
+  StorageCapacity:
+    Default: 18000
+    Description: Storage capacity of file system in increments of 3600 GiBs
+    MaxValue: 100200
+    MinValue: 3600
+    Type: Number
+  SubnetId:
+    Description: Select an existing subnet id
+    Type: AWS::EC2::Subnet::Id
+  WeeklyMaintenanceStartTime:
+    AllowedPattern: ^$|[1-7]:([01]\d|2[0-3]):?([0-5]\d)$
+    Description: Enter the weekly maintenance start time in day:hour:minute UTC format (e.g. Monday 11:30pm = 1:23:30)
+    Type: String    
+
+Conditions:
+  ExportPathProvided:
+    !Not [ !Equals [ '', !Ref ExportPath ] ]
+  ImportedFileChunkSizeProvided:
+    !Not [ !Equals [ '', !Ref ImportedFileChunkSize ] ]
+  ImportPathProvided:
+    !Not [ !Equals [ '', !Ref ImportPath ] ]
+  WeeklyMaintenanceStartTimeProvided:
+    !Not [ !Equals [ '', !Ref WeeklyMaintenanceStartTime ] ]
+
+Resources:
+  FileSystem:
+    Type: AWS::FSx::FileSystem
+    Properties:
+      FileSystemType: LUSTRE
+      StorageCapacity: !Ref StorageCapacity
+      SubnetIds:
+        - !Ref SubnetId
+      SecurityGroupIds:
+        - !Ref SecurityGroupId
+      Tags:
+        - Key: Name
+          Value: !Ref FileSystemName
+      LustreConfiguration:
+        ExportPath: !If [ ExportPathProvided, !Ref ExportPath, !Ref 'AWS::NoValue' ]
+        ImportPath: !If [ ImportPathProvided, !Ref ImportPath, !Ref 'AWS::NoValue' ]
+        ImportedFileChunkSize: !If [ ImportedFileChunkSizeProvided, !Ref ImportedFileChunkSize, !Ref 'AWS::NoValue' ]
+        WeeklyMaintenanceStartTime: !If [ WeeklyMaintenanceStartTimeProvided, !Ref WeeklyMaintenanceStartTime, !Ref 'AWS::NoValue' ]
+
+Outputs:
+  FileSystemId:
+    Value: !Ref FileSystem

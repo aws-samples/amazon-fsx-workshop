@@ -10,7 +10,7 @@ This is a set of workshop designed for architects and engineers who would like t
 Click the button below to access Amazon FSx workshops.
 
 
-//image::fsx-lustre-workshop-logo.png[link=lustre/, align="left",width=420]
+image::fsx-lustre-workshop-logo.png[link=lustre/, align="left",width=420]
 
 image::fsx-windows-workshop-logo.png[link=windows/, align="left",width=420]
 

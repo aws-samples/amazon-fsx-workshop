@@ -1,0 +1,167 @@
+= Examine data repository integration
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+== Summary
+
+This section will examine Amazon FSx for Lustre data repository integration with Amazon S3.
+
+The workshop environment created an FSx for Lustre file system with a data repository integrated with the "nasanex" bucket in the US West (Oregon) region. link:https://registry.opendata.aws/nasanex/[NASA NEX] is a part of the link:https://registry.opendata.aws/[Registry of Open Data on AWS] project and is a collection of Earth science datasets maintained by NASA, including climate change projections and satellite images of the Earth's surface.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below before continuing.
+
+=== Connect to *Linux Instance 0*
+
+image::connect-linux-instance-0.gif[align="left", width=600]
+
+
+. Open the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and Amazon EC2 console.
++
+. Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
+. *_Select_* the EC2 instance created by the CloudFormation template. The name is "*Linux Instance 0*".
+. *_Click_* the *Connect* button.
+. *_Copy_* the SSH command and *_click_* *Close*.
+. *_Open_* your *terminal* application and *_paste_* the SSH command in a terminal window.
+. *_Follow_* the prompts to SSH into the instance.
+
+=== Examine *s3://nasanex* data repository integration
+
+*_Copy_*, *_paste_*, then *_execute_* the shell commands below in the SSH terminal session of *Linux Instance 0* to answer the following questions:
+
+. Is the FSx for Lustre file system mounted?
++
+[source,bash]
+----
+mount -t lustre
+
+----
++
+. How long does it take to list the entire file system?
++
+[source,bash]
+----
+time lfs find /mnt/fsx
+
+----
++
+. What file types did you see?
+. How many files?
++
+[source,bash]
+----
+time lfs find /mnt/fsx --type f | wc -l
+
+----
++
+. How many directories?
++
+[source,bash]
+----
+time lfs find /mnt/fsx --type d | wc -l
+
+----
++
+. How many small files (< 512 KiB)?
++
+[source,bash]
+----
+time lfs find /mnt/fsx --type f --size -512k | wc -l
+
+----
++
+. How many large files (> 100 MiB)?
++
+[source,bash]
+----
+time lfs find /mnt/fsx --type f --size +100M | wc -l
+
+----
++
+. How many .nc, .hdf, .tif, .gz files?
++
+[source,bash]
+----
+time lfs find /mnt/fsx --type f --name *.nc | wc -l
+time lfs find /mnt/fsx --type f --name *.hdf | wc -l
+time lfs find /mnt/fsx --type f --name *.tif | wc -l
+time lfs find /mnt/fsx --type f --name *.gz | wc -l
+
+----
++
+. How much metadata (MDT) has been loaded into the file system?
++
+How much data (all the OSTs) has been loaded into the file system?
++
+How much data storage capacity is available?
++
+[source,bash]
+----
+time lfs df -h
+
+----
+
+
+=== Verify your results
+
+The results of your queries should match the following:
+
+[cols="3,10"]
+|===
+| Query | Results
+
+| Is the FSx for Lustre file system mounted?
+| 10.0.1.193@tcp:/fsx on /mnt/fsx type lustre (rw,lazystatfs) (you will have a different IP address)
+
+| How long does it take to list the entire file system?
+| ~real	0m47.373s
+
+| What file types did you see?
+| .hdf  .nc  .gz  .tif  .json  .md5  .txt  .pdf
+
+| How many files?
+| 373572
+
+| How many directories?
+| 42242
+
+| How many small files (< 512 KiB)?
+| 23692
+
+| How many large files (> 100 MiB)?
+| 169617
+
+| How many .nc, .hdf, .tif, .gz files?
+| .hdf = 207552; .tif = 11095; .nc = 87002; .gz = 42009
+
+| How much storage is used by the metadata target (MDT)?
+| 934.1M
+
+| How much storage is used by all the object storage targets (OSTs)?
+| 27.M
+
+| How much data storage capacity is available?
+| 6.6 T
+|===
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::03-load-data.png[link=../03-load-data/, align="left",width=420]
+
+
+
+

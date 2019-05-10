@@ -1,0 +1,119 @@
+= Create Workshop Environment
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+== Summary
+
+This section will create a new environment (see diagram below) that you will use for the workshop.
+
+== Duration
+
+NOTE: It will take approximately 15 minutes for CloudFormation to automatically create your workshop environment, after completing the *Step-by-step Guide* below.
+
+== Diagram
+
+image::fsx-lustre-workshop-environment-architecture.png[align="left", width=600]
+
+
+== Step-by-step Guide
+
+=== CloudFormation
+
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::create-environment.gif[align="left", width=600]
+
+
+
+. Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin.
++
+Amazon FSx is currently available in 6 regions.
++
+File system creation is currently not supported in the following Availability Zones:
++
+[cols="1,1,2", options="header"]
+|===
+|Region | Availability Zone ID | Mapping
+| *N. Virginia* (us-east-1)
+| *use1-az3*
+| Open the link:https://us-east-1.console.aws.amazon.com/vpc/home?region=us-east-1#subnets:[us-east-1 VPC] console for AZ mapping.
+
+| *Oregon* (us-west-2)
+| *usw2-az4*
+| Open the link:https://us-west-2.console.aws.amazon.com/vpc/home?region=us-west-2#subnets:[us-west-2 VPC] console for AZ mapping.
+
+| *Sydney* (ap-southeast-2)
+| *apse2-az3*
+| Open the link:https://ap-southeast-2.console.aws.amazon.com/vpc/home?region=ap-southeast-2#subnets:[ap-southeast-2 VPC] console for AZ mapping.
+
+| *Tokyo* (ap-northeast-1)
+| *apne1-az3*
+| Open the link:https://ap-northeast-1.console.aws.amazon.com/vpc/home?region=ap-northeast-1#subnets:[ap-northeast-1 VPC] console for AZ mapping.
+|===
++
+When selecting availability zones in the CloudFormation create stack wizard, take care not to select an availability zone mapped to one of the Availability Zone IDs listed above.
++
+TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS Console.
++
+|===
+|Region | Launch template with a new VPC
+| *N. Virginia* (us-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+
+| *Ohio* (us-east-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+
+| *Oregon* (us-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+
+| *Ireland* (eu-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+
+| *Sydney* (ap-southeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+
+| *Tokyo* (ap-northeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+|===
++
+. Accept the defaults on the *Prerequisite - Prepare template* page and *_click_* *Next*.
++
+. Accept the default stack name and *_click_* *Next*. *_Enter_* values for all parameters.
++
+[cols="3,10"]
+|===
+| *VPC CIDR*
+a| Select a CIDR that will be used for the VPC.
+
+| *Availability Zones*
+a| Select two (2) availability zones for your VPC. An Amazon EC2 instance and the FSx file system will be created in the *first* availability zone.
+
+| *Key Name*
+a| Select an EC2 key name. This key name is associated with a key pair used to securely connect (SSH) to the EC2 instance.
+
+| *Email address*
+a| Enter the email address that will receive notifications for low free storage capacity CloudWatch alarms. Important! An AWS Notification Subscription Confirmation email will be sent to this email address when the CloudFormation stack is created. You must take the action described in that email to confirm the SNS topic subscription before the email address can start receiving alarm notifications.
+|===
++
+. After you have entered values for all parameters, *_click_* *Next*.
+. *_Accept_* the default values of the *Configure stack options* and *Advanced options* sections and *_click_* *Next*.
+. *_Review_* the CloudFormation stack settings.
+. *_Click_* both checkboxes in the blue *Capabilities* box at the bottom of the page.
++
+image::cloudformation-capabilities.png[align="left", width=420]
++
+. *_Click_* *Create stack*.
+
+In approximately 15 minutes an email will be sent to the email address entered above (see sample  below). Open the email message and *_click_* the *Confirm subscription* link. This will allow Amazon SNS to send CloudWatch alarm notifications to this email address during the workshop.
+
+image::aws-notification-subscription-email.png[align="left",width=420]
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::02-examine-data-repository-integration.png[link=../02-examine-data-repository-integration/, align="right",width=420]
+

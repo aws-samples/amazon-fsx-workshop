@@ -1,0 +1,79 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates Security Groups
+
+Metadata:
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: AWS Parameters
+      Parameters:
+        - IngressCidr
+        - VpcId
+    ParameterLabels:
+      IngressCidr:
+        default: Ingress CIDR Block
+      VpcId:
+        default: VPC ID
+
+Parameters:
+  IngressCidr:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    Description: The CIDR IP range that is permitted to access the instances. Note - a value of 0.0.0.0/0 will allow access from ANY IP address.
+    Type: String
+    Default: 0.0.0.0/0
+  VpcId:
+    AllowedPattern: ^(vpc-)([a-f0-9]{8,17})$
+    Description: The VPC ID of an existing VPC.
+    Type: AWS::EC2::VPC::Id
+
+Resources:
+  Ec2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Amazon EC2 instances
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref IngressCidr
+      Tags:
+        - Key: Name
+          Value: "EC2 security group" 
+      VpcId:
+        !Ref VpcId
+  Ec2SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      GroupId: !Ref Ec2SecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref Ec2SecurityGroup
+  FileSystemSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Amazon FSx
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 988
+          ToPort: 988
+          SourceSecurityGroupId: !Ref Ec2SecurityGroup
+      Tags:
+        - Key: Name
+          Value: "File system security group"     
+      VpcId:
+        !Ref VpcId
+  FileSystemSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      GroupId: !Ref FileSystemSecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref FileSystemSecurityGroup
+
+Outputs:
+  Ec2SecurityGroupId:
+    Value: !Ref Ec2SecurityGroup
+  FileSystemSecurityGroupId:
+    Value: !Ref FileSystemSecurityGroup
