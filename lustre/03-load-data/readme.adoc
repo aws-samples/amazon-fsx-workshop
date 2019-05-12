@@ -86,13 +86,23 @@ sys     0m0.108s
 ----
 +
 [qanda]
-. Where did the last command get it's data?
-The cache on *Linux Instance 0*. You can verify this by opening a second SSH terminal session window to this same instance and run `nload -u M` to see real-time network throughput of the instance and re-run the command. To force the read operation to go back to FSx for Lustre, drop the cache on *Linux Instance 0* and re-run the command.
+. The last command returned results from where? S3? FSx? Local cache?
+The local cache on *Linux Instance 0*. You can verify this by opening a second SSH terminal session window to the same instance and run `nload -u M` to see real-time network throughput of the instance and re-run the command. 
++
+. *_Re-run_* the same **"time cat ${file}  >/dev/shm/fsx"** command and see how long it takes? My results are below.
++
+[source,bash]
+----
+time cat ${file}  >/dev/shm/fsx
+
+----
++
+To force this read operation to go back to FSx for Lustre, drop the local cache on *Linux Instance 0* and re-run the command.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-time cat ${file} >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
+time cat ${file} >/dev/shm/fsx
 
 ----
 +
