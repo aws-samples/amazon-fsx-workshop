@@ -38,13 +38,18 @@ time lfs find /mnt/fsx --type f --name *.tif | head -100
 ----
 +
 . *_Copy_* the full path of one of the .tif files and *_replace_* the *_FILE_* placeholder.
-*_Execute_* the script.
+*_Execute_* the command.
++
+[source,bash]
+----
+file=FILE # e.g. file=/mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+
+----
 +
 . How large is the file? Run an ls -la against the file to find out the size.
 +
 [source,bash]
 ----
-file=FILE # e.g. file=/mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
 time ls -lah ${FILE} 
 
 ----
