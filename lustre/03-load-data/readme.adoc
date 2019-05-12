@@ -118,17 +118,9 @@ sys     0m0.170s
 
 === Bulk load data
 
-Complete these steps from two SSH terminal session windows connected to *Linux Instance 0*.
+Complete these steps from the two SSH terminal session windows you have opened to *Linux Instance 0*.
 
-. Open two (2) SSH terminal session windows connected to *Linux Instance 0*.
-+
-Start `*nload*` in one of the SSH terminal session windows.
-+
-[source,bash]
-----
-nload -u M
-
-----
+. Keep one SSH terminal session window running *_nload -u M_*
 +
 *_Copy_* the scripts below and *_execute_* them in the other SSH terminal session window.
 +
