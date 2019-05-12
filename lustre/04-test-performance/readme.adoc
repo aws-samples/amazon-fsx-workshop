@@ -69,6 +69,7 @@ sudo python ~/smallfile/smallfile_cli.py \
 --files-per-dir ${file_count} \
 --top ${path} &
 
+
 ----
 +
 . Read ~316200 files
@@ -88,6 +89,7 @@ sudo python ~/smallfile/smallfile_cli.py \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
 --top ${path} &
+
 
 ----
 +
@@ -109,6 +111,7 @@ sudo python ~/smallfile/smallfile_cli.py \
 --files-per-dir ${file_count} \
 --top ${path} &
 
+
 ----
 
 
@@ -127,6 +130,8 @@ threads=1
 sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
 
 time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+
+
 ----
 +
 [source,bash]
@@ -140,6 +145,8 @@ threads=2
 sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
 
 time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+
+
 ----
 +
 [source,bash]
@@ -153,6 +160,8 @@ threads=3
 sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
 
 time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+
+
 ----
 
 === ior tests
@@ -165,6 +174,8 @@ job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 
 cd /mnt/fsx
 time seq 1 2 | parallel --will-cite -j2 'ior -b 32g -t 8m -w -r -F -B -o /mnt/fsx/${job_name}{}.txt' &
+
+
 ----
 
 == Next section
