@@ -124,7 +124,7 @@ sudo python ~/smallfile/smallfile_cli.py \
 job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 bs=1024K
 count=4096
-sync=oflag=sync
+sync=conv=fsync
 threads=1
 
 sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
@@ -139,7 +139,7 @@ time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero 
 job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 bs=1024K
 count=4096
-sync=oflag=sync
+sync=conv=fsync
 threads=2
 
 sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
@@ -154,8 +154,8 @@ time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero 
 job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 bs=1024K
 count=4096
-sync=oflag=sync
-threads=3
+sync=conv=fsync
+threads=4
 
 sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
 
