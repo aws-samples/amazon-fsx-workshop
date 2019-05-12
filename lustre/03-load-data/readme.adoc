@@ -139,8 +139,7 @@ threads=36
 time lfs find /mnt/fsx/CMIP5 --type f | parallel --will-cite -j ${threads} sudo lfs hsm_restore {}
 
 ----
-. *_Monitor_* the network throughput of the instance from the other SSH terminal window running `*nload*`. These objects are not copied through the instance from S3 to the file system. The GET API is called in parallel to copy data directly from S3 to the OSTs.
-
+. *_Monitor_* the network throughput of the instance from the other SSH terminal window running `*nload*`. These objects are not copied through the instance from S3 to FSx. The GET API copies data directly from S3 to FSx (directly from S3 to all Lustre OSTs in parallel).
 
 . Open the link:https://console.aws.amazon.com/cloudwatch/[Amazon CloudWatch] console.
 +
