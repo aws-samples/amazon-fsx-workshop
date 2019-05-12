@@ -50,7 +50,7 @@ file=FILE # e.g. file=/mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.
 +
 [source,bash]
 ----
-time ls -lah ${FILE} 
+time ls -lah ${file} 
 
 ----
 +
@@ -64,7 +64,7 @@ My results are below. The file I'm using is 183 MB.
 +
 [source,bash]
 ----
-time cat ${FILE}  >/dev/shm/fsx
+time cat ${file}  >/dev/shm/fsx
 
 ----
 +
@@ -76,7 +76,7 @@ user    0m0.000s
 sys     0m0.152s
 ----
 +
-. *_Re-run_* the same **"time cat ${FILE}  >/dev/shm/fsx"** command and see how long it takes? My results are below.
+. *_Re-run_* the same **"time cat ${file}  >/dev/shm/fsx"** command and see how long it takes? My results are below.
 +
 [source,bash]
 ----
@@ -92,7 +92,7 @@ The cache on *Linux Instance 0*. You can verify this by opening a second SSH ter
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-time cat ${FILE} >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
+time cat ${file} >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
 
 ----
 +
