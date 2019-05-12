@@ -25,9 +25,9 @@ IMPORTANT: Read through all steps below before continuing.
 
 Complete these steps from the SSH terminal session window connected to *Linux Instance 0*.
 
-*_Copy_* the scripts below and *_paste_* it into your favorite text editor.
+*_Copy_* the commands below and *_paste_* it into your favorite text editor.
 *_Copy_* the full path of one of the .tif files and *_replace_* the *_FILE_* placeholder.
-*_Execute_* the script
+*_Execute_* the commands.
 
 . Generate a list of some .tif files
 +
@@ -44,7 +44,8 @@ time lfs find /mnt/fsx --type f --name *.tif | head -100
 +
 [source,bash]
 ----
-time ls -lah FILE # e.g. time ls -lah /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+file=FILE # e.g. file=/mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+time ls -lah ${FILE} 
 
 ----
 +
@@ -58,7 +59,7 @@ My results are below. The file I'm using is 183 MB.
 +
 [source,bash]
 ----
-time cat FILE >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
+time cat ${FILE}  >/dev/shm/fsx
 
 ----
 +
@@ -70,7 +71,7 @@ user    0m0.000s
 sys     0m0.152s
 ----
 +
-. *_Re-run_* the same **"time cat..."** command and see how long it takes? My results are below.
+. *_Re-run_* the same **"time cat ${FILE}  >/dev/shm/fsx"** command and see how long it takes? My results are below.
 +
 [source,bash]
 ----
@@ -86,7 +87,7 @@ The cache on *Linux Instance 0*. You can verify this by opening a second SSH ter
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-time cat FILE >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
+time cat ${FILE} >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
 
 ----
 +
