@@ -53,7 +53,7 @@ Resources:
                       "width": 9,
                       "height": 6,
                       "properties": {
-                          "markdown": "\n# Amazon FSx file system: ',!Ref 'FileSystemId','\n## Region: ',!Ref 'AWS::Region','\n\nDashboard: [', !Join [ '_', [ !Ref 'AWS::Region', !Ref FileSystemId ] ],'](#dashboards:name=', !Join [ '_', [ !Ref 'AWS::Region', !Ref FileSystemId ] ],')\n\n![FSx_logo](https://s3.amazonaws.com/aws-us-east-1/amazon-fsx-tutorial/Amazon-FSx-for-Windows-File-Server.png)\n"
+                          "markdown": "\n# Amazon FSx file system: ',!Ref 'FileSystemId','\n## Region: ',!Ref 'AWS::Region','\n\nDashboard: [', !Join [ '_', [ !Ref 'AWS::Region', !Ref FileSystemId ] ],'](#dashboards:name=', !Join [ '_', [ !Ref 'AWS::Region', !Ref FileSystemId ] ],')\n\n![FSx_logo](https://s3.amazonaws.com/amazon-fsx/workshop/windows/resources/images/fsx-for-windows-file-server-icon.png)\n"
                       }
                   },
                   {
@@ -235,6 +235,6 @@ Resources:
       MetricName: FreeStorageCapacity
       Namespace: AWS/FSx
       Period: 60
-      Statistic: Minimum
+      Statistic: Sum
       Threshold: !Ref LowFreeStorageCapacityThreshold
       TreatMissingData: missing
