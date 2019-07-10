@@ -67,8 +67,17 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 | *Oregon* (us-west-2)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=fsx-windows-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/00-fsx-workshop.yaml]
 
+| *Frankfurt* (eu-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=fsx-windows-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/00-fsx-workshop.yaml]
+
 | *Ireland* (eu-west-1)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=fsx-windows-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/00-fsx-workshop.yaml]
+
+| *London* (eu-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=fsx-windows-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/00-fsx-workshop.yaml]
+
+| *Singapore* (ap-southeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=fsx-windows-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/00-fsx-workshop.yaml]
 
 | *Sydney* (ap-southeast-2)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=fsx-windows-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/windows/templates/00-fsx-workshop.yaml]
