@@ -46,8 +46,8 @@ $RestoredFSComputerName = (Resolve-DnsName ${RestoredFSDnsName} -Type CNAME).Nam
 +
 [source,bash]
 ----
-$Group = "Group1" # e.g. "ReplicationGroup"
-$Folder = "Folder1" # e.g. "ReplicatedFolder"
+$Group = "Group" # e.g. "ReplicationGroup"
+$Folder = "Folder" # e.g. "ReplicatedFolder"
 $FirstFSReplicationPath = "D:\Share"
 $RestoredFSReplicationPath = "D:\Share"
 
