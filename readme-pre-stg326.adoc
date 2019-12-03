@@ -9,8 +9,14 @@ This is a set of workshop designed for architects and engineers who would like t
 
 Click the button below to access Amazon FSx workshops.
 
-image::fsx-windows-stg326.png[link=stg326/, align="left",width=420]
 
+image::fsx-lustre-workshop-logo.png[link=lustre/, align="left",width=420]
+
+image::fsx-windows-workshop-logo.png[link=windows/, align="left",width=420]
+
+
+
+NOTE: You will incur charges as you go through these workshops as it will exceed the link:http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-limits.html[limits of AWS free tier].
 
 === Participation
 
