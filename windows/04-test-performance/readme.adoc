@@ -9,12 +9,12 @@
 
 This section will test the performance of *Amazon FSx for Windows File Server 0*.
 
-There are many disk performance tools out there. We have pre-installed link:https://aka.ms/diskspd[DiskSpd] and link:https://bluestop.org/fio/[fio] on the *Windows Instance 0* instance. If you are familiar with another tool and would prefer using it to test performance, feel free to download and use it.
+There are many disk performance tools out there. We have pre-installed link:https://aka.ms/diskspd[DiskSpd] on the *Windows Instance 0* instance. If you are familiar with another tool and would prefer using it to test performance, feel free to download and use it.
 
 
 == Duration
 
-NOTE: It will take approximately 30 minutes to complete this section.
+NOTE: It will take approximately 20 minutes to complete this section.
 
 
 == Step-by-step Guide
@@ -129,109 +129,6 @@ a| Disables both software caching and hardware write caching.
 
 * What different parameters did you test?
 * How did the different parameter options alter the results?
-
-=== fio read tests
-
-. From the remote desktop session to *Windows Instance 0*, *_open_* a PowerShell window.
-+
-IMPORTANT: This section assumes that *Amazon FSx for Windows File Server 0* is mapped as the *Z:/* drive. If your *Windows Instance 0* does not have a mapped *Z:/* drive, map *Amazon FSx for Windows File Server 0* as the *Z:/* drive (see the previous section for step-by-step instructions).
-+
-. Run the fio script below to test read performance of the mapped **Z:** drive
-+
-```sh
-$random = $(Get-Random)
-C:\Tools\fio-3.13-x64\fio --directory Z\:\\ --randrepeat=1 --direct=1 --name=${env:computername}-$random.dat --numjobs=1 --bs=64K --iodepth=32 --size=1024M --readwrite=read --rwmixread=100 --thread --time_based --runtime=120
-```
-+
-While the script is running, open *Task Explorer* and monitor network performance (e.g. Task Explorer >> Performance (tab) >> Ethernet).
-+
-* What was the peak read throughput?
-* What was the average read throughput?
-* What was the average IOPS?
-* How many GB did you read in 120 seconds?
-+
-. Experiment with different fio parameter settings. Use the table below as a guide. Test with direct I/O enabled or disabled (--direct), different block sizes (--bs), number of outstanding I/O requests (--iodepth), number of jobs (--numjobs), random read, random write, sequential read, sequential write (--readwrite), and mixture of reads and writes (--rwmixread).
-
-+
-[cols="3,10"]
-|===
-| Parameter | Description
-
-| `--direct=[0\|1]`
-a| Duration in seconds.
-
-| `--bs=<size>[K\|M\|G]`
-a| Block size in bytes or KiB, MiB, or GiB (default = 64K).
-
-| `--numjobs=<count>`
-a| Number of clones (processes/threads performing the same workload) of this job. Default: 1.
-
-| `--readwrite=[read\|write\|randread\|randwrite]`
-a| Type of I/O pattern (read = sequential read; write = sequential write; randread = random read; randwrite = random write).
-
-| `--iodepth=<count>`
-a| Number of I/O units to keep in flight against the file.
-
-| `--rwmixread=<percent>`
-a| Percentage of a mixed workload that should be reads. The outstanding percentage will be writes.
-
-|===
-+
-
-* What different parameters did you test?
-* How did the different parameter options alter the results?
-
-=== fio write tests
-
-. From the remote desktop session to *Windows Instance 0*, *_open_* a PowerShell window.
-+
-IMPORTANT: This section assumes that *Amazon FSx for Windows File Server 0* is mapped as the *Z:/* drive. If your *Windows Instance 0* does not have a mapped *Z:/* drive, map *Amazon FSx for Windows File Server 0* as the *Z:/* drive (see the previous section for step-by-step instructions).
-+
-. Run the fio script below to test write performance of the mapped **Z:** drive
-+
-```sh
-$random = $(Get-Random)
-C:\Tools\fio-3.13-x64\fio --directory Z\:\\ --randrepeat=1 --direct=1 --name=${env:computername}-$random.dat --numjobs=1 --bs=64K --iodepth=32 --size=1024M --readwrite=read --rwmixread=0 --thread --time_based --runtime=120
-```
-+
-While the script is running, open *Task Explorer* and monitor network performance (e.g. Task Explorer >> Performance (tab) >> Ethernet).
-+
-* What was the peak write throughput?
-* What was the average write throughput?
-* What was the average IOPS?
-* How many GB did you write in 120 seconds?
-+
-. Experiment with different fio parameter settings. Use the table below as a guide. Test with direct I/O enabled or disabled (--direct), different block sizes (--bs), number of outstanding I/O requests (--iodepth), number of jobs (--numjobs), random read, random write, sequential read, sequential write (--readwrite), and mixture of reads and writes (--rwmixread).
-
-+
-[cols="3,10"]
-|===
-| Parameter | Description
-
-| `--direct=[0\|1]`
-a| Duration in seconds.
-
-| `--bs=<size>[K\|M\|G]`
-a| Block size in bytes or KiB, MiB, or GiB (default = 64K).
-
-| `--numjobs=<count>`
-a| Number of clones (processes/threads performing the same workload) of this job. Default: 1.
-
-| `--readwrite=[read\|write\|randread\|randwrite]`
-a| Type of I/O pattern (read = sequential read; write = sequential write; randread = random read; randwrite = random write).
-
-| `--iodepth=<count>`
-a| Number of I/O units to keep in flight against the file.
-
-| `--rwmixread=<percent>`
-a| Percentage of a mixed workload that should be reads. The outstanding percentage will be writes.
-
-|===
-+
-
-* What different parameters did you test?
-* How did the different parameter options alter the results?
-
 
 == Next section
 

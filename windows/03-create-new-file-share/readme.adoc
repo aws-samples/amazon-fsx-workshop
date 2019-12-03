@@ -126,7 +126,7 @@ $FileSystem0DnsName = "file_system_0_dns_name" # e.g. "fs-0123456789abcdef.examp
 | finance
 | D:\finance
 | Yes
-| Administrators have full access; other users have no access
+| Administrators have full access; other users have read-only access
 
 | sales
 | D:\sales
