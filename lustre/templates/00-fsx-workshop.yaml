@@ -12,12 +12,12 @@ Metadata:
         default: Workshop Environment
       Parameters:
         - VpcCidr
-        - AvailabilityZones
+        - AvailabilityZone
         - KeyName
         - EmailAddress
     ParameterLabels:
-      AvailabilityZones:
-        default: Availability Zones
+      AvailabilityZone:
+        default: Availability Zone
       KeyName:
         default: EC2 key pair
       EmailAddress:
@@ -26,9 +26,9 @@ Metadata:
         default: VPC CIDR
 
 Parameters:
-  AvailabilityZones:
-    Description: Select two (2) Availability Zones (AZ). One public subnet and one private subnet will be created in each AZ.
-    Type: List<AWS::EC2::AvailabilityZone::Name>
+  AvailabilityZone:
+    Description: Select one (1) Availability Zone (AZ). One public subnet and one private subnet will be created in each AZ.
+    Type: AWS::EC2::AvailabilityZone::Name
   EmailAddress:
     Description: The email address for CloudWatch alarm notification.
     Type: String
@@ -50,7 +50,7 @@ Resources:
     Properties:
       Parameters:
         AvailabilityZones:
-          !Join [ ',', !Ref AvailabilityZones ]
+          !Ref AvailabilityZone
       TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/01-vpc.yaml
   SecurityGroup:
     DependsOn: [ Vpc ]

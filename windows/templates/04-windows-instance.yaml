@@ -87,7 +87,7 @@ Resources:
             }
             Disable-ieESC
 
-            # install vdbench (windows)
+            # install diskpd (windows)
             $path = "C:\Tools\DiskSpd-2.0.21a"
             $url = "https://gallery.technet.microsoft.com/DiskSpd-A-Robust-Storage-6ef84e62/file/199535/2/DiskSpd-2.0.21a.zip"
             $destination = "C:\Tools\DiskSpd-2.0.21a.zip"

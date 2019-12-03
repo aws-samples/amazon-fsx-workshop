@@ -1,0 +1,27 @@
+= Access Workshop Environment
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+A new AWS environment will be pre-built and available to you for use during this workshop. See *environment diagram* below.
+
+== Environment Diagram
+
+image::fsx-windows-workshop-architecture.png[align="left", width=600]
+
+== Step-by-step Guide
+
+IMPORTANT: Follow the instructions given by the workshop administrators on how to log in to the AWS account provided for this workshop. Do NOT use your personal or business account to run this workshop, as the required pre-built resources will not be available.
+
+. Using the instructions provided at the workshop, enter the URL to access the provided workshop AWS account and use the credentials given to you at the workshop to access the AWS Management Console.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::02-create-maz-file-system.png[link=../02-create-maz-file-system/, align="right",width=420]
+

@@ -51,7 +51,7 @@ File system creation is currently not supported in the following Availability Zo
 
 |===
 +
-When selecting availability zones in the CloudFormation create stack wizard, take care not to select an availability zone mapped to one of the Availability Zone IDs listed above.
+When selecting an availability zone in the CloudFormation create stack wizard, take care not to select an availability zone mapped to one of the Availability Zone IDs listed above.
 +
 TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS Console.
 +

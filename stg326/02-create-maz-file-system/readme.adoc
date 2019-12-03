@@ -1,0 +1,89 @@
+= Create Multi-AZ file system
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will create a new file system that spans multiple Availability Zones.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Diagram
+
+image::create-maz-file-system.png[align="left", width=600]
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::create-maz-file-system.gif[align="left", width=600]
+
+. Open the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and Amazon FSx console.
++
+NOTE: The pre-built workshop environment was built in the *Ohio (us-east-2) AWS Region*. Make sure you are in the *Ohio (us-east-2) AWS Region*.
++
+. *_Select_* the *Create file system* button.
+. *_Select_* the *Amazon FSx for Windows File Server* as the file system type.
+. *_Select_* *Next*.
+. *_Complete_* the *Create file system...* wizard with the following settings:
++
+[cols="3,10"]
+|===
+| *File system name*
+a| *_Enter_* *STG326 - MAZ*
+| *Deployment type*
+a| *_Select_* - *Multi-AZ*
+| *Storage capacity*
+a| *_Enter_* *300*
+| *Throughput capacity - Specify throughput capacity*
+a| *_Select_* - *64 MB/s*
+| *Virtual private cloud (VPC)*
+a| *_Select_* - *VPC \| mod-...*
+| *VPC Security Groups*
+a| *_Click_* the *X* to remove the default security group. From the dropdown menu *_select_* the *File system security group \| sg-...* security group
+| *Preferred subnet*
+a| *_Select_* - *Private Subnet 0 \| mod-...*
+| *Standby subnet*
+a| *_Select_* - *Private Subnet 1 \| mod-...*
+| *Windows authentication*
+a| AWS Managed Microsoft Active Directory
+| *Microsoft Active Directory ID*
+a| *_Select_* - *example.com \| d-...*
+| *Encryption key*
+a| *_Accept_* the default - *(default)aws/fsx*
+| *Maintenance preferences - _optional_*
+a| *_Select_* the arrow to expand
+| *Daily automatic backup window*
+a| *_Select_* - *No preferences*
+| *Automatic backup retention period*
+a| *_Accept_* the default *7* days
+| *Weekly maintenance window*
+a| *_Accept_* the default *No preferences*
+|===
++
+. *_Select_* *Next*
+
+. *_Review_* the file system summary and *_select_* *Create file system*.
+
+NOTE: It will take approximately 15 minutes to create a new file system. Continue with the next section while the new file system is created in the background.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::03-create-new-file-shares.png[link=../03-create-new-file-shares/, align="left",width=420]
+
+
+
+

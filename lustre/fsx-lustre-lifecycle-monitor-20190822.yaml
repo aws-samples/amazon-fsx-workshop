@@ -1,0 +1,147 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates an Amazon CloudWatch custom metric and alarm to monitor the lifecycle of an Amazon FSx for Lustre file systems
+
+Metadata:
+
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  License:
+    Description: 'Copyright 2019 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+      SPDX-License-Identifier: MIT-0'
+
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: File System Parameters
+      Parameters:
+        - FileSystemId
+        - FileSystemLifecycle
+        - EmailAddress
+    ParameterLabels:
+      FileSystemLifecycle:
+        default: Lifecycle
+      FileSystemId:
+        default: File System Id
+      EmailAddress:
+        default: Email Address
+
+Parameters:
+
+  FileSystemLifecycle:
+    AllowedValues:
+      - CREATING
+      - AVAILABLE
+      - UPDATING
+      - MISCONFIGURED
+      - FAILED
+      - DELETING
+    Default: AVAILABLE
+    Description: Send notification once FSx returns a value greater than the selected lifecycle ( CREATING=1 | AVAILABLE=2 | UPDATING=3 | MISCONFIGURED=4 | FAILED=5 | DELETING=6 )
+    Type: String
+  FileSystemId:
+    AllowedPattern: ^(fs-)([a-z0-9]{17})$
+    Description: File system id
+    Type: String
+  EmailAddress:
+    Description: Email address
+    Type: String
+
+Mappings:
+
+  LifecycleMap:
+    CREATING:
+      Value: 1
+    AVAILABLE:
+      Value: 2
+    UPDATING:
+      Value: 3
+    MISCONFIGURED:
+      Value: 4
+    FAILED:
+      Value: 5
+    DELETING:
+      Value: 6
+
+Resources:
+
+  FileSystemLifecycleMonitorEvent:
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: Scheduled event to update FileSystemLifecycle FSx custom metric
+      Name: !Join [ '-', [ !Ref 'AWS::StackName', 'scheduled-event'] ]
+      ScheduleExpression: rate(1 minute)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt FileSystemLifecycleMonitorFunction.Arn
+          Id: 1
+
+  LambdaPermission: 
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName: !Ref FileSystemLifecycleMonitorFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt FileSystemLifecycleMonitorEvent.Arn
+
+  FileSystemLifecycleMonitorFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: fsx/fsx-lifecycle-monitor.zip
+      Environment:
+        Variables:
+          filesystemid: !Ref FileSystemId
+          region: !Ref 'AWS::Region'
+      Handler: lifecycle.handler
+      Runtime: python3.7
+      Timeout: 30
+      Role: !GetAtt LambdaExecutionRole.Arn
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/CloudWatchFullAccess
+      - arn:aws:iam::aws:policy/AmazonFSxReadOnlyAccess
+
+  LifecycleAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+      - !Ref SNSTopicAlarm
+      AlarmDescription: !Join [ ' ', [ !Ref 'AWS::StackName', 'lifecycle', 'alarm' ] ]
+      AlarmName: !Join [ ' ', [ !Ref 'AWS::StackName', 'lifecycle', 'alarm' ] ]
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: FileSystemId
+        Value: !Ref FileSystemId
+      EvaluationPeriods: 1
+      MetricName: Lifecycle
+      Namespace: Custom/FSx
+      Period: 60
+      Statistic: Maximum
+      Threshold: !FindInMap [ LifecycleMap, !Ref FileSystemLifecycle, Value ]
+      TreatMissingData: missing
+      Unit: None
+
+  SNSTopicAlarm: 
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: !Join [ '-', [ !Ref 'AWS::StackName', 'lifecycle', 'alarm' ] ]
+      Subscription:
+      - Endpoint: !Ref EmailAddress
+        Protocol: "email"
+      TopicName: !Join [ '-', [ !Ref 'AWS::StackName', 'lifecycle', 'alarm' ] ]

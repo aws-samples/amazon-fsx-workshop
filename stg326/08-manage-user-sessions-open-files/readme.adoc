@@ -1,0 +1,180 @@
+= Manage user sessions and open files
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will help you manage user sessions and open files.
+
+You use the Windows-native Shared Folders GUI tool and the Amazon FSx CLI for remote management on PowerShell to manage user sessions and open files on your Amazon FSx for Windows File Server file system.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Manage user sessions and open files using the UI
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::manage-sessions-files-ui.gif[align="left", width=600]
+
+. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *STG326 - SAZ* file system and *_select_* the *Network & security* tab. *_Copy_* the *DNS Name* of the file system to the clipboard.
+
+. Go to the remote desktop session for your *Windows Instance 0*.
+
+. *_Click_* *Start*.
+
+. *_Type_* *fsmgmt.msc*.
+
+. From the *Shared Folders* Console, *_select_* *Action* >> *Connect to another computer...*.
+
+. *_Paste_* the *DNS Name* copied above in the *Another computer:* text box and *_click_* *Ok*.
+
+. From the left pane *_select_* *Sessions*.
+
+. Review the open sessions to the file system.
+
+. From the left pane *_select_* *Open Files*.
+
+. Review the open files of the file system.
+
+. Keep the Shared Folders Console open.
+
+. *_Click_* *Start* >> *Windows PowerShell*.
++
+IMPORTANT: This section assumes that *STG326 - SAZ* is mapped as the *Z:/* drive. If your *Windows Instance 0* does not have a mapped *Z:/* drive, map *STG326 - SAZ* as the *Z:/* drive (see the previous section for step-by-step instructions).
++
+. Run the DiskSpeed script below to test read performance of the mapped **Z:** drive.
++
+```sh
+$random = $(Get-Random)
+fsutil file createnew Z:\${env:computername}-$random.dat 100000000000
+C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b64K -Su -L Z:\${env:computername}-$random.dat
+```
++
+. While the script is running, go back to the *Shared Folders* Console and refresh the *Open Files* view.
+
+. Do you see an open file?
++
+TIP: Check your email. You should eventually get a High Throughput Alarm email.
++
+. *_Context-click (right-click)_* the new open file (e.g. D:\share\EC2AMAZ-xxxxxx-xxxxx.dat) and *_select_* *Close Open File*. *_Select_* *Yes* at the prompt window.
+
+. What happened to the open file?
+
+. What happened to the DiskSpd command in the PowerShell window?
+
+. Close the PowerShell window. *_Run_* *exit*.
+
+. Close the *Shared Folders* Console.
+
+
+=== Manage user sessions and open files using the Amazon FSx CLI for Remote Management on PowerShell.
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::manage-sessions-files-cli.gif[align="left", width=600]
+
+. *_Copy_* the script below into your favorite text editor.
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "fs-0123456789abcdef.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *STG326 - SAZ* file system and *_select_* the *Network & security* tab. *_Copy_* the *Windows Remote PowerShell Endpoint* of the file system to the clipboard (e.g. fs-0123456789abcdef.example.com).
+
+. Return to your favorite text editor and replace *"windows_remote_powershell_endpoint"* with the *Windows Remote PowerShell Endpoint* of *STG326 - SAZ*. *_Copy_* the updated script.
+
+. Go to the remote desktop session for your *Windows Instance 0*.
+
+. *_Click_* *Start* >> *Windows PowerShell*.
+
+. *_Run_* the updated script in the *Windows PowerShell* window.
+
+. What commands are available to manage user sessions?
+* *_Run_* the command in the *Remote Windows PowerShell Session* window.
++
+[source,bash]
+----
+Get-Command *SmbSession*
+
+----
++
+
+. What commands are available to manage open files?
+* *_Run_* the command in the *Remote Windows PowerShell Session* window.
++
+[source,bash]
+----
+Get-Command *Open*
+
+----
++
+
+. Open a new *Windows PowerShell* window.
+
+* *_Click_* *Start* >> *Windows PowerShell*.
+
++
+. Run the DiskSpeed script below to test read performance of the mapped **Z:** drive in the new *Windows PowerShell* window.
++
+```sh
+$random = $(Get-Random)
+fsutil file createnew Z:\${env:computername}-$random.dat 100000000000
+C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b64K -Su -L Z:\${env:computername}-$random.dat
+```
+
+. While the script is running, go back to the *Remote Windows PowerShell Session* window.
+
+. Run the command in the *Remote Windows PowerShell Session* window.
+
++
+[source,bash]
+----
+Get-FSxSmbOpenFile
+
+----
++
+
+. Do you see an open file?
+
+. Close the open file.
+
+. Run the command in the *Remote Windows PowerShell Session* window. *_Enter_* *A* for *Yes to All* at the prompt.
+
++
+[source,bash]
+----
+Close-FSxSmbOpenFile
+
+----
++
+
+. What happened to the open file?
+
+. What happened to the DiskSpd command in the other PowerShell window?
+
+. End the remote PowerShell session. *_Run_* *Exit-PSSession*.
+
+. Close the PowerShell window. *_Run_* *exit*.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::09-enable-ca-share.png[link=../09-enable-ca-share/, align="left",width=420]
+
+
+
