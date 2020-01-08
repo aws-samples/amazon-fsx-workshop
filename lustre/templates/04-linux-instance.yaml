@@ -123,7 +123,7 @@ Resources:
         S3Bucket: !Sub solution-references-${AWS::Region}
         S3Key: fsx/amilookup-lin.zip
       Handler: amilookup-lin.handler
-      Runtime: nodejs8.10
+      Runtime: nodejs10.x
       Timeout: 30
       Role: !GetAtt LambdaExecutionRole.Arn
   AmiInfo:
