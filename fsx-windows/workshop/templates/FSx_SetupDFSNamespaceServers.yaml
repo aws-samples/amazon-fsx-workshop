@@ -206,7 +206,7 @@ Resources:
         S3Bucket: 'amazon-fsx-private-beta'
         S3Key: 'ActiveDirectoryCustomResource.zip'
       Handler: 'ad.handler'
-      Runtime: 'nodejs4.3'
+      Runtime: 'nodejs10.x'
       Timeout: 30
       Role: !GetAtt ActiveDirectoryRole.Arn
   ActiveDirectory:
