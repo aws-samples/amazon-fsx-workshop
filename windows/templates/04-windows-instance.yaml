@@ -214,7 +214,7 @@ Resources:
         S3Bucket: !Sub solution-references-${AWS::Region}
         S3Key: fsx/dfs/ActiveDirectoryCustomResource.zip
       Handler: ad.handler
-      Runtime: nodejs8.10
+      Runtime: nodejs12.x
       Timeout: 30
       Role: !GetAtt LambdaExecutionRole.Arn
   ActiveDirectory:
@@ -230,7 +230,7 @@ Resources:
         S3Bucket: !Sub solution-references-${AWS::Region}
         S3Key: fsx/dfs/amilookup-win.zip
       Handler: amilookup-win.handler
-      Runtime: nodejs8.10
+      Runtime: nodejs12.x
       Timeout: 30
       Role: !GetAtt LambdaExecutionRole.Arn
   AmiInfo:
