@@ -1,0 +1,616 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates the Amazon FSx for Windows File Server workshop environment.
+
+Metadata:
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Workshop Environment
+      Parameters:
+        - VpcCidr
+        - AvailabilityZones
+    ParameterLabels:
+      AvailabilityZones:
+        default: Availability Zones
+      VpcCidr:
+        default: VPC CIDR
+
+Parameters:
+  AvailabilityZones:
+    Default: "us-east-2a,us-east-2b"
+    Description: Select two (2) Availability Zones (AZ). One public subnet and one private subnet will be created in each AZ.
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  VpcCidr:
+    AllowedValues: 
+    - 10.0.0.0/16
+    - 173.31.0.0/16
+    - 192.168.0.0/16
+    Default: 10.0.0.0/16
+    Description: Select the private IPv4 CIDR for the VPC.
+    Type: String
+
+Resources:
+  AttachInternetGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref Vpc
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'VPC IGW | ', !Ref 'AWS::StackName' ] ]     
+  PrivateRouteTable0:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Private Route Table | ', !Ref 'AWS::StackName' ] ]
+        - Key: Network
+          Value: Private
+      VpcId: !Ref Vpc
+  PrivateRouteTable1:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Private Route Table | ', !Ref 'AWS::StackName' ] ]
+        - Key: Network
+          Value: Private
+      VpcId: !Ref Vpc
+  PrivateRouteTableAssociation0:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet0
+      RouteTableId: !Ref PrivateRouteTable0
+  PrivateRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable1
+  PrivateSubnet0:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 0, !Ref AvailabilityZones ]
+      CidrBlock: !Select [ 1, !Cidr [ !GetAtt Vpc.CidrBlock, 3, 8 ]]
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Private Subnet 0 | ', !Ref 'AWS::StackName' ] ]
+        - Key: SubnetType
+          Value: Private
+      VpcId: !Ref Vpc
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 1, !Ref AvailabilityZones ]
+      CidrBlock: !Select [ 2, !Cidr [ !GetAtt Vpc.CidrBlock, 3, 8 ] ]
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Private Subnet 1 | ', !Ref 'AWS::StackName' ] ]
+        - Key: SubnetType
+          Value: Private
+      VpcId: !Ref Vpc
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Public Route Table | ', !Ref 'AWS::StackName' ] ]
+        - Key: Network
+          Value: Public
+      VpcId: !Ref Vpc
+  PublicRouteTableAssociation0:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet0
+      RouteTableId: !Ref PublicRouteTable
+  PublicRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+  PublicSubnet0:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 0, !Ref AvailabilityZones ]
+      CidrBlock: !Select [ 0, !Cidr [ !GetAtt Vpc.CidrBlock, 2, 4 ] ]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Public Subnet 0 | ', !Ref 'AWS::StackName' ] ]
+        - Key: SubnetType
+          Value: Public
+      VpcId: !Ref Vpc
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 1, !Ref AvailabilityZones ]
+      CidrBlock: !Select [ 1, !Cidr [ !GetAtt Vpc.CidrBlock, 2, 4 ] ]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Public Subnet 1 | ', !Ref 'AWS::StackName' ] ]
+        - Key: SubnetType
+          Value: Public
+      VpcId: !Ref Vpc
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'VPC | ', !Ref 'AWS::StackName' ] ]
+
+  WindowsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Amazon EC2 Windows instances
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3389
+          ToPort: 3389
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: "Windows security group" 
+      VpcId:
+        !Ref Vpc
+  WindowsSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      GroupId: !Ref WindowsSecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref WindowsSecurityGroup
+  FileSystemSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Amazon FSx for Windows File Server
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 445
+          ToPort: 445
+          SourceSecurityGroupId: !Ref WindowsSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 5985
+          ToPort: 5985
+          SourceSecurityGroupId: !Ref WindowsSecurityGroup
+      Tags:
+        - Key: Name
+          Value: "File system security group"     
+      VpcId:
+        !Ref Vpc
+  FileSystemSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      GroupId: !Ref FileSystemSecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref FileSystemSecurityGroup
+
+  Directory: 
+    DependsOn: Password
+    Type: AWS::DirectoryService::MicrosoftAD
+    Properties: 
+      Edition: Standard
+      Name: example.com
+      Password: !Join ['', ['{{resolve:secretsmanager:', !Ref Password, ':SecretString:password}}' ]]
+      VpcSettings: 
+        SubnetIds: 
+          - !Ref PublicSubnet0
+          - !Ref PublicSubnet1
+        VpcId: 
+          !Ref Vpc
+  Password:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      GenerateSecretString:
+        SecretStringTemplate: !Sub '{"username": "admin@example.com"}'
+        GenerateStringKey: password
+        PasswordLength: 32
+  DhcpOptions:
+    Type: AWS::EC2::DHCPOptions
+    Properties: 
+      DomainName: example.com
+      DomainNameServers: !GetAtt Directory.DnsIpAddresses
+  DhcpOptionsAssociation:
+    Type: AWS::EC2::VPCDHCPOptionsAssociation
+    Properties: 
+      DhcpOptionsId: !Ref DhcpOptions
+      VpcId: !Ref Vpc
+
+  WindowsFileSystem:
+    Type: AWS::FSx::FileSystem
+    Properties:
+      FileSystemType: WINDOWS
+      StorageCapacity: 1024
+      SubnetIds:
+        - !Ref PrivateSubnet0
+      SecurityGroupIds:
+        - !Ref FileSystemSecurityGroup
+      Tags:
+        - Key: Name
+          Value: STG326 - SAZ
+      WindowsConfiguration:
+        ActiveDirectoryId: !Ref Directory
+        ThroughputCapacity: 64
+
+  Instance0:
+    DependsOn: Directory
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !GetAtt AmiInfo.Id
+      Monitoring: true
+      InstanceType: m5a.xlarge
+      SecurityGroupIds: 
+        - !Ref WindowsSecurityGroup
+      SubnetId: !Ref PublicSubnet0
+      Tags:
+        - Key: Name
+          Value: Windows Instance 0
+      UserData:
+        Fn::Base64:
+          !Sub |
+            <powershell>
+
+            # disable ie security (windows)
+            function Disable-ieESC {
+                $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+                $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+                Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
+                Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
+                Stop-Process -Name Explorer
+                Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -ForegroundColor Green
+            }
+            Disable-ieESC
+
+            # install vdbench (windows)
+            $path = "C:\Tools\DiskSpd-2.0.21a"
+            $url = "https://gallery.technet.microsoft.com/DiskSpd-A-Robust-Storage-6ef84e62/file/199535/2/DiskSpd-2.0.21a.zip"
+            $destination = "C:\Tools\DiskSpd-2.0.21a.zip"
+            $download = New-Object -Typename System.Net.WebClient
+            New-Item -Type Directory -Path $path
+            $download.DownloadFile($url,$destination)
+            $extract = New-Object -ComObject Shell.Application
+            $files = $extract.Namespace($destination).Items()
+            $extract.NameSpace($path).CopyHere($files)
+
+            # install fio (windows)
+            $path = "C:\Tools"
+            $url = "https://bsdio.com/fio/releases/fio-3.16-x64.zip"
+            $destination = "C:\Tools\fio-3.16-x64.zip"
+            $download = New-Object -Typename System.Net.WebClient
+            New-Item -Type Directory -Path $path
+            $download.DownloadFile($url,$destination)
+            $extract = New-Object -ComObject Shell.Application
+            $files = $extract.Namespace($destination).Items()
+            $extract.NameSpace($path).CopyHere($files)
+            
+            </powershell>
+  FSxDomainJoinInstallDFS:
+    DependsOn: Directory
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        schemaVersion: "2.2"
+        description: Join instances to an AWS Directory Service domain
+        parameters:
+          directoryId:
+            type: String
+            description: (Required) ID of the AWS Managed Microsoft AD (i.e. d-0123456789)
+          directoryName:
+            type: String
+            description: (Required) Directory name (i.e. example.com)
+          dnsIpAddresses:
+            type: StringList
+            default: []
+            description: "(Optional) AWS Managed Microsoft AD DNS IP addresses (i.e. 172.31.0.11, 172.31.0.12)
+              Required when DHCP is not configured. Learn more at http://docs.aws.amazon.com/directoryservice/latest/simple-ad/join_get_dns_addresses.html"
+        mainSteps:
+        - action: aws:domainJoin
+          name: joinDomain
+          inputs:
+            directoryId: "{{ directoryId }}"
+            directoryName: "{{ directoryName }}"
+            dnsIpAddresses: "{{ dnsIpAddresses }}"
+        - action: aws:runPowerShellScript
+          name: installDfsMgmt
+          inputs:
+            runCommand:
+              - Install-WindowsFeature -Name FS-FileServer, FS-DFS-namespace -IncludeManagementTools;
+              - Install-WindowsFeature -Name RSAT-DFS-Mgmt-Con
+              - New-Item -Type Directory -Path "C:\DFS"
+  Association:
+    DependsOn: Directory
+    Type: AWS::SSM::Association
+    Properties:
+      Name: !Ref FSxDomainJoinInstallDFS
+      Parameters:
+        directoryId: [!Ref Directory]
+        directoryName: [!GetAtt ActiveDirectory.Name]
+        dnsIpAddresses:
+        - !Select [ 0, !GetAtt ActiveDirectory.DnsIpAddrs ]
+        - !Select [ 1, !GetAtt ActiveDirectory.DnsIpAddrs ]        
+      Targets:
+      - Key: InstanceIds
+        Values: [ !Ref Instance0 ]
+  InstanceProfile:
+    DependsOn: Directory
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: '/'
+      Roles:
+      - !Ref InstanceRole
+  InstanceRole:
+    DependsOn: Directory
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+  LambdaExecutionRole:
+    DependsOn: Directory
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AWSLambdaExecute'
+        - 'arn:aws:iam::aws:policy/AWSDirectoryServiceReadOnlyAccess'
+      Path: "/"
+      Policies:
+      - PolicyName: root
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - ec2:DescribeImages
+            Resource: "*"
+  ActiveDirectoryFunction:
+    DependsOn: Directory
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: fsx/dfs/ActiveDirectoryCustomResource.zip
+      Handler: ad.handler
+      Runtime: nodejs8.10
+      Timeout: 30
+      Role: !GetAtt LambdaExecutionRole.Arn
+  ActiveDirectory:
+    DependsOn: Directory
+    Type: Custom::ActiveDirectory
+    Properties:
+      ServiceToken: !GetAtt ActiveDirectoryFunction.Arn
+      Region: !Ref 'AWS::Region'
+      ID: !Ref Directory
+  AmiInfoFunction:
+    DependsOn: Directory
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: fsx/dfs/amilookup-win.zip
+      Handler: amilookup-win.handler
+      Runtime: nodejs8.10
+      Timeout: 30
+      Role: !GetAtt LambdaExecutionRole.Arn
+  AmiInfo:
+    DependsOn: Directory
+    Type: Custom::AmiInfo
+    Properties:
+      ServiceToken: !GetAtt AmiInfoFunction.Arn
+      Region: !Ref 'AWS::Region'
+      OSName: Windows Server 2019 English 64-bit
+
+  Dashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Join [ '-', [ !Ref 'AWS::Region', !Ref WindowsFileSystem ] ]
+      DashboardBody:
+        {"Fn::Join":["",['{
+              "widgets": [
+                  {
+                      "type": "text",
+                      "x": 15,
+                      "y": 0,
+                      "width": 9,
+                      "height": 6,
+                      "properties": {
+                          "markdown": "\n# Amazon FSx file system: ',!Ref 'WindowsFileSystem','\n## Region: ',!Ref 'AWS::Region','\n\nDashboard: [', !Join [ '_', [ !Ref 'AWS::Region', !Ref WindowsFileSystem ] ],'](#dashboards:name=', !Join [ '_', [ !Ref 'AWS::Region', !Ref WindowsFileSystem ] ],')\n\n![FSx_logo](https://s3.amazonaws.com/amazon-fsx/workshop/windows/resources/images/fsx-for-windows-file-server-icon.png)\n"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 6,
+                      "width": 15,
+                      "height": 9,
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "totaldatabytes/PERIOD(datareadbytes)", "label": "Total Data Throughput (B/s)", "id": "totaldatathroughput", "yAxis": "left", "color": "#2ca02c" } ],
+                              [ { "expression": "datawritebytes/PERIOD(datawritebytes)", "label": "Data Write Throughput (B/s)", "id": "datawritethroughput", "yAxis": "left", "color": "#1f77b4" } ],
+                              [ { "expression": "datareadbytes/PERIOD(datareadbytes)", "label": "Data Read Throughput (B/s)", "id": "datareadthroughput", "yAxis": "left", "color": "#ff7f0e" } ],
+                              [ { "expression": "datareadbytes+datawritebytes", "label": "TotalDataBytes", "id": "totaldatabytes", "visible": false } ],
+                              [ "AWS/FSx", "DataWriteBytes", "FileSystemId", "',!Ref 'WindowsFileSystem','", { "stat": "Sum", "id": "datawritebytes", "yAxis": "right", "visible": false } ],
+                              [ ".", "DataReadBytes", ".", ".", { "stat": "Sum", "id": "datareadbytes", "yAxis": "right", "visible": false } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "',!Ref 'AWS::Region','",
+                          "period": 60,
+                          "title": "Throughput (Bytes per second)",
+                          "legend": {
+                              "position": "bottom"
+                          },
+                          "yAxis": {
+                              "left": {
+                                  "showUnits": true
+                              },
+                              "right": {
+                                  "showUnits": false
+                              }
+                          },
+                          "stat": "Average"
+                      }
+                  },
+                  {
+                    "type": "metric",
+                      "x": 15,
+                      "y": 6,
+                      "width": 9,
+                      "height": 9,
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "datawritebytes*100/(datawritebytes+datareadbytes)", "label": "Data Write (%)__", "id": "datawritepercent", "stat": "Sum", "color": "#1f77b4" } ],
+                              [ { "expression": "datareadbytes*100/(datawritebytes+datareadbytes)", "label": "Data Read (%)__", "id": "datareadpercent", "stat": "Sum", "color": "#ff7f0e" } ],
+                              [ "AWS/FSx", "DataWriteBytes", "FileSystemId", "',!Ref 'WindowsFileSystem','", { "id": "datawritebytes", "visible": false } ],
+                              [ ".", "DataReadBytes", ".", ".", { "id": "datareadbytes", "visible": false } ]
+                          ],
+                          "view": "timeSeries",
+                          "region": "',!Ref 'AWS::Region','",
+                          "stacked": false,
+                          "title": "Percent Throughput (%)",
+                          "period": 60,
+                          "legend": {
+                              "position": "bottom"
+                          },
+                          "stat": "Sum",
+                          "yAxis": {
+                              "left": {
+                                  "showUnits": false
+                              },
+                              "right": {
+                                  "showUnits": false
+                              }
+                          }
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 15,
+                      "width": 15,
+                      "height": 9,
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "(datawriteoperations+datareadoperations+metadataoperations)/PERIOD(metadataoperations)", "label": "Total Operations per second", "id": "totalops", "yAxis": "left", "color": "#2ca02c" } ],
+                              [ { "expression": "(datawriteoperations)/PERIOD(datawriteoperations)", "label": "Data Write Operations per second", "id": "datawriteops", "yAxis": "left", "color": "#1f77b4" } ],
+                              [ { "expression": "(datareadoperations)/PERIOD(datareadoperations)", "label": "Data Read Operations per second", "id": "datareadops", "yAxis": "left", "color": "#ff7f0e" } ],
+                              [ { "expression": "(metadataoperations)/PERIOD(metadataoperations)", "label": "Metadata Operations per second", "id": "metadataops", "yAxis": "left", "color": "#d62728" } ],
+                              [ "AWS/FSx", "DataWriteOperations", "FileSystemId", "',!Ref 'WindowsFileSystem','", { "stat": "Sum", "id": "datawriteoperations", "visible": false } ],
+                              [ ".", "DataReadOperations", ".", ".", { "stat": "Sum", "id": "datareadoperations", "visible": false } ],
+                              [ ".", "MetadataOperations", ".", ".", { "stat": "Sum", "id": "metadataoperations", "visible": false } ]
+                          ],
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "region": "',!Ref 'AWS::Region','",
+                          "period": 60,
+                          "title": "Operations per Second",
+                          "legend": {
+                              "position": "bottom"
+                          },
+                          "yAxis": {
+                              "left": {
+                                  "showUnits": false
+                              },
+                              "right": {
+                                  "showUnits": false
+                              }
+                          },
+                          "stat": "Average"
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 15,
+                      "y": 15,
+                      "width": 9,
+                      "height": 9,
+                      "properties": {
+                          "metrics": [
+                              [ { "expression": "datawriteoperations*100/totaloperations", "label": "Data Write (%)__", "id": "percentdatawriteoperations", "color": "#1f77b4" } ],
+                              [ { "expression": "datareadoperations*100/totaloperations", "label": "Data Read (%)__", "id": "percentdatareadoperations", "color": "#ff7f0e" } ],
+                              [ { "expression": "metadataoperations*100/totaloperations", "label": "Metadata (%)__", "id": "percentmetadataoperations", "color": "#d62728" } ],
+                              [ { "expression": "datawriteoperations+datareadoperations+metadataoperations", "label": "TotalOperations", "id": "totaloperations", "visible": false } ],
+                              [ "AWS/FSx", "DataWriteOperations", "FileSystemId", "',!Ref 'WindowsFileSystem','", { "stat": "Sum", "id": "datawriteoperations", "visible": false } ],
+                              [ ".", "DataReadOperations", ".", ".", { "stat": "Sum", "id": "datareadoperations", "visible": false } ],
+                              [ ".", "MetadataOperations", ".", ".", { "stat": "Sum", "id": "metadataoperations", "visible": false } ]
+                          ],
+                          "view": "timeSeries",
+                          "region": "',!Ref 'AWS::Region','",
+                          "stacked": false,
+                          "title": "Percent Operations per Second (%)",
+                          "period": 60,
+                          "legend": {
+                              "position": "bottom"
+                          },
+                          "stat": "Average",
+                          "yAxis": {
+                              "left": {
+                                  "showUnits": false
+                              },
+                              "right": {
+                                  "showUnits": false
+                              }
+                          }
+                      }
+                  },
+                  {
+                      "type": "metric",
+                      "x": 0,
+                      "y": 0,
+                      "width": 15,
+                      "height": 6,
+                      "properties": {
+                          "view": "timeSeries",
+                          "stacked": false,
+                          "metrics": [
+                              [ "AWS/FSx", "FreeStorageCapacity", "FileSystemId", "',!Ref 'WindowsFileSystem','" ]
+                          ],
+                          "region": "',!Ref 'AWS::Region','",
+                          "title": "Free Storage Capacity (Bytes)"
+                      }
+                  }  
+              ]
+          }
+        ']]}

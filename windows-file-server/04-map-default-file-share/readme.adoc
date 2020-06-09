@@ -1,0 +1,61 @@
+= Map Default File Share
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will map the Amazon FSx for Windows File Server default file share on an Amazon EC2 Windows instance.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Map default file share
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::map-default-file-share.gif[align="left", width=600]
+
+. Go to the Remote Desktop Session where you connected to the *FSx/W Workshop Windows Instance*.
+
+. *_Launch_* *File Explorer*.
+
+. *_Context-click (right-click)_* *This PC* and *_select_* *Map network drive...*
+
+. Map the file share using the following information:
++
+[cols="3,10"]
+|===
+| *Drive*
+a| Z:
+
+| *Folder*
+a| This is the UNC path of the file system's default file share. Return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system and *_select_* the *Network & security* tab. *_Click_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the *DNS name* to *_copy_* the *DNS Name* to the clipboard and paste it as the first part of the UNC path. *_Add_* *\share* to the end of the *DNS Name* to complete the UNC path to the file system's default file share (e.g. \\amznfsx0123abcde.example.com\share).
+
+| *Reconnect at sign-in*
+a| Leave checked
+
+| *Connect using different credentials*
+a| Leave unchecked
+|===
++
+. In the *File Explorer* window of the *Z:* drive you should see the folder *AVHRR* which contains sample data that was preloaded into your file system.
+. Create new test files in the root of the *Z:* drive. *_Context-click (right-click)_* >> *New* >> *Text Document*. Create a few different types of test files.
+
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::mount-default-file-share.png[link=../05-mount-default-file-share/, align="left",width=420]
+
+
+
+

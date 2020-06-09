@@ -2,7 +2,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Description: Creates Amazon Virtual Private Cloud (Amazon VPC) with one Availability Zone (AZ),
-  one public subnet and one private subnet (one public, private subnet in the AZ), an Internet 
+  one public subnet and one private subnet (one public, private subnet in each AZ), an Internet 
   gateway, and a NAT gateway.
 Metadata:
   AWS::CloudFormation::Interface:
@@ -11,18 +11,18 @@ Metadata:
         default: Virtual Private Cloud
       Parameters:
         - VpcCidr
-        - AvailabilityZone
+        - AvailabilityZones
     ParameterLabels:
-      AvailabilityZone:
-        default: Availability Zone
+      AvailabilityZones:
+        default: Availability Zones (select one)
       VpcCidr:
         default: VPC CIDR
 
 Parameters:
-  AvailabilityZone:
-    Description: Select the availability zone (AZ). One (1) public subnet and one (1) private
-      subnet will be created in the AZ.
-    Type: AWS::EC2::AvailabilityZone::Name
+  AvailabilityZones:
+    Description: Select one (1) availability zone (AZ). One (1) public subnet and one (1) private
+      subnet will be created in each AZ (2 total subnets).
+    Type: AWS::EC2::AvailabilityZone::Name    
   VpcCidr:
     AllowedValues: 
     - 10.0.0.0/16
@@ -44,7 +44,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join [ '', [ 'VPC IGW | ', !Ref 'AWS::StackName' ] ]     
-  PrivateRouteTable:
+  PrivateRouteTable0:
     Type: AWS::EC2::RouteTable
     Properties:
       Tags:
@@ -53,19 +53,19 @@ Resources:
         - Key: Network
           Value: Private
       VpcId: !Ref Vpc
-  PrivateRouteTableAssociation:
+  PrivateRouteTableAssociation0:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnet
-      RouteTableId: !Ref PrivateRouteTable
-  PrivateSubnet:
+      SubnetId: !Ref PrivateSubnet0
+      RouteTableId: !Ref PrivateRouteTable0
+  PrivateSubnet0:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !Ref AvailabilityZone
+      AvailabilityZone: !Ref AvailabilityZones
       CidrBlock: !Select [ 1, !Cidr [ !GetAtt Vpc.CidrBlock, 3, 8 ]]
       Tags:
         - Key: Name
-          Value: !Join [ '', [ 'Private Subnet | ', !Ref 'AWS::StackName' ] ]
+          Value: !Join [ '', [ 'Private Subnet 0 | ', !Ref 'AWS::StackName' ] ]
         - Key: SubnetType
           Value: Private
       VpcId: !Ref Vpc
@@ -84,15 +84,15 @@ Resources:
         - Key: Network
           Value: Public
       VpcId: !Ref Vpc
-  PublicRouteTableAssociation:
+  PublicRouteTableAssociation0:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicSubnet
+      SubnetId: !Ref PublicSubnet0
       RouteTableId: !Ref PublicRouteTable
-  PublicSubnet:
+  PublicSubnet0:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !Ref AvailabilityZone
+      AvailabilityZone: !Ref AvailabilityZones
       CidrBlock: !Select [ 0, !Cidr [ !GetAtt Vpc.CidrBlock, 2, 4 ] ]
       MapPublicIpOnLaunch: true
       Tags:
@@ -118,12 +118,12 @@ Outputs:
     Value: !Ref VpcCidr
   DefaultSecurityGroupId:
     Value: !GetAtt Vpc.DefaultSecurityGroup
-  PrivateSubnetId:
-    Value: !Ref PrivateSubnet
-  PrivateSubnetCidr:
+  PrivateSubnetId0:
+    Value: !Ref PrivateSubnet0
+  PrivateSubnetCidr0:
     Value: !Select [ 1, !Cidr [ !GetAtt Vpc.CidrBlock, 3, 8 ] ]
-  PublicSubnetId:
-    Value: !Ref PublicSubnet
-  PublicSubnetCidr:
+  PublicSubnetId0:
+    Value: !Ref PublicSubnet0
+  PublicSubnetCidr0:
     Value: !Select [ 0, !Cidr [ !GetAtt Vpc.CidrBlock, 2, 4 ] ]
 

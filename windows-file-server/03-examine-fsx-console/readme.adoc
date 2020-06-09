@@ -1,0 +1,85 @@
+= Examine Amazon FSx console
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will help you become more familiar with the Amazon FSx console.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Examine the Amazon FSx console
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::examine-fsx-console.gif[align="left", width=600]
+
+. *_Go_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system.
+
+. *_Examine_* the *Summary* section of the file system. *_Find_* the values of the following file system attributes:
+* File system ID
+* Lifecycle state
+* Deployment type
+* Storage type
+* Storage capacity
+* Throughput capacity
+* Availability Zones
+* Creation time
+
+. *_Examine_* the *Network & security* section of the console. *_Click_* the *Network & security* tab. *_Find_* the values of the following file system attributes:
+* VPC
+* DNS name
+* Preferrred File Server IP Address
+* Windows Remote PowerShell Endpoint
+* KMS key ID
+* AWS Managed AD directory ID
+* Type
+
+. *_Examine_* the subnet attributes of the console. *_Find_* the values of preferred and standby subnets:
+* Subnets
+* Availability Zones
+* Network interfaces
+
+* How would you find the VPC security groups associated to the file system?
+* Hint: *_Click_* the Network interface link of the preferred subnet. From the *Details* tab of the preferred file server's ENI, *_click_* the *view inbound rules* link within the *Security groups* attribute. *_Close_* the browser tab of the *Network interface* console.
+
+. *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
+
+. *_Examine_* the *Monitoring* section of the console. *_Click_* the *Monitoring* tab.
+* What Amazon CloudWatch metric information is available for the file system?
+
+. *_Examine_* the *Administration* section of the console. *_Click_* the *Administration* tab.
+* When is the weekly maintenance window scheduled?
+* Amazon FSx for Windows File Server performs routine software patching for the Microsoft Windows Server software it manages. The maintenance window is your opportunity to control what day and time of the week this software patching occurs. Patching occurs infrequently, typically once every several weeks. Patching should require only a fraction of your 30-minute maintenance window. During these few minutes of time, your Single-AZ file system is temporarily unavailable, and Multi-AZ file systems automatically fail over and fail back.
+
+. *_Examine_* the *Backups* section of the console. *_Click_* the *Backups* tab.
+* When is the daily automatic backup scheduled?
+* What's the automatic backup retention period?
+
+. *_Examine_* the *Updates* section of the console. *_Click_* the *Updates* tab.
+* What updates have been performed?
+* Storage and throughput capacity updates will be performed later in the workshop
+
+. *_Examine_* the *Tags* section of the console. *_Click_* the *Tags* tab.
+* What tags (key/value) pairs are assigned to the file system?
+* Add a new tag (key/value) pair. *_Click_* the *[Add]* button and enter a *key* / *value* of your choice (e.g. Environment/Production). *_Click_* the *[Save]* button.
+
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::map-default-file-share.png[link=../04-map-default-file-share/, align="left",width=420]
+
+
+
+

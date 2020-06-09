@@ -1,0 +1,124 @@
+= Mount Default File Share
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will mount the Amazon FSx for Windows File Server default file share on an Amazon EC2 Linux instance.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Mount default file share
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::mount-default-file-share.gif[align="left", width=600]
+
+. Return to the browser-based SSH connection of the *FSx/W Workshop Linux instance*.
++
+TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx/W Workshop Linux Instance*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
++
+. Enter the following command to see which CIFS/SMB shares have been mounted.
++
+[source,bash]
+----
+mount -t cifs
+
+----
++
+
+. Which CIFS/SMB file shares have been mounted?
+NOTE: No shares should be mounted at this time.
+
+. *_Copy_* the script below into your favorite text editor.
++
+[source,bash]
+----
+sudo yum install cifs-utils -y
+
+mountpoint=/fsx
+dnsname="dns_name" # e.g. "amznfsx0123abcde.example.com"
+username="admin@example.com"
+
+sudo mkdir -p ${mountpoint}
+sudo mount -t cifs //${dnsname}/share ${mountpoint} -o vers=2.0,user=${username}
+----
++
+. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system and *_select_* the *Network & security* tab. *_Click_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the *DNS name* to *_copy_* the *DNS Name* to the clipboard.
+
+. Return to your favorite text editor and replace *"dns_name"* with the *DNS name* in your clipboard. *_Copy_* the entire updated script to the clipboard.
++
+TIP: Make sure you don't copy a hidden *new line* character after the script, otherwise the mount command will error out with: *mount error(115): Operation now in progres* after running it in the browser-based SSH connection in the next few steps.
++
+. *_Return_* to the browser-based SSH connection of the *FSx/W Workshop Linux instance*.
++
+TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one.
++
+. *_Paste_* and run the script you copied to the clipboard in the browser-based SSH connection window.
+
+. *_Return_* to the link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. Use the *Secret key/value* pairs of *username* and *password* and copy the *password* to the clipboard.
+
+. *_Paste_* the password from the clipboard in the browser-based SSH connection following the prompt (e.g. *Password for admin@example.com@//amznfsx0123abcde.example.com/share:*). The pasted password should be obfuscated (e.g. ************)
+
+. Verify the mount command succeeded. *_Run_* the following commands in the browser-based SSH connection window:
++
+[source,bash]
+----
+mount -t cifs
+ll /fsx
+
+----
++
+. What information about the CIFS mount was returned?
+
+. What directories and files do you see in the */fsx* mount point?
+
+. How many files, directories, and data were preloaded from Amazon S3? *_Run_* the following command in the browser-based SSH connection window:
++
+[source,bash]
+----
+time tree --du -h /fsx
+
+----
++
+* The output should look similar to this:
++
+[source,bash]
+----
+│           ├── [8.9M]  AVHRRBUVI01.2011octa.abl
+│           ├── [8.9M]  AVHRRBUVI01.2011octb.abl
+│           ├── [8.9M]  AVHRRBUVI01.2011sepa.abl
+│           └── [8.9M]  AVHRRBUVI01.2011sepb.abl
+├── [   0]  MyFirstFile.txt
+└── [   7]  MySecondFile.rtf
+
+  26G used in 9 directories, 2225 files
+
+real0m0.169s
+user0m0.010s
+sys0m0.013s
+----
+
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::create-new-file-shares.png[link=../06-create-new-file-shares/, align="left",width=420]
+
+
+
+

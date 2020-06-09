@@ -1,0 +1,148 @@
+= Create New File Shares
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will create new file shares on the Amazon FSx for Windows File Server.
+
+You can use standard Microsoft tools to create new file shares on your Amazon FSx for Windows File Server.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step guide
+
+
+=== Create new file shares
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::create-new-file-shares.gif[align="left",width=600]
+
+. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system and *_click_* the *Network & security* tab. *_Click_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the *DNS name* to *_copy_* the *DNS Name* to the clipboard.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. From the remote desktop session to the *FSx/W Workshop Windows Instance*, *_click_* *Start*.
+
+. *_Type_* *fsmgmt.msc* then press *return/enter* key.
+
+. From the *Shared Folders* window, *_select_* *Action* >> *Connect to another computer...*.
+
+. *_Paste_* the *DNS Name* copied above in the *Another computer:* text box and *_click_* *Ok*.
+
+. *_Context/right-click_* the *Shares* folder and *_click_* *New Share...*.
+
+. *_Click_* *Next >*.
+
+. *_Click_* *Browse...*.
+
+. *_Select_* *d$*.
+
+. *_Click_* *Make New Folder*.
+
+. Name the new folder *application*.
+
+. *_Select_* *OK*.
+
+. Complete the *Create A Shared Folder Wizard*, creating a new share with the following attribute:
+
++
+|===
+| *Folder path* | *Share name* | *Create new path* | *Shared folder permissions*
+| D:\application
+| application
+| Yes
+| Customize permissions >> Everyone Full Control
+|===
++
+
+. Repeat the steps above and create a second new share with the name *data*.
+
++
+|===
+| *Folder path* | *Share name* | *Create new path* | *Shared folder permissions*
+| D:\data
+| data
+| Yes
+| Customize permissions >> Everyone Full Control
+|===
++
+
+. Experiment by using the steps above and create other file shares. All shares must be created on the *D:\* drive.
+
+=== Manage file shares
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::manage-file-shares.gif[align="left", width=600]
+
+
+. *_Copy_* the script below into your favorite text editor.
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system and *_select_* the *Network & security* tab. *_Click_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the *Windows Remote PowerShell Endpoint* to *_copy_* the *Windows Remote PowerShell Endpoint* to the clipboard.
+
+. Return to your favorite text editor and replace *"windows_remote_powershell_endpoint"* with the *Windows Remote PowerShell Endpoint* in your clipboard. *_Copy_* the entire updated script.
+
+. Return to the remote desktop session for your *FSx/W Workshop Windows Instance*.
+
+. *_Click_* *Start* >> *Windows PowerShell*.
+
+. *_Run_* the updated script in the *Windows PowerShell* window.
+
+. Complete the next few steps using the remote PowerShell session of the FSx for Windows File Server.
+
+. Review the PowerShell function commands available using the *Amazon FSx CLI for Remote Management on PowerShell*.
+
+* *_Run_* the command in the *Remote Windows PowerShell Session*.
++
+----
+Get-Command
+----
++
+
+. What commands are available?
+
+. Review all the different commands available using the *Amazon FSx CLI for Remote Management on PowerShell*.
+
+. Examine your file system using the commands in the table below.
+
+* *_Run_* the commands in the remote PowerShell session.
++
+|===
+| *Command*
+| Get-FSxSmbShare
+| Get-FSxSmbSession
+| Get-FSxSmbServerConfiguration
+| Get-FSxSmbShareAccess (when prompted, enter these share names one at a time: application, data, share; press enter between each one and again at the end)
+|===
++
+
+. Close the PowerShell window.
+
+. Close the Shared Folders window.
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::test-performance.png[link=../07-test-performance/, align="left",width=420]
+
+
+
+

@@ -1,0 +1,41 @@
+= Scale storage capacity
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will demonstrate how to scale the storage capacity of the file system.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Scale storage capacity
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::scale-storage-capacity.gif[align="left", width=600]
+
+. Return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console. *_Click_* the link to the *MAZ* file system.
+. In the *Summary* section, *_click_* the *[Update]* button next to *Storage capacity*.
+. Increase the storage capacity of the file system by 10%. Accept the default _Input type_ *Percentage* and the default _Desired % increase_ *10%*. *_Click_* *[Update]*.
+. *_Click_* the *Updates* tab to monitor the storage capacity update action.
+* When you increase the storage capacity of your Amazon FSx file system, behind the scenes, Amazon FSx adds a new, larger set of disks to your file system. The new capacity is available for use within minutes. When the new storage capacity becomes available, you are billed only for the new storage capacity. Amazon FSx runs a storage optimization process in the background to transparently migrate data from the old disks to the new, larger disks. For most file systems, storage optimization takes a few hours up to a few days, with minimal noticeable impact on your workload performance.
+* You can also monitor the storage capacity update action from the *Monitoring* tab using the *Free storage capacity* widget. The widget will show a large increase in free storage capacity once the update action is complete.
+* Do not wait for the storage capacity update to complete.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::tear-down-workshop.png[link=../14-tear-down-workshop/, align="left",width=420]
+
+
+
+

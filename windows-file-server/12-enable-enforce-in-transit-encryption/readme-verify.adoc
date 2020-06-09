@@ -1,0 +1,201 @@
+= Enable Enforcement of In-transit Encryption
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will enable enforcement of in-transit encryption. Amazon FSx supports encryption of data in-transit using SMB 3 encryption, and allows unencrypted connections from compute instances that don’t support SMB 3. You can now choose to enforce that access is allowed only via encrypted connections to meet your compliance needs.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Enable enforcement of in-transit encryption
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::enable-enforce-in-transit-encryption.gif[align="left", width=600]
+
+. *_Copy_* the script below into your favorite text editor.
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system and *_select_* the *Network & security* tab. *_Copy_* the *Windows Remote PowerShell Endpoint* of the file system to the clipboard (e.g. amznfsx0123abcde.example.com).
+
+. Return to your favorite text editor and replace *"windows_remote_powershell_endpoint"* with the *Windows Remote PowerShell Endpoint* of *MAZ*. *_Copy_* the updated script.
+
+. Go to the remote desktop session for your *FSx/W Workshop Windows Instance*.
+
+. *_Click_* *Start* >> *Windows PowerShell*.
+
+. *_Run_* the updated script in the *Windows PowerShell* window.
+
++
+NOTE: Complete the next few steps using the remote PowerShell session to the FSx file server.
++
+
+. Review the PowerShell function commands for the SMB server configuration using the *Amazon FSx CLI for remote management on PowerShell*.
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Get-Command *-FSxSmbServerConfiguration*
+----
++
+
+. What commands are available?
+
+. Get the current setting of enforcement of in-transit encryption.
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Get-FSxSmbServerConfiguration
+----
++
+
+. What's the values of *RejectUnencryptedAccess*?
+
+. Enable enforcement of in-transit encryption.
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $True
+----
++
+. When prompted to perform this action, _*type*_ *A* at the prompt.
+
+
+
+=== Verify enforcement of in-transit encryption
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::verify-enforce-in-transit-encryption.gif[align="left", width=600]
+
+. Return to the browser-based SSH connection of the *FSx/W Workshop Linux Instance*.
++
+TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx/W Workshop Linux Instance*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
++
+. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to see how the Amazon FSx for Windows File Server default file share is mounted.
++
+[source,bash]
+----
+mount -t cifs
+
+----
++
+* The output of the command should look similar to this:
++
+[source,bash]
+----
+//amznfsx0123abcd.example.com/share on /fsx type cifs (rw,relatime,vers=2.0,cache=strict,username=admin@example.com,domain=,uid=0,noforceuid,gid=0,nof
+orcegid,addr=10.0.1.46,file_mode=0755,dir_mode=0755,soft,nounix,serverino,mapposix,rsize=65536,wsize=65536,echo_interval=60,actimeo=1,user=admin@examp
+le.com)
+----
++
+. What CIFS version is used to mount the default file share?
+. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to list the directorires of the default file share.
++
+[source,bash]
+----
+ll /fsx
+
+----
++
+* The output of the command should look similar to this:
++
+[source,bash]
+----
+ls: cannot access /fsx: Host is down
+----
++
+. Why can't you access the default file share mapped to /fsx?
++
+* Encryption of data in transit is supported on file shares that are mapped on a compute instance that supports SMB protocol 3.0 or newer. This includes all Windows versions starting from Windows Server 2012 and Windows 8, and all Linux clients with Samba client version 4.2 or newer. Amazon FSx automatically encrypts data in transit using SMB encryption as you access your file system without the need for you to modify your applications. SMB encryption uses AES-CCM [RFC5084] as its encryption algorithm, and also provides data integrity with signing using SMB Kerberos session keys.
+
+* To meet compliance requirements for always encrypting data-in-transit, you can limit file system access to only allow access to clients that support SMB encryption. You can also enable or disable in-transit encryption per file share or to the entire file system.
++
+. Return to the remote desktop session for your *FSx/W Workshop Windows Instance*.
+. Return to the the remote PowerShell session to the FSx file server.
+. Disable enforcement of in-transit encryption.
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $False
+----
++
+. When prompted to perform this action, _*type*_ *A* at the prompt.
+. Return to the browser-based SSH connection of the *FSx/W Workshop Linux Instance*.
+. *_Re-run_* the following command in the browser-based SSH connection window to list the directorires of the default file share.
++
+[source,bash]
+----
+ll /fsx
+
+----
++
+* The output of the command should look similar to this:
++
+[source,bash]
+----
+total 199506832
+drwxr-xr-x 2 root root            0 Jun  1 16:25 AVHRR
+-rwxr-xr-x 1 root root 100000000000 Jun  1 19:57 EC2AMAZ-T42AAO8-1274665807.dat
+-rwxr-xr-x 1 root root 100000000000 Jun  1 20:11 EC2AMAZ-T42AAO8-1701166724.dat
+-rwxr-xr-x 1 root root   2147483648 Jun  1 20:05 EC2AMAZ-T42AAO8-1881100421.dat
+-rwxr-xr-x 1 root root   2147483648 Jun  1 20:07 EC2AMAZ-T42AAO8-662477100.dat
+-rwxr-xr-x 1 root root            0 Jun  1 18:22 MyFirstFile.txt
+-rwxr-xr-x 1 root root            7 Jun  1 18:22 MySecondFile.rtf
+----
++
+. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to unmount the default file share.
++
+[source,bash]
+----
+cd
+sudo umount -f /fsx
+
+----
++
+
+
+
+
+
+*_Copy_* the script below into your favorite text editor.
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system and *_select_* the *Network & security* tab. *_Copy_* the *Windows Remote PowerShell Endpoint* of the file system to the clipboard (e.g. amznfsx0123abcde.example.com).
+
+. Return to your favorite text editor and replace *"windows_remote_powershell_endpoint"* with the *Windows Remote PowerShell Endpoint* of *MAZ*. *_Copy_* the updated script.
+
+. Go to the remote desktop session for your *FSx/W Workshop Windows Instance*.
+
+
+

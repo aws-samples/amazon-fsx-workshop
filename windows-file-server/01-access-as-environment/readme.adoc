@@ -1,0 +1,36 @@
+= Access AWS sponsored workshop
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+A new AWS environment will be pre-built and available to you for use during this workshop. See *workshop diagram* below.
+
+== Workshop Diagram
+
+image::fsx-windows-workshop-architecture-v1.png[align="center"]
+
+== Step-by-step Guide
+
+IMPORTANT: Follow the instructions given by the workshop administrators on how to log in to the AWS account provided for this workshop. Do NOT use your personal or business account to run this workshop, as the required pre-built resources will not be available.
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::access-as-workshop.gif[align="left", width=600]
+
+. Go to the link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run] or access the direct link provided by the workshop administrators.
+* The AWS Event Engine was created to help AWS field teams run Workshops, GameDays, Bootcamps, Immersion Days, and other events that require hands-on access to AWS accounts.
+. *_Read_* the *Terms & Conditions*.
+. *_Enter_* the team hash you were given from the workshop administrators and *_click_* *[Accept terms and login]*.
+. From the *Team Dashboard* page, *_click_* *[AWS Console]*.
+. From the *AWS Console Login* page, *_click_* the *[Open AWS Console]* link in the *Login Link* section to open the AWS Console using the AWS sponsored account.
+
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::connect-to-instances.png[link=../02-connect-to-instances/, align="right",width=420]

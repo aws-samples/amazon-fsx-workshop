@@ -25,9 +25,9 @@ IMPORTANT: Read through all steps below before continuing.
 
 Complete these steps from the SSH terminal session window connected to *Linux Instance 0*.
 
-*_Copy_* the commands below and *_paste_* it into your favorite text editor.
+*_Copy_* the scripts below and *_paste_* it into your favorite text editor.
 *_Copy_* the full path of one of the .tif files and *_replace_* the *_FILE_* placeholder.
-*_Execute_* the commands.
+*_Execute_* the script
 
 . Generate a list of some .tif files
 +
@@ -38,19 +38,13 @@ time lfs find /mnt/fsx --type f --name *.tif | head -100
 ----
 +
 . *_Copy_* the full path of one of the .tif files and *_replace_* the *_FILE_* placeholder.
-*_Execute_* the command.
-+
-[source,bash]
-----
-file=FILE # e.g. file=/mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
-
-----
+*_Execute_* the script.
 +
 . How large is the file? Run an ls -la against the file to find out the size.
 +
 [source,bash]
 ----
-time ls -lah ${file} 
+time ls -lah FILE # e.g. time ls -lah /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
 
 ----
 +
@@ -64,7 +58,7 @@ My results are below. The file I'm using is 183 MB.
 +
 [source,bash]
 ----
-time cat ${file}  >/dev/shm/fsx
+time cat FILE >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
 
 ----
 +
@@ -76,7 +70,7 @@ user    0m0.000s
 sys     0m0.152s
 ----
 +
-. *_Re-run_* the same **"time cat ${file}  >/dev/shm/fsx"** command and see how long it takes? My results are below.
+. *_Re-run_* the same **"time cat..."** command and see how long it takes? My results are below.
 +
 [source,bash]
 ----
@@ -86,23 +80,13 @@ sys     0m0.108s
 ----
 +
 [qanda]
-. The last command returned results from where? S3? FSx? Local cache?
-The local cache on *Linux Instance 0*. You can verify this by opening a second SSH terminal session window to the same instance and run `nload -u M` to see real-time network throughput of the instance and re-run the command. 
-+
-. *_Re-run_* the same **"time cat ${file}  >/dev/shm/fsx"** command and see how long it takes? My results are below.
-+
-[source,bash]
-----
-time cat ${file}  >/dev/shm/fsx
-
-----
-+
-To force this read operation to go back to FSx for Lustre, drop the local cache on *Linux Instance 0* and re-run the command.
+. Where did the last command get it's data?
+The cache on *Linux Instance 0*. You can verify this by opening a second SSH terminal session window to this same instance and run `nload -u M` to see real-time network throughput of the instance and re-run the command. To force the read operation to go back to FSx for Lustre, drop the cache on *Linux Instance 0* and re-run the command.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-time cat ${file} >/dev/shm/fsx
+time cat FILE >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
 
 ----
 +
@@ -118,9 +102,17 @@ sys     0m0.170s
 
 === Bulk load data
 
-Complete these steps from the two SSH terminal session windows you have opened to *Linux Instance 0*.
+Complete these steps from two SSH terminal session windows connected to *Linux Instance 0*.
 
-. Keep one SSH terminal session window running *_nload -u M_*
+. Open two (2) SSH terminal session windows connected to *Linux Instance 0*.
++
+Start `*nload*` in one of the SSH terminal session windows.
++
+[source,bash]
+----
+nload -u M
+
+----
 +
 *_Copy_* the scripts below and *_execute_* them in the other SSH terminal session window.
 +
@@ -136,10 +128,11 @@ time tree --du -h /mnt/fsx/CMIP5
 +
 ----
 threads=36
-time lfs find /mnt/fsx/CMIP5 --type f | parallel --will-cite -j ${threads} sudo lfs hsm_restore {}
+time lfs find /mnt/fsx/CMIP5--type f | parallel --will-cite -j ${threads} sudo lfs hsm_restore {}
 
 ----
-. *_Monitor_* the network throughput of the instance from the other SSH terminal window running `*nload*`. These objects are not copied through the instance from S3 to FSx. The GET API copies data directly from S3 to FSx (directly from S3 to all Lustre OSTs in parallel).
+. *_Monitor_* the network throughput of the instance from the other SSH terminal window running `*nload*`. These objects are not copied through the instance from S3 to the file system. The GET API is called in parallel to copy data directly from S3 to the OSTs.
+
 
 . Open the link:https://console.aws.amazon.com/cloudwatch/[Amazon CloudWatch] console.
 +

@@ -1,0 +1,41 @@
+= Scale throughput capacity
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will demonstrate how to scale the throughput capacity of the file system.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Scale throughput capacity
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::scale-throughput-capacity.gif[align="left", width=600]
+
+. Return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console. *_Click_* the link to the *MAZ* file system.
+. In the *Summary* section, *_click_* the *[Update]* button next to *Throughput capacity*.
+. Increase the throughput capacity of the file system to 64 MB/s. *_Click_* the _Desired throughput capacity_ dropdown and select *64 MB/s*.  *_Click_* *[Update]*.
+. *_Click_* the *Updates* tab to monitor the storage capacity update action.
+* You can modify your file system's throughput capacity at any time, as needed. Throughput capacity is one factor that determines the speed at which the file server hosting the file system can serve file data. Higher levels of throughput capacity also come with higher levels of I/O operations per second (IOPS) and more memory for caching of data on the file server. When you modify your file system's throughput capacity, behind the scenes, Amazon FSx switches out the file system's file server. For Multi-AZ file systems, it results in an automatic failover and failback while Amazon FSx switches out the preferred and secondary file servers. For single-AZ systems, your file system will be unavailable for a few minutes during throughput capacity scaling. You are billed for the new amount of throughput capacity once it is available to your file system.
+* Do not wait for the throughput capacity action to complete. Move to the next section.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::monitor-performance.png[link=../09-monitor-performance/, align="left",width=420]
+
+
+
+

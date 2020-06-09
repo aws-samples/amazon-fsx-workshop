@@ -34,7 +34,7 @@ Parameters:
   LowFreeDataStorageCapacityThreshold:
     AllowedPattern: ^[0-9]+$
     ConstraintDescription: Must be an integer.
-    Default: 7100000000000
+    Default: 7000000000000
     Description: Low free data storage capacity threshold (Bytes)
     Type: String
 
@@ -53,7 +53,7 @@ Resources:
                       "width": 9,
                       "height": 6,
                       "properties": {
-                          "markdown": "\n# Amazon FSx file system: ',!Ref 'FileSystemId','\n## Region: ',!Ref 'AWS::Region','\n\nDashboard: [', !Join [ '_', [ !Ref 'AWS::Region', !Ref FileSystemId ] ],'](#dashboards:name=', !Join [ '_', [ !Ref 'AWS::Region', !Ref FileSystemId ] ],')\n\n![FSx_logo](https://s3.amazonaws.com/amazon-fsx/workshop/lustre/resources/images/fsx-for-lustre-icon.png)\n"
+                          "markdown": "\n# Amazon FSx file system: ',!Ref 'FileSystemId','\n## Region: ',!Ref 'AWS::Region','\n\nDashboard: [', !Join [ '_', [ !Ref 'AWS::Region', !Ref FileSystemId ] ],'](#dashboards:name=', !Join [ '_', [ !Ref 'AWS::Region', !Ref FileSystemId ] ],')\n\n![FSx_logo](https://s3.amazonaws.com/aws-us-east-1/amazon-fsx-tutorial/Amazon-FSx-for-Windows-File-Server.png)\n"
                       }
                   },
                   {
@@ -235,6 +235,6 @@ Resources:
       MetricName: FreeDataStorageCapacity
       Namespace: AWS/FSx
       Period: 60
-      Statistic: Sum
+      Statistic: Minimum
       Threshold: !Ref LowFreeDataStorageCapacityThreshold
       TreatMissingData: missing

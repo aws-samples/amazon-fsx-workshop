@@ -1,0 +1,165 @@
+= Enable shadow copies
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will enable shadow copies for the entire file system.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Enable shadow copies
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::enable-shadow-copies.gif[align="left", width=600]
+
+. *_Copy_* the script below into your favorite text editor.
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system and *_select_* the *Network & security* tab. *_Copy_* the *Windows Remote PowerShell Endpoint* of the file system to the clipboard (e.g. amznfsx0123abcde.example.com).
+
+. Return to your favorite text editor and replace *"windows_remote_powershell_endpoint"* with the *Windows Remote PowerShell Endpoint* of *MAZ*. *_Copy_* the updated script.
+
+. Go to the remote desktop session for your *FSx/W Workshop Windows Instance*.
+
+. *_Click_* *Start* >> *Windows PowerShell*.
+
+. *_Run_* the updated script in the *Windows PowerShell* window.
+
++
+NOTE: Complete the next few steps using the remote PowerShell session to the FSx file server.
++
+
+. Review the PowerShell function commands for shadow copies available using the *Amazon FSx CLI for remote management on PowerShell*.
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Get-Command *-FSxShadow*
+----
++
+
+. What commands are available?
+
+. Set shadow copy storage for the entire FSx file system. The default shadow copy storage setting lets shadow copies consume a maximum of 10 percent of your file system. The default schedule automatically takes shadow copies every Monday, Tuesday, Wednesday, Thursday, and Friday, at 7:00 AM and 12:00 PM UTC.
+* *_Run_* the script in the *Remote Windows PowerShell Session*. *_Enter_* *A* for *Yes to All* when prompted to confirm.
+
++
+[source,bash]
+----
+Set-FsxShadowStorage -Default
+Set-FsxShadowCopySchedule -Default
+----
++
+
+. Examine the default shadow copy configuration using the commands in the table below.
+
++
+|===
+| *Command*
+| Get-FSxShadowCopies
+
+| Get-FSxShadowCopySchedule
+
+| Get-FSxShadowStorage
+|===
++
+
+* What's the default schedule for shadow copies?
+* How much space is allocated, used, and available for shadow copies?
+
+NOTE: Shadow copies are stored alongside your ﬁle system's data, and therefore consume its storage capacity. However, shadow copies consume storage capacity only for the changed portions of ﬁles. All shadow copies stored in your ﬁle system are included in backups of your ﬁle system. Thus, when you restore a backup, users continue to have previous versions available as of the time that the ﬁle system was backed up. For more information on shadow copies, please read the link:https://docs.aws.amazon.com/fsx/latest/WindowsGuide/shadow-copies-fsxW.html[Working with Shadow Copies] section in the link:https://docs.aws.amazon.com/fsx/latest/WindowsGuide[Amazon FSx for Windows File Server User Guide].
+
+
+=== Modify shadow copy storage
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::modify-shadow-copies.gif[align="left", width=600]
+
+NOTE: Complete the next few steps using the remote PowerShell session to the FSx file server.
+
+
+. Set maximum size of shadow copy storage to 20% of the total storage capacity of the file system.
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Set-FSxShadowStorage -maxsize "20%"
+----
++
+
+. What other maxize options are available for shadow copies?
+
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Set-FSxShadowStorage -?
+----
++
+
+. Experiment and use different options to set the maximum storage for shadow copies.
+
+
+=== Create a new shadow copy
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::new-shadow-copy.gif[align="left", width=600]
+
+
+NOTE: Complete the next few steps using the remote PowerShell session to the FSx file server.
+
+. Create an new shadow copy of the file system.
+
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+New-FSxShadowCopy
+----
++
+
+. From *File Explorer*, modify one of the test files you created when you first mapped the default file share (e.g. New Text Document, or New Rich Text Document).
+* Add something new to the document, like your name.
+* Save and close the document.
+* Open the document again to verify the changes.
+* *_Context-click (right-click)_* the file and *_select_* *Restore previous versions*.
+* *_Select_* the *Open* button to open and examine the previous version of the file. It should be empty.
+* *_Close_* the file.
+* *_Select_* the *Restore* button to restore the file to the previous version. Confirm this by *_selecting_* *Restore* on the *Previous version* pop-up window.
+* *Select* *OK* and *OK*.
+* Open the document again to verify the file was restored to the previous version - an empty file.
+
+. Experiment creating new files, folders, and taking shadow copies.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::enforce-in-transit-encryption.png[link=../12-enable-enforce-in-transit-encryption/, align="left",width=420]
+
+
+
+

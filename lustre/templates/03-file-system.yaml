@@ -41,7 +41,7 @@ Parameters:
     Description: Select an existing security group id
     Type: AWS::EC2::SecurityGroup::Id          
   StorageCapacity:
-    Default: 7200
+    Default: 100200
     Description: Storage capacity of file system in increments of 3600 GiBs
     MaxValue: 100200
     MinValue: 3600

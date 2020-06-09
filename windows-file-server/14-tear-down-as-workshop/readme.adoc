@@ -1,0 +1,15 @@
+= Tear down AWS sponsored workshop
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+*Congratulation!* You have completed the Amazon FSx for Windows File Server Workshop.
+
+Because you completed the Amazon FSx for Windows File Server AWS sponsored workshop, there are no other steps you need to do to tear down your workshop. The AWS account provided to you for the workshop will be deleted at the end of the workshop event.
+
+If you're interested in taking this workshop again, please return to this Github repo and select the link:/../../[Amazon FSx for Windows File Server On-Demand Workshop] and complete the workshop using your own account, or click on the link below.
+
+image::fsx-windows-workshops.png[link=/../../, align="right",width=420]
+
+

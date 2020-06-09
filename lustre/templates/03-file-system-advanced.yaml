@@ -9,7 +9,7 @@ Metadata:
     - Label:
         default: File system configuration
       Parameters:
-        - FileSystemName
+        - Name
         - StorageCapacity
         - SubnetId
         - SecurityGroupId
@@ -20,12 +20,12 @@ Metadata:
     ParameterLabels:
       ExportPath:
         default: Export path (optional)
-      FileSystemName:
-        default: Name tag value
       ImportedFileChunkSize:
         default: Imported file chunk size (MiB) (optional)
       ImportPath:
         default: Import path (optional)
+      Name:
+        default: Name tag value
       SecurityGroupId:
         default: Security group
       StorageCapacity:
@@ -40,10 +40,6 @@ Parameters:
     AllowedPattern: ^$|(s3://)([a-z0-9.-]*)$
     Description: Export path e.g. s3://my-bucket/export-prefix. Optionally include only if Import Path value is provided. If included, export bucket must match import bucket.
     Type: String
-  FileSystemName:
-    AllowedPattern: ^$|([A-Za-z0-9+-=._:/ ]{0,256})$
-    Description: Name of file system - name value of key-value pair
-    Type: String 
   ImportedFileChunkSize:
     Description: Stripe set of the files imported from a data repository. Optionally include only if Import Path value is provided. Allowed values 1 - 512000.
     Type: String
@@ -52,6 +48,10 @@ Parameters:
     Default: s3://nasanex
     Description: Import path e.g. s3://my-bucket/import-prefix
     Type: String
+  Name:
+    AllowedPattern: ^$|([A-Za-z0-9+-=._:/ ]{0,256})$
+    Description: Name of file system - name value of key-value pair
+    Type: String     
   SecurityGroupId:
     Description: Select an existing security group id
     Type: AWS::EC2::SecurityGroup::Id          

@@ -1,0 +1,89 @@
+= Enable Enforcement of In-transit Encryption
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will enable enforcement of in-transit encryption. Amazon FSx supports encryption of data in-transit using SMB 3 encryption, and allows unencrypted connections from compute instances that don’t support SMB 3. You can now choose to enforce that access is allowed only via encrypted connections to meet your compliance needs.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Enable enforcement of in-transit encryption
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::enable-enforce-in-transit-encryption.gif[align="left", width=600]
+
+. *_Copy_* the script below into your favorite text editor.
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system and *_select_* the *Network & security* tab. *_Copy_* the *Windows Remote PowerShell Endpoint* of the file system to the clipboard (e.g. amznfsx0123abcde.example.com).
+
+. Return to your favorite text editor and replace *"windows_remote_powershell_endpoint"* with the *Windows Remote PowerShell Endpoint* of *MAZ*. *_Copy_* the updated script.
+
+. Go to the remote desktop session for your *FSx/W Workshop Windows Instance*.
+
+. *_Click_* *Start* >> *Windows PowerShell*.
+
+. *_Run_* the updated script in the *Windows PowerShell* window.
+
++
+NOTE: Complete the next few steps using the remote PowerShell session to the FSx file server.
++
+
+. Review the PowerShell function commands for the SMB server configuration using the *Amazon FSx CLI for remote management on PowerShell*.
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Get-Command *-FSxSmbServerConfiguration*
+----
++
+
+. What commands are available?
+
+. Get the current setting of enforcement of in-transit encryption.
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Get-FSxSmbServerConfiguration
+----
++
+
+. What's the values of *RejectUnencryptedAccess*?
+
+. Enable enforcement of in-transit encryption.
+* *_Run_* the script in the *Remote Windows PowerShell Session*.
+
++
+[source,bash]
+----
+Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $True
+----
++
+. When prompted to perform this action, *_enter_* *A* at the prompt.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::scale-storage-capacity.png[link=../13-scale-storage-capacity/, align="left",width=420]
+

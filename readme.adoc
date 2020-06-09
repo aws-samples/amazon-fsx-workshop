@@ -3,14 +3,18 @@
 :linkattrs:
 :imagesdir: resources/images
 
-image:fsx-aws-logos.png[alt="fsx and aws logos", align="left",width=420]
+image:fsx-aws-logos.png[align="left",width=420]
 
-This is a set of workshop designed for architects and engineers who would like to learn more about Amazon Web Services (AWS) full-managed third party file system service - link:https://aws.amazon.com/fsx/[Amazon FSx].
+This is a set of workshops designed for architects and engineers who would like to learn more about Amazon Web Services (AWS) full-managed third party file system service - link:https://aws.amazon.com/fsx/[Amazon FSx].
 
-Click the button below to access Amazon FSx workshops.
+There are two types of Amazon FSx workshops. **On-Demand workshops** are designed for individuals to run the workshop at any time using their own AWS account. These workshops include instructions to create the workshop environment using your own AWS account. **AWS Sponsored workshops** are designed for individuals or groups taking the workshop during an AWS sponsored event, such as an AWS Summit, AWS Storage Days Workshop, AWS Workshop, or AWS re:invent. These workshops use AWS owned accounts that will be created and distributed at the time of the event. Instructions on how to gain access to these AWS accounts will by shared by AWS at the start of the event.
 
-image::fsx-windows-stg326.png[link=stg326/, align="left",width=420]
+Click the link below to access the type of workshops you want to run.
 
+[cols="1,1"]
+|===
+a|image::fsx-od-workshops.png[link=on-demand/] a| image::fsx-as-workshops.png[link=aws-sponsored/]
+|===
 
 === Participation
 
