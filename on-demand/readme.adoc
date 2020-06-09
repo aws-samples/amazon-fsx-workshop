@@ -12,7 +12,7 @@ Click the link below to access the type of on-demand workshop you want to run, *
 [cols="1,1"]
 |===
 a|image::fsx-lustre-od-workshop.png[link=../lustre/01-create-od-environment/]
-a|image::fsx-windows-od-workshop.png[link=../windows-file-serverr/01-create-od-environment/]
+a|image::fsx-windows-od-workshop.png[link=../windows-file-server/01-create-od-environment/]
 |===
 
 NOTE: You will incur charges as you go through either of these workshops, as they will exceed the link:http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-limits.html[limits of AWS free tier].
