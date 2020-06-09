@@ -12,7 +12,7 @@ It will take approximately 40 minutes for the workshop environment to be created
 
 == Workshop Diagram
 
-image::fsx-windows-workshop-architecture-v1.png[align="left", width=600]
+image::fsx-windows-workshop-architecture-v1.png[align="center"]
 
 === Deploy the workshop using AWS CloudFormation
 
