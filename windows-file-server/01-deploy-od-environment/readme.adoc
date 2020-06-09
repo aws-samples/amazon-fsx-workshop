@@ -1,4 +1,4 @@
-= Access On-Demand Workshop
+= Deploy On-Demand Workshop
 :toc:
 :icons:
 :linkattrs:
@@ -130,4 +130,4 @@ The tutorial environment will be available in approximately 40 minutes.
 
 Click the button below to go to the next section.
 
-image::map-default-file-share.png[link=../02-map-default-file-share/, align="right",width=420]
+image::connect-to-instances.png[link=../02-connect-to-instances/, align="right",width=420]

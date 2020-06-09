@@ -1,4 +1,4 @@
-= Access AWS sponsored workshop
+= Access AWS Sponsored Workshop
 :toc:
 :icons:
 :linkattrs:
@@ -29,7 +29,7 @@ image::access-as-workshop.gif[align="left", width=600]
 . From the *AWS Console Login* page, *_click_* the *[Open AWS Console]* link in the *Login Link* section to open the AWS Console using the AWS sponsored account.
 
 
-== Next section
+== Next Section
 
 Click the link below to go to the next section.
 
