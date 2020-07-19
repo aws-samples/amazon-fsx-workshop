@@ -164,7 +164,7 @@ time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero 
 job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 
 cd /mnt/fsx
-time seq 1 2 | parallel --will-cite -j2 'ior -b 32g -t 8m -w -r -F -B -o /mnt/fsx/${job_name}{}.txt' &
+time seq 1 2 | parallel --will-cite -j2 'ior -b 32g -t 8m -w -r -F --posix.odirect -o /mnt/fsx/${job_name}{}.txt' &
 ----
 
 == Next section
