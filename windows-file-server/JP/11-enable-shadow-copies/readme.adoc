@@ -1,0 +1,165 @@
+= Enable shadow copies
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== 概要
+
+この章ではファイルシステム全体に対するシャドーコピーの有効化を行います。
+
+
+== 所要時間
+
+注意: この章の完了には15分程度の時間を要します。
+
+
+== ステップバイステップガイド
+
+=== シャドーコピーの有効化
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::enable-shadow-copies.gif[align="left", width=600]
+
+. テキストエディターに以下のスクリプトを*_コピー_*して下さい。
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+
+. テキストエディターに戻り、*"windows_remote_powershell_endpoint"*の部分をクリップボードにコピーした値に入れ替えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+
+. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+
+. *Start* >> *Windows PowerShell*の順で*_クリック_*して下さい。
+
+. *Windows PowerShell*ウィンドウで先ほどコピーしたスクリプトを貼り付け、*_実行_*して下さい。
+
++
+注意: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
++
+
+. *Amazon FSx CLI for remote management on PowerShell*を使用して、シャドーコピー設定のためのパワーシェルコマンドを確認します。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-Command *-FSxShadow*
+----
++
+
+. どのようなコマンドが使えますか？
+
+. ファイルシステム全体に対してシャドーコピーの設定を行います。デフォルト設定では、ファイルシステム全体の容量の10％までシャドーコピーで使えるようになっています。また、デフォルトスケジュールとして、毎週月曜日、火曜日、水曜日、木曜日、金曜日の午前7:00と午後12:00(UTC)にシャドーコピーを取得するようになっています。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。確認のプロンプトが現れた場合は*Yes to All*の質問に対して*A*を*_入力_*して下さい。
+
++
+[source,bash]
+----
+Set-FsxShadowStorage -Default
+Set-FsxShadowCopySchedule -Default
+----
++
+
+. 以下のコマンド群を使用して、シャドーコピーのデフォルト設定を確認して下さい。
+
++
+|===
+| *Command*
+| Get-FSxShadowCopies
+
+| Get-FSxShadowCopySchedule
+
+| Get-FSxShadowStorage
+|===
++
+
+* シャドーコピーのデフォルトスケジュールはどのようになっていますか？
+* シャドーコピーの割当て済み容量、使用済み容量、残り容量はそれぞれどのようになっていますか？
+
+注意: シャドーコピーはファイルシステムのデータの一部として保存されるため、ファイルシステムのストレージ容量を消費します。しかしながら、シャドーコピーはファイルに生じた差分更新のみを保存します。ファイルシステム内に作成された全てのシャドーコピーは、そのままファイルシステムのバックアップにも含まれます。このような仕組みから、もしバックアップからファイルシステムをリストアした場合、ユーザーはファイルシステムをバックアップした時点の以前のバージョンのファイルに引き続きアクセスする事が出来ます。シャドーコピーに関する詳細は、link:https://docs.aws.amazon.com/fsx/latest/WindowsGuide[Amazon FSx for Windows File Server User Guide] のlink:https://docs.aws.amazon.com/fsx/latest/WindowsGuide/shadow-copies-fsxW.html[Working with Shadow Copies] を参照して下さい。
+
+
+=== シャドーコピーの変更
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::modify-shadow-copies.gif[align="left", width=600]
+
+注意: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
+
+
+. ファイルシステム内でシャドーコピーが使用できる最大容量を20％へ増やします。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Set-FSxShadowStorage -maxsize "20%"
+----
++
+
+. シャドーコピーコマンドのmaxizeオプションとして他に何が使えますか？
+
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Set-FSxShadowStorage -?
+----
++
+
+. シャドーコピーの最大容量を設定するための他のオプションも試してみて下さい。
+
+
+=== 新規シャドーコピーの作成
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::new-shadow-copy.gif[align="left", width=600]
+
+
+注意: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
+
+. ファイルシステムの新しいシャドーコピーを作成します。
+
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+New-FSxShadowCopy
+----
++
+
+. *ファイルエクスプローラー*で、最初にデフォルトファイル共有を作成した時に作成したテストファイルの中身を変更します。(例 新規テキストドキュメントまたは新規リッチテキストドキュメント）
+* ドキュメントを開き、何か追記して下さい。（例えばあなたのお名前）
+* ドキュメントを保存して閉じて下さい。
+* ドキュメントをサイド開き、変更が反映されているか確認して下さい。
+* ファイルを*_コンテキストクリック (右クリック)_* し、*Restore previous versions*を*_選択_*して下さい。
+* 以前のバージョンのファイルかどうかを確認するため、*Open*ボタンを*_選択_*してファイルを開きます。空のファイルが表示されるはずです。
+* ファイルを*_閉じて_*下さい。
+* ファイルを以前のバージョンに戻すために*Restore*ボタンを*_選択_*して下さい。*Previous version*ポップアップウィンドウで*Restore*を*_選択_*し、リストアを確定させて下さい。
+* *OK*を*選択*し、再度*OK*を押して下さい。
+* 再度ファイルを開き、以前のバージョン（空のファイル）にリストアされている事を確認して下さい。
+
+. 新規ファイルやフォルダーを作り、シャドーコピーを取って色々と試してみて下さい。
+
+== 次の章
+
+以下のリンクをクリックして次の章に進んで下さい。
+
+image::enforce-in-transit-encryption.png[link=../12-enable-enforce-in-transit-encryption/, align="left",width=420]
+
+
+
+

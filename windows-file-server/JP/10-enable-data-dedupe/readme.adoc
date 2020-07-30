@@ -1,0 +1,316 @@
+= 重複排除の有効化
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+この章では重複排除の有効化を行います。
+
+
+== 所要時間
+
+注意: この章の完了には20分程度の時間を要します。
+
+
+== ステップバイステップガイド
+
+=== 重複排除の有効化
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::enable-data-dedup.gif[align="left", width=600]
+
+
+. テキストエディターに以下のスクリプトを*_コピー_*して下さい。
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+
+. テキストエディターに戻り、*"windows_remote_powershell_endpoint"*の部分をクリップボードにコピーした値に入れ替えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+
+. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+
+. *Start* >> *Windows PowerShell*の順で*_クリック_*して下さい。
+
+. *Windows PowerShell*ウィンドウで先ほどコピーしたスクリプトを貼り付け、*_実行_*して下さい。
+
++
+注意: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
++
+
+. *Amazon FSx CLI for remote management on PowerShell*を使用して、重複排除設定のためのパワーシェルコマンドを確認します。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-Command *-FSxDedup*
+----
++
+
+. どのようなコマンドが使えますか？
+
+. ファイルシステム全体に対して重複排除の設定を行います。
+* *Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい
+
++
+[source,bash]
+----
+Enable-FSxDedup
+----
++
+
+. 以下のコマンド群を使用して、重複排除関連の設定を確認して下さい。
+
++
+|===
+| *Command*
+| Get-FSxDedupConfiguration
+
+| Get-FSxDedupStatus
+
+| Get-FSxDedupJob
+
+| Get-FSxDedupMetadata
+
+| Get-FSxDedupSchedule
+
+| Measure-FSxDedupFileMetadata -path "D:\share"
+
+|===
++
+
+* 全てのコマンドが上手く実行出来ましたか？何故上手く出来ないものがあるのでしょうか？
+* 次の"Optimization"タスクはいつにスケジュールされていますか？
+
+. リモートPowerShellセッションを終了します。*Exit-PSSession*を*_実行_*して下さい。
+
+. PowerShellウィンドウを閉じます。*exit*を*_実行_*して下さい。
+
+
+=== 新規重複排除optimizationスケジュールの作成
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::new-data-dedup-schedule.gif[align="left", width=600]
+
+
+. テキストエディターに以下のスクリプトを*_コピー_*して下さい。
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+ link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+
+. テキストエディターに戻り、*"windows_remote_powershell_endpoint"*の部分をクリップボードにコピーした値に入れ替えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+
+. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+
+. *Start* >> *Windows PowerShell*の順で*_クリック_*して下さい。
+
+. *Windows PowerShell*ウィンドウで先ほどコピーしたスクリプトを貼り付け、*_実行_*して下さい。
+
+重要: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
+
+. 新規重複排除optimizationスケジュールを作成します。
+
+* *Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい。
+
++
+[source,bash]
+----
+New-FSxDedupSchedule
+----
++
+
+* プロンプトが現れたら以下の値を使用して下さい。
+
++
+|===
+| *Prompt* | *Value*
+| Name
+| DailyOptimization
+
+| Type
+| Optimization
+
+|===
++
+
+. optimizationを開始する時間はいつですか？
+
+. 重複排除設定のその他のオプションも見てみます。
+* *Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Set-FSxDedupSchedule -?
+----
++
+
+. 以下のコマンドをテキストエディターに*_コピー_*し、*start_time*パラメーターを現在時刻の2分後に編集します。リモートデスクトップウィンドウの右下に時間が表示されています。この時刻に2分足して、*start_time*パラメーターを足した時刻に入れ替えて下さい。(例 5:32pm). この時刻はUTCです。
+
++
+[source,bash]
+----
+Set-FSxDedupSchedule -Name DailyOptimization -Start start_time
+----
++
+
+* *Windows PowerShell*ウィンドウでアップデートしたコマンドを実行して下さい。
+
+* 先ほど設定したDailyOptimizationの時間が来るまで待機し(例 先ほど設定したstart_timeの1分後) 、ステータス確認のため以下のコマンドを実行して下さい。
+
+* *Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-FSxDedupStatus
+----
++
+
+. optimizationスケジュールは実行されましたか？
+
+* Get-FSxDedupStatusコマンドの出力結果のLastOptimizationTimeの値を確認して下さい。
+
+. 何個のファイルが最適化され、どのくらいの容量が削減されましたか？
+
+* Get-FSxDedupStatusコマンドの出力に表示される、以下のような関連事項も確認して下さい。
+
++
+|===
+| *Attribute*
+| LastOptimizationResult
+
+| OptimizedFilesCount
+
+| OptimizedFilesSavingsRate
+
+| OptimizedFilesSize
+
+| SavedSpace
+|===
++
+
+. 何か最適化されていると思いますか？何故最適化されていないのですか？
+
+. この問いの答えを得るためにlink:https://docs.aws.amazon.com/fsx/latest/WindowsGuide/using-data-dedup.html[Amazon FSx for Windows File Server User Guide] の*_Enabling data deduplication_*セクションを確認してみて下さい。
+
+* *Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-FSxDedupConfiguration
+----
++
+
+. MinimumFileAgeDaysの値は何ですか？
+
+. 重複排除設定をアップデートし、minimum file age daysの値を0にします。
+
+* *Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Set-FSxDedupConfiguration -MinimumFileAgeDays 0
+----
++
+
+. 2分後に重複排除をスケジュールするため、DailyOptimizationをアップデートします。
+
+. 以下のコマンドをテキストエディターに*_コピー_*し、*start_time*パラメーターを現在時刻の2分後に編集します。リモートデスクトップウィンドウの右下に時間が表示されています。この時刻に2分足して、*start_time*パラメーターを足した時刻に入れ替えて下さい。(例 5:32pm). この時刻はUTCです。
+
++
+[source,bash]
+----
+Set-FSxDedupSchedule -Name DailyOptimization -Start start_time
+----
++
+
+* *Remote Windows PowerShell Session*でアップデートしたコマンドを*_実行_*して下さい。
+
+* 先ほど設定したDailyOptimizationの時間が来るまで待機し(例 先ほど設定したstart_timeの1分後) 、ステータス確認のため以下のコマンドを実行して下さい。
+
+* *Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-FSxDedupStatus
+
+----
++
+
+. optimizationスケジュールは実行されましたか？
+* Get-FSxDedupStatusコマンドの出力結果のLastOptimizationTimeの値を確認して下さい。
+
+. アクティブな重複排除ジョブがまだ実行中になっているのではないでしょうか。重複排除ジョブのステータスを確認するため、*Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい。
++
+[source,bash]
+----
+Get-FSxDedupJob
+----
++
+
+. ジョブのステータスを継続的に確認するため、数分おきにGet-FSxDedupJobコマンドを実行してみて下さい。*パフォーマンスをテストする*の章で作成したデータの量にもよりますが、完了までに5-10分必要です。
+
+. 重複排除ジョブがバックグラウンドで走っていますが、そのままワークショップを継続して下さい。
+
+. もしGet-FSxDedupJobコマンドがエラーを返す場合、アクティブジョブが存在せず、ジョブが完了している事を意味します。
+
+. *Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-FSxDedupStatus
+----
++
+
+. 何個のファイルが最適化され、どのくらいの容量が削減されましたか？
+
+* Get-FSxDedupStatusコマンドの出力に表示される、以下のような関連事項も確認して下さい。
+
++
+|===
+| *Attribute*
+| LastOptimizationResult
+
+| OptimizedFilesCount
+
+| OptimizedFilesSavingsRate
+
+| OptimizedFilesSize
+
+| SavedSpace
+|===
+
+
+== 次の章
+
+以下のリンクをクリックして次の章に進んで下さい。
+
+image::enable-shadow-copies.png[link=../11-enable-shadow-copies/, align="left",width=420]
+
+
+
+

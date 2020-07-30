@@ -1,0 +1,124 @@
+= デフォルトファイル共有のマウント
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+この章ではAmazon EC2 LinuxインスタンスにAmazon FSx for Windowsファイルサーバーのデフォルトファイル共有をマウントします。
+
+
+== 所要時間
+
+注意: この章の完了には5分程度の時間を要します。
+
+
+== ステップバイステップガイド
+
+=== デフォルトファイル共有のマウント
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::mount-default-file-share.gif[align="left", width=600]
+
+. *FSx/W Workshop Linux instance*のブラウザベースSSH接続に戻ります。
++
+補足: もしSSH接続がタイムアウトしている場合、例えばセッションが反応しない場合、一度ウィンドウを閉じて再度新しいウィンドウを開きます。link:https://console.aws.amazon.com/ec2/[Amazon EC2] コンソールに戻って下さい。*FSx/W Workshop Linux Instance*の横のラジオボタンを*_クリック_*して下さい。*Connect*ボタンを*_クリック_*して下さい。*EC2 Instance Connect (browser-based SSH connection)*の横のラジオボタンを*_クリック_*して下さい。ユーザー名をデフォルトの*ec2-user*のままにして*Connect*を*_クリック_*して下さい。
++
+. どのCIFS/SMB共有がマウントされているかを確認するため、以下のコマンドを実行して下さい。
++
+[source,bash]
+----
+mount -t cifs
+
+----
++
+
+. どのCIFS/SMBファイル共有がマウントされていますか？
+注意: この段階ではマウントされている共有は存在しないはずです。
+
+. 以下のスクリプトをテキストエディタに*_コピー_*して下さい。
++
+[source,bash]
+----
+sudo yum install cifs-utils -y
+
+mountpoint=/fsx
+dnsname="dns_name" # e.g. "amznfsx0123abcde.example.com"
+username="admin@example.com"
+
+sudo mkdir -p ${mountpoint}
+sudo mount -t cifs //${dnsname}/share ${mountpoint} -o vers=2.0,user=${username}
+----
++
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_クリック_*して下さい。*DNS name*をクリップボードに*_コピー_*するために、*DNS name*の隣のimage:copy-to-clipboard.png[align="left",width=20] ショートカットを*_クリック_*して下さい。
+
+. テキストエディタに戻り、*"dns_name"* をクリップボードにコピーした*dns name*に入れ替えて下さい。スクリプト全体を*_コピー_*して下さい。
++
+補足: スクリプトの後の*線*をコピーしないように注意して下さい。以降のステップで次のようなエラーが発生する原因になります。: *mount error(115): Operation now in progres*
++
+. *FSx/W Workshop Linux instance*のブラウザベースSSH接続に戻ります。
++
+補足: もしSSH接続がタイムアウトしている場合、例えばセッションが反応しない場合、一度ウィンドウを閉じて再度新しいウィンドウを開きます。
++
+. ブラウザベースSSH接続にクリップボードにコピーしたスクリプトを*_ペースト_*して実行します。
+
+. link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] コンソールに*_戻り_*ます。
++
+補足: *_コンテキストクリック (右クリック)_* で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールの切り替えがし易く便利です。
++
+. *username*と*password*の*Secret key/value*ペアを使用し、*password*をクリップボードにコピーします。
+
+. ブラウザベースSSH接続のプロンプトにクリップボードのパスワードを*_貼り付け_*ます (例 *Password for admin@example.com@//amznfsx0123abcde.example.com/share:*). パスワードはマスクして表示されます。(例 ************)
+
+. マウントが成功したかどうか確認します。ブラウザベースSSH接続ウィンドウで以下のコマンドを*_実行_*して下さい。
++
+[source,bash]
+----
+mount -t cifs
+ll /fsx
+
+----
++
+. CIFSマウントについてどのような情報が出力されますか？
+
+. */fsx*マウントポイントにどのようなディレクトリやファイルが見えますか？
+
+. Amazon S3から何個のファイル、ディレクトリ、データがプリロードされていますか？ ブラウザベースSSH接続ウィンドウで以下のコマンドを*_実行_*して下さい。
++
+[source,bash]
+----
+time tree --du -h /fsx
+
+----
++
+* 出力は以下のようになるはずです
++
+[source,bash]
+----
+│           ├── [8.9M]  AVHRRBUVI01.2011octa.abl
+│           ├── [8.9M]  AVHRRBUVI01.2011octb.abl
+│           ├── [8.9M]  AVHRRBUVI01.2011sepa.abl
+│           └── [8.9M]  AVHRRBUVI01.2011sepb.abl
+├── [   0]  MyFirstFile.txt
+└── [   7]  MySecondFile.rtf
+
+  26G used in 9 directories, 2225 files
+
+real0m0.169s
+user0m0.010s
+sys0m0.013s
+----
+
+
+== 次の章
+
+以下のリンクをクリックして次の章に進んで下さい。
+
+image::create-new-file-shares.png[link=../06-create-new-file-shares/, align="left",width=420]
+
+
+
+

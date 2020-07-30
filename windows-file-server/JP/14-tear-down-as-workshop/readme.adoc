@@ -1,0 +1,15 @@
+= スポンサードワークショップの事後処理
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+*おめでとうございます!* あなたはAmazon FSx for Windowsファイルサーバーワークショップを完了しました。
+
+完了したワークショップはAWSスポンサードワークショップなので、ワークショップの事後処理の必要は有りません。使用したAWSアカウントはワークショップ後に自動的に削除されます。
+
+もしこのワークショップを後ほど再度実行したい場合は、Githubリポジトリに戻ってlink:/../../[Amazon FSx for Windows File Server On-Demand Workshop]をクリックし、各自のアカウントでワークショップを行うか、以下のリンクをクリックして下さい。
+
+image::fsx-windows-workshops.png[link=/../../, align="right",width=420]
+
+

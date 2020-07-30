@@ -1,0 +1,85 @@
+= Amazon FSx コンソールの実習
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+この章ではAmazon FSxコンソールについて重点的に学習します。
+
+
+== 所要時間
+
+注意: この章の完了には5分程度の時間を要します。
+
+
+== ステップバイステップガイド
+
+=== Amazon FSx コンソールの実習
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::examine-fsx-console.gif[align="left", width=600]
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールにアクセスし、*MAZ*ファイルシステムのリンクを*_クリック_*して下さい。
+
+. ファイルシステムの*Summary*セクションを*_確認_*して下さい。以下のファイルシステム関連情報を*_探して_*みて下さい。
+* File system ID
+* Lifecycle state
+* Deployment type
+* Storage type
+* Storage capacity
+* Throughput capacity
+* Availability Zones
+* Creation time
+
+. コンソールの*Network & security*セクションを*_確認_*します。*Network & security*タブを*_クリック_*して下さい。以下のファイルシステム関連情報を*_探して_*みて下さい。
+* VPC
+* DNS name
+* Preferrred File Server IP Address
+* Windows Remote PowerShell Endpoint
+* KMS key ID
+* AWS Managed AD directory ID
+* Type
+
+. コンソールのサブネット関連情報を*_確認_*します。プリファード及びスタンバイサブネットの値を*_探して_*みて下さい。
+* Subnets
+* Availability Zones
+* Network interfaces
+
+* ファイルシステムにアタッチされたVPCセキュリティグループはどのようにして見つければ良いでしょうか？
+* ヒント: プリファードサブネットのネットワークインターフェースリンクを*_クリック_*して下さい。プリファードファイルサーバーのENIの*詳細*タブから、セキュリティグループ属性の中の*view inbound rules*リンクを*_クリック_*して下さい。最後に*Network interface*コンソールのブラウザのタブを*_閉じて_*下さい。
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールに戻ってください。
+
+. コンソールの*Monitoring*セクションを*_確認_*して下さい。*Monitoring*タブを*_クリック_*して下さい。
+* ファイルシステムにはどのようなAmazon CloudWatchメトリックが有りますか？
+
+. コンソールの*Administration*セクションを*_確認_*します。*Administration*タブを*_クリック_*して下さい。
+* 週次のメンテナンスウィンドウはいつに設定されていますか？
+* Amazon FSx for Windowsファイルサーバーは管理するMicrosoft Windows Server softwareに対して定期的なパッチアップデートを実行します。 メンテナンスウィンドウによりこのパッチアップデートを行う時間をコントロール出来ます。パッチアップデートは頻繁には行われず、通常数週間に１度程度です。パッチアップデートは30分確保されているメンテナンスウィンドウの一部で行われます。この数分間、Single-AZファイルシステムの場合は一時的にアクセス不可になりますが、Multi-AZファイルシステムの場合は自動的にスタンバイ側に切り替わり、アップデート完了後、プライマリ側にフェイルバックします。
+
+. コンソールの*Backups*セクションを*_確認_*します。*Backups*タブを*_クリック_*して下さい。
+* 日次の自動バックアップ時間はいつになっていますか？
+* 自動バックアップの保持期間は何日ですか？
+
+. コンソールの*Updates*セクションを*_確認_*します。*Updates*タブを*_クリック_*して下さい。
+* どのようなアップデートが過去に実行されましたか？
+* ストレージとスループットキャパシティのアップデートはワークショップで後ほど実行します。
+
+. コンソールの*Tags*セクションを*_確認_*します。*Tags*タブを*_クリック_*して下さい。
+* ファイルシステムにどのようなタグペア（キー/バリュー）がアサインされていますか？
+* 新しいタグペア（キー/バリュー）を追加します。*[Add]*ボタンを*_クリック_*し、*キー* / *バリュー*を何か追加してみて下さい。(例 Environment/Production)。追加したら*[Save]*ボタンを*_クリック_*して下さい。
+
+
+== 次の章
+
+以下のリンクをクリックして次の章に進んで下さい。
+
+image::map-default-file-share.png[link=../04-map-default-file-share/, align="left",width=420]
+
+
+
+

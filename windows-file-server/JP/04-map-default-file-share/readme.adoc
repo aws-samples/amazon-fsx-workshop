@@ -1,0 +1,61 @@
+= デフォルトファイル共有をマップする
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+この章ではAmazon FSx for Windowsファイルサーバーのデフォルトファイル共有をAmazon EC2 Windows instance上にマップします。
+
+
+== 所要時間
+
+注意: この章の完了には5分程度の時間を要します。
+
+
+== ステップバイステップガイド
+
+=== デフォルトファイル共有をマップする
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::map-default-file-share.gif[align="left", width=600]
+
+. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+
+. *File Explorer*を*_起動_*して下さい。
+
+. *This PC*を*_コンテキストクリック (右クリック)_*し、*Map network drive...*を*_選択_*して下さい。
+
+. 以下の情報を使用してファイル共有をマップして下さい。
++
+[cols="3,10"]
+|===
+| *Drive*
+a| Z:
+
+| *Folder*
+a| ここにはデフォルトファイル共有のUNCパスが入ります。link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。*DNS name*の隣のimage:copy-to-clipboard.png[align="left",width=20] ショートカットを*_クリック_*し、UNCパスの先頭部分をクリップボードへ*_コピー_*します。デフォルトファイル共有へのUNCパスを完成させるために*DNS Name*の後ろに*\share*を*_追加_*して下さい。(例 \\amznfsx0123abcde.example.com\share)。
+
+| *Reconnect at sign-in*
+a| チェックしたまま
+
+| *Connect using different credentials*
+a| チェック無しのまま
+|===
++
+. *Z:*ドライブの*File Explorer*ウィンドウに、事前に用意された*AVHRR*というフォルダが見えるはずです。
+. *Z:*ドライブのルートディレクトリに新規のテストファイルを作成します。*_コンテキストクリック (右クリック)_* >> *New* >> *Text Document*の順にクリックします。複数の異なるタイプのテストファイルを作成してみて下さい。
+
+
+== 次の章
+
+以下のリンクをクリックして次の章に進んで下さい。
+
+image::mount-default-file-share.png[link=../05-mount-default-file-share/, align="left",width=420]
+
+
+
+

@@ -1,0 +1,17 @@
+= ワークショップの事後処理
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+*おめでとうございます!* あなたはAmazon FSx for Windowsファイルサーバーワークショップを完了しました。
+
+重要: **AWS Managed** または **On-demand**のどちらか実施したワークショップに合わせて、以下のリンクから選んで*_クリック_*して下さい。リンク先はワークショップ環境の事後処理に必要なステップを解説しています。無駄な課金を避けるために、このワークショップで使用したリソースを全て削除して下さい。
+
+
+[cols="1,1"]
+|===
+a|image::tear-down-od-workshop.png[link=../14-tear-down-od-workshop/]
+a|image::tear-down-as-workshop.png[link=../14-tear-down-as-workshop/]
+|===
+

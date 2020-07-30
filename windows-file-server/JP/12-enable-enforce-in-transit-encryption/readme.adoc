@@ -1,0 +1,89 @@
+= 転送データの強制暗号化
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== 概要
+
+この章では伝送データの強制暗号化を有効にする方法を学習します。Amazon FSxはSMB 3暗号化を使った伝送データの暗号化をサポートしており、SMB 3をサポートしていないインスタンスからの非暗号化通信を受け付ける事も可能です。コンプライアンスの要求に合わせて、暗号化通信のみ受け付けるように強制する事も可能です。
+
+
+== 所要時間
+
+注意: この章の完了には15分程度の時間を要します。
+
+
+== ステップバイステップガイド
+
+=== 伝送データの強制暗号化を有効にする
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::enable-enforce-in-transit-encryption.gif[align="left", width=600]
+
+. 以下のスクリプトをお使いのテキストエディタに*_コピー_*して下さい。
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールで*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。ファイルシステムの*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+
+. お使いのテキストエディタに戻り、*"windows_remote_powershell_endpoint"*の部分を先ほどコピーした*Windows Remote PowerShell Endpoint*に置き換えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+
+. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+
+. *Start* >> *Windows PowerShell*の順で*_クリック_*して下さい。
+
+. *Windows PowerShell*ウィンドウで先ほどコピーしたスクリプトを貼り付け、*_実行_*して下さい。
+
++
+注意: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
++
+
+. *Amazon FSx CLI for remote management on PowerShell*を使用して、SMBサーバー設定のためのパワーシェルコマンドを確認します。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-Command *-FSxSmbServerConfiguration*
+----
++
+
+. どのようなコマンドが使えますか？
+
+. 伝送データ強制暗号化の現在の設定を確認します。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-FSxSmbServerConfiguration
+----
++
+
+. *RejectUnencryptedAccess*の値は何ですか?
+
+. 伝送データ強制暗号化を有効化します。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $True
+----
++
+. 実行するかどうかプロンプトが現れた場合は*A*を*_入力_*して下さい。
+
+== 次の章
+
+以下のリンクをクリックして次の章に進んで下さい。
+
+image::scale-storage-capacity.png[link=../13-scale-storage-capacity/, align="left",width=420]
+

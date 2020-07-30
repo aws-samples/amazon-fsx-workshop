@@ -1,0 +1,201 @@
+= Enable Enforcement of In-transit Encryption
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== 概要
+
+この章では伝送データの強制暗号化を有効にする方法を学習します。Amazon FSxはSMB 3暗号化を使った伝送データの暗号化をサポートしており、SMB 3をサポートしていないインスタンスからの非暗号化通信を受け付ける事も可能です。コンプライアンスの要求に合わせて、暗号化通信のみ受け付けるように強制する事も可能です。
+
+
+== 所要時間
+
+注意: この章の完了には15分程度の時間を要します。
+
+
+== ステップバイステップガイド
+
+=== 伝送データの強制暗号化を有効にする
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::enable-enforce-in-transit-encryption.gif[align="left", width=600]
+
+. 以下のスクリプトをお使いのテキストエディタに*_コピー_*して下さい。
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールで*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。ファイルシステムの*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+
+. お使いのテキストエディタに戻り、*"windows_remote_powershell_endpoint"*の部分を先ほどコピーした*Windows Remote PowerShell Endpoint*に置き換えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+
+. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+
+. *Start* >> *Windows PowerShell*の順で*_クリック_*して下さい。
+
+. *Windows PowerShell*ウィンドウで先ほどコピーしたスクリプトを貼り付け、*_実行_*して下さい。
+
++
+注意: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
++
+
+. *Amazon FSx CLI for remote management on PowerShell*を使用して、SMBサーバー設定のためのパワーシェルコマンドを確認します。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-Command *-FSxSmbServerConfiguration*
+----
++
+
+. どのようなコマンドが使えますか？
+
+. 伝送データ強制暗号化の現在の設定を確認します。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Get-FSxSmbServerConfiguration
+----
++
+
+. *RejectUnencryptedAccess*の値は何ですか?
+
+. 伝送データ強制暗号化を有効化します。
+* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $True
+----
++
+. 実行するかどうかプロンプトが現れた場合は*A*を*_入力_*して下さい。
+
+
+
+=== 伝送データ強制暗号化の検証
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::verify-enforce-in-transit-encryption.gif[align="left", width=600]
+
+. *FSx/W Workshop Linux Instance*のブラウザベースのSSH接続に戻って下さい。
++
+補足: もしSSH接続がタイムアウトしている場合（例 セッションが応答しない等）、一度ウィンドウを閉じて新しいウィンドウを開きます。link:https://console.aws.amazon.com/ec2/[Amazon EC2] コンソールに戻り、*FSx/W Workshop Linux Instance*という名前のインスタンス横のラジオボタンを*_クリック_*して下さい。次に*Connect*ボタンを*_クリック_*して下さい。*EC2 Instance Connect (browser-based SSH connection)*の横のラジオボタンを*_クリック_*し、ユーザー名はデフォルトの*ec2-user*のままにして、*Connect*を*_クリック_*して下さい。
++
+. Amazon FSx for Windowsファイルサーバーのデフォルトファイル共有がどのようにマウントされるかを確認するため、ブラウザベースのSSH接続ウィンドウで以下のコマンドを*_コピー_*、*_ペースト_*、そして*_実行_*して下さい。
++
+[source,bash]
+----
+mount -t cifs
+
+----
++
+* 以下のような実行結果が表示されるはずです
++
+[source,bash]
+----
+//amznfsx0123abcd.example.com/share on /fsx type cifs (rw,relatime,vers=2.0,cache=strict,username=admin@example.com,domain=,uid=0,noforceuid,gid=0,nof
+orcegid,addr=10.0.1.46,file_mode=0755,dir_mode=0755,soft,nounix,serverino,mapposix,rsize=65536,wsize=65536,echo_interval=60,actimeo=1,user=admin@examp
+le.com)
+----
++
+. デフォルトファイル共有をマウントするために使用されたCIFSバージョンは何ですか？
+. デフォルトファイル共有内のディレクトリを表示するため、ブラウザベースのSSH接続ウィンドウで以下のコマンドを*_コピー_*、*_ペースト_*そして*_実行_*して下さい。
++
+[source,bash]
+----
+ll /fsx
+
+----
++
+* 以下のような出力が表示されるはずです。
++
+[source,bash]
+----
+ls: cannot access /fsx: Host is down
+----
++
+. 何故/fsxにマップされたデフォルトファイル共有にアクセス出来ないんでしょうか？
++
+* 伝送データの暗号化はSMB3.0以降のバージョンをサポートするコンピュートインスタンスでマップされたファイル共有に対応しています。これにはWindows Server 2012とWindows 8以降の全てのバージョンのWindows、バージョン4.2以降のSambaクライアントを使用するLinuxが含まれます。Amazon FSxはアプリケーション設定を変え無くても、SMB暗号化を使用して自動的に伝送データを暗号化します。 SMB暗号化は暗号化アルゴリズムとしてAES-CCM [RFC5084]を使用し、SMB Kerberosセッションキーの署名を使ってデータの検証を行います。
+
+* 伝送データの常時暗号化のコンプライアンス要求を満たすために、SMB暗号化をサポートしたクライアントのみにファイルシステムへのアクセスを制限する事が出来ます。また、伝送データの暗号化はファイル共有単位、またはファイルシステム全体で有効化、無効化が可能です。
++
+. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+. FSx file serverのリモートPowerShellセッションへ戻って下さい。
+. 伝送データの暗号化を無効化します。
+* *リモートWindows PowerShellセッション*で、以下のスクリプトを*_実行_*して下さい。
+
++
+[source,bash]
+----
+Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $False
+----
++
+. プロンプトが表示された場合、*A*を_*入力*_して下さい。
+. *FSx/W Workshop Linux Instance*のブラウザベースのSSH接続に戻って下さい。
+. デフォルトファイル共有のディレクトリの一覧を表示するため、以下のコマンドを*_再実行_*して下さい。
++
+[source,bash]
+----
+ll /fsx
+
+----
++
+* 以下のような結果が出力されるはずです。
++
+[source,bash]
+----
+total 199506832
+drwxr-xr-x 2 root root            0 Jun  1 16:25 AVHRR
+-rwxr-xr-x 1 root root 100000000000 Jun  1 19:57 EC2AMAZ-T42AAO8-1274665807.dat
+-rwxr-xr-x 1 root root 100000000000 Jun  1 20:11 EC2AMAZ-T42AAO8-1701166724.dat
+-rwxr-xr-x 1 root root   2147483648 Jun  1 20:05 EC2AMAZ-T42AAO8-1881100421.dat
+-rwxr-xr-x 1 root root   2147483648 Jun  1 20:07 EC2AMAZ-T42AAO8-662477100.dat
+-rwxr-xr-x 1 root root            0 Jun  1 18:22 MyFirstFile.txt
+-rwxr-xr-x 1 root root            7 Jun  1 18:22 MySecondFile.rtf
+----
++
+. デフォルトファイル共有をアンマウントするため、ブラウザベースのSSH接続ウィンドウで以下のコマンドを*_コピー_*、*_ペースト_*そして*_実行_*して下さい。
++
+[source,bash]
+----
+cd
+sudo umount -f /fsx
+
+----
++
+
+
+
+
+
+テキストエディターに以下のスクリプトを*_コピー_*して下さい。
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+
+. テキストエディターに戻り、*"windows_remote_powershell_endpoint"*の部分をクリップボードにコピーした値に入れ替えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+
+. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+
+
+

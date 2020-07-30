@@ -1,0 +1,36 @@
+= AWSスポンサードワークショップへのアクセス
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+新規のAWS環境がこのワークショップのために事前に準備されています。以下の*ワークショップ構成図*を参照して下さい。
+
+== ワークショップ構成図
+
+image::fsx-windows-workshop-architecture-v1.png[align="center"]
+
+== ステップバイステップガイド
+
+重要: このワークショップで使用されるAWSアカウントへのログイン方法については担当者の案内に従って下さい。個人やビジネスアカウントをこのワークショップでは使用しないで下さい。
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::access-as-workshop.gif[align="left", width=600]
+
+. link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run]をクリックするか、担当者から案内のあるリンク先へアクセスして下さい。
+* AWSイベントエンジンとは、AWSのチームがワークショップ、ゲームデイ、ブートキャンプ、イマージョンデイと言ったハンズオンが必要なイベントに一時的なAWSアカウントを払い出すシステムです。
+. *Terms & Conditions*に*目を通して下さい*。
+. 担当者から与えられたハッシュ文字列を*_入力_* し、*[Accept terms and login]*を*_クリック_*して下さい。
+. *Team Dashboard*ページで*[AWS Console]*を*_クリック_*して下さい。
+. *AWS Console Login*ページで、*Login Link*セクションの*[Open AWS Console]*リンクを*_クリック_*し、AWS管理コンソールを開いて下さい。
+
+
+== 次の章
+
+以下のリンクをクリックして次の章に進んで下さい。
+
+image::connect-to-instances.png[link=..JP/02-connect-to-instances/, align="right",width=420]

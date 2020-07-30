@@ -1,0 +1,148 @@
+= 新規ファイル共有の作成
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+この章ではAmazon FSx for Windowsファイルサーバーに新規ファイル共有を作成します。
+
+Amazon FSx for Windowsファイルサーバーに新規ファイル共有を作成するために、Microsoftの標準ツールが使用出来ます。
+
+
+== 所要時間
+
+注意: この章の完了には5分程度の時間を要します。
+
+
+== ステップバイステップガイド
+
+
+=== 新規ファイル共有の作成
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::create-new-file-shares.gif[align="left",width=600]
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_クリック_*して下さい。*DNS name*をクリップボードに*_コピー_*するために、*DNS name*の隣のimage:copy-to-clipboard.png[align="left",width=20] ショートカットを*_クリック_*して下さい。
++
+補足: *_コンテキストクリック (右クリック)_* で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールの切り替えがし易く便利です。
++
+. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションで、*Start*を*_クリック_*して下さい。
+
+. *fsmgmt.msc*を*_入力_*し、*return/enter*キーを押して下さい。
+
+. *Shared Folders* ウィンドウで、*Action* >> *Connect to another computer...*の順に*_選択_*して下さい。
+
+. *Another computer:*テキストボックスに上記でコピーした*DNS Name*を*_ペースト_*し、*Ok*を*_クリック_*して下さい。
+
+. *Shares*フォルダーを*_右クリック_*し、*New Share...*を*_クリック_*して下さい。
+
+. *Next >*を*_クリック_*して下さい。
+
+. *Browse...*を*_クリック_*して下さい。
+
+. *d$*を*_選択_*して下さい。
+
+. *Make New Folder*を*_クリック_*して下さい。
+
+. 新規フォルダの名前を*application*にして下さい。
+
+. *OK*を*_選択_*して下さい。
+
+. 以下の設定を使って*Create A Shared Folder Wizard*を完了させます。
+
++
+|===
+| *Folder path* | *Share name* | *Create new path* | *Shared folder permissions*
+| D:\application
+| application
+| Yes
+| Customize permissions >> Everyone Full Control
+|===
++
+
+. 同様の手順で*data*という名前の2つ目のファイル共有を作成します。
+
++
+|===
+| *Folder path* | *Share name* | *Create new path* | *Shared folder permissions*
+| D:\data
+| data
+| Yes
+| Customize permissions >> Everyone Full Control
+|===
++
+
+. 同様の手順でその他のファイル共有も作ってみて下さい。全ての共有は*D:\*ドライブ上に作成する必要が有ります。
+
+=== ファイル共有を管理する
+
+重要: 以下の手順に従い、次のステップに進む前に用意された手順解説動画を視聴して下さい。
+
+image::manage-file-shares.gif[align="left", width=600]
+
+
+. 以下のスクリプトをテキストエディタ*_コピー_*して下さい。
++
+[source,bash]
+----
+$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
+enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
+
+----
++
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールで*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。ファイルシステムの*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+
+. テキストエディタに戻り、*"windows_remote_powershell_endpoint"* をクリップボードにコピーした*Windows Remote PowerShell Endpoint*に入れ替えて下さい。スクリプト全体を*_コピー_*して下さい。
+
+. *FSx/W Workshop Windows Instance*リモートデスクトップセッションに戻ります。
+
+. *Start* >> *Windows PowerShell*の順で*_クリック_*して下さい。
+
+. *Windows PowerShell*ウィンドウで、アップデートしたスクリプトを*_実行_*して下さい。
+
+. 以降の手順はFSx for WindowsファイルサーバーのリモートPowerShellセッションで実行します。
+
+. *Amazon FSx CLI for Remote Management on PowerShell*を使用して使用可能なコマンドを確認します。
+
+* *Remote Windows PowerShell Session*で以下のコマンドを*_実行_*して下さい。
++
+----
+Get-Command
+----
++
+
+. どのようなコマンドが使用できますか？
+
+. *Amazon FSx CLI for Remote Management on PowerShell*で使用可能な全てのコマンドを確認してみて下さい。
+
+. 以下のコマンド群を使用してファイルシステムを確認します。
+
+* リモートPowerShellセッションでコマンドを*_実行_*してみて下さい。
++
+|===
+| *Command*
+| Get-FSxSmbShare
+| Get-FSxSmbSession
+| Get-FSxSmbServerConfiguration
+| Get-FSxSmbShareAccess (プロンプトが表示されたら、右のファイル共有名を入力し、都度Enterを入力して、最後にもう一度Enterを入力して下さい。: application, data, share)
+|===
++
+
+. PowerShellウィンドウを閉じて下さい。
+
+. 共有フォルダーウィンドウを閉じて下さい。
+
+== 次の章
+
+以下のリンクをクリックして次の章に進んで下さい。
+
+image::test-performance.png[link=../07-test-performance/, align="left",width=420]
+
+
+
+
