@@ -33,4 +33,4 @@ image::access-as-workshop.gif[align="left", width=600]
 
 以下のリンクをクリックして次の章に進んで下さい。
 
-image::connect-to-instances.png[link=..JP/02-connect-to-instances/, align="right",width=420]
+image::connect-to-instances.png[link=../02-connect-to-instances/, align="right",width=420]
