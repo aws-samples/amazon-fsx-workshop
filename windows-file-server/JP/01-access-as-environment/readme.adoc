@@ -7,7 +7,7 @@
 
 == 概要
 
-新規のAWS環境がこのワークショップのために事前に準備されています。以下の*ワークショップ構成図*を参照して下さい。
+新規のAWS環境がこのワークショップのために事前に準備されています。以下のワークショップ構成図を参照して下さい。
 
 == ワークショップ構成図
 
@@ -23,10 +23,10 @@ image::access-as-workshop.gif[align="left", width=600]
 
 . link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run]をクリックするか、担当者から案内のあるリンク先へアクセスして下さい。
 * AWSイベントエンジンとは、AWSのチームがワークショップ、ゲームデイ、ブートキャンプ、イマージョンデイと言ったハンズオンが必要なイベントに一時的なAWSアカウントを払い出すシステムです。
-. *Terms & Conditions*に*目を通して下さい*。
-. 担当者から与えられたハッシュ文字列を*_入力_* し、*[Accept terms and login]*を*_クリック_*して下さい。
-. *Team Dashboard*ページで*[AWS Console]*を*_クリック_*して下さい。
-. *AWS Console Login*ページで、*Login Link*セクションの*[Open AWS Console]*リンクを*_クリック_*し、AWS管理コンソールを開いて下さい。
+. "Terms & Conditions"に目を通して下さい。
+. 担当者から与えられたハッシュ文字列を入力し、"[Accept terms and login]*"をクリックして下さい。
+. "Team Dashboard"ページで"[AWS Console]"をクリックして下さい。
+. "AWS Console Login"ページで、"Login Link"セクションの"[Open AWS Console]"リンクをクリックし、AWS管理コンソールを開いて下さい。
 
 
 == 次の章
