@@ -22,7 +22,7 @@
 
 image::enable-enforce-in-transit-encryption.gif[align="left", width=600]
 
-. 以下のスクリプトをお使いのテキストエディタに*_コピー_*して下さい。
+. 以下のスクリプトをお使いのテキストエディタにコピーして下さい。
 +
 [source,bash]
 ----
@@ -32,22 +32,22 @@ enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationN
 ----
 +
 
-. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールで*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。ファイルシステムの*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールで"MAZ"ファイルシステムのリンクをクリックし、"Network & security"タブを選択して下さい。ファイルシステムの"Windows Remote PowerShell Endpoint"(例 amznfsx0123abcde.example.com)をクリップボードにコピーして下さい。
 
-. お使いのテキストエディタに戻り、*"windows_remote_powershell_endpoint"*の部分を先ほどコピーした*Windows Remote PowerShell Endpoint*に置き換えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+. お使いのテキストエディタに戻り、"windows_remote_powershell_endpoint"の部分を先ほどコピーした"Windows Remote PowerShell Endpoint"に置き換えて下さい。アップデートしたスクリプトをコピーして下さい。
 
-. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+. "FSx/W Workshop Windows Instance"のリモートデスクトップセッションへ戻って下さい。
 
-. *Start* >> *Windows PowerShell*の順で*_クリック_*して下さい。
+. "Start" >> "Windows PowerShell"の順でクリックして下さい。
 
-. *Windows PowerShell*ウィンドウで先ほどコピーしたスクリプトを貼り付け、*_実行_*して下さい。
+. "Windows PowerShell"ウィンドウで先ほどコピーしたスクリプトを貼り付け、実行して下さい。
 
 +
 注意: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
 +
 
-. *Amazon FSx CLI for remote management on PowerShell*を使用して、SMBサーバー設定のためのパワーシェルコマンドを確認します。
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+. "Amazon FSx CLI for remote management on PowerShell"を使用して、SMBサーバー設定のためのパワーシェルコマンドを確認します。
+* "Remote Windows PowerShell Session"で以下のコマンドを実行して下さい。
 
 +
 [source,bash]
@@ -59,7 +59,7 @@ Get-Command *-FSxSmbServerConfiguration*
 . どのようなコマンドが使えますか？
 
 . 伝送データ強制暗号化の現在の設定を確認します。
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+* "Remote Windows PowerShell Session"で以下のコマンドを実行して下さい。
 
 +
 [source,bash]
@@ -68,10 +68,10 @@ Get-FSxSmbServerConfiguration
 ----
 +
 
-. *RejectUnencryptedAccess*の値は何ですか?
+. "RejectUnencryptedAccess"の値は何ですか?
 
 . 伝送データ強制暗号化を有効化します。
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+* "Remote Windows PowerShell Session"で以下のスクリプトを実行して下さい。
 
 +
 [source,bash]
@@ -79,7 +79,7 @@ Get-FSxSmbServerConfiguration
 Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $True
 ----
 +
-. 実行するかどうかプロンプトが現れた場合は*A*を*_入力_*して下さい。
+. 実行するかどうかプロンプトが現れた場合は"A"を入力して下さい。
 
 
 
@@ -89,11 +89,11 @@ Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $True
 
 image::verify-enforce-in-transit-encryption.gif[align="left", width=600]
 
-. *FSx/W Workshop Linux Instance*のブラウザベースのSSH接続に戻って下さい。
+. "FSx/W Workshop Linux Instance"のブラウザベースのSSH接続に戻って下さい。
 +
-補足: もしSSH接続がタイムアウトしている場合（例 セッションが応答しない等）、一度ウィンドウを閉じて新しいウィンドウを開きます。link:https://console.aws.amazon.com/ec2/[Amazon EC2] コンソールに戻り、*FSx/W Workshop Linux Instance*という名前のインスタンス横のラジオボタンを*_クリック_*して下さい。次に*Connect*ボタンを*_クリック_*して下さい。*EC2 Instance Connect (browser-based SSH connection)*の横のラジオボタンを*_クリック_*し、ユーザー名はデフォルトの*ec2-user*のままにして、*Connect*を*_クリック_*して下さい。
+補足: もしSSH接続がタイムアウトしている場合（例 セッションが応答しない等）、一度ウィンドウを閉じて新しいウィンドウを開きます。link:https://console.aws.amazon.com/ec2/[Amazon EC2] コンソールに戻り、"FSx/W Workshop Linux Instance"という名前のインスタンス横のラジオボタンをクリックして下さい。次に"Connect"ボタンをクリックして下さい。"EC2 Instance Connect (browser-based SSH connection)"の横のラジオボタンをクリックし、ユーザー名はデフォルトの"ec2-user"のままにして、"Connect"をクリックして下さい。
 +
-. Amazon FSx for Windowsファイルサーバーのデフォルトファイル共有がどのようにマウントされるかを確認するため、ブラウザベースのSSH接続ウィンドウで以下のコマンドを*_コピー_*、*_ペースト_*、そして*_実行_*して下さい。
+. Amazon FSx for Windowsファイルサーバーのデフォルトファイル共有がどのようにマウントされるかを確認するため、ブラウザベースのSSH接続ウィンドウで以下のコマンドをコピー、ペースト、そして実行して下さい。
 +
 [source,bash]
 ----
@@ -111,7 +111,7 @@ le.com)
 ----
 +
 . デフォルトファイル共有をマウントするために使用されたCIFSバージョンは何ですか？
-. デフォルトファイル共有内のディレクトリを表示するため、ブラウザベースのSSH接続ウィンドウで以下のコマンドを*_コピー_*、*_ペースト_*そして*_実行_*して下さい。
+. デフォルトファイル共有内のディレクトリを表示するため、ブラウザベースのSSH接続ウィンドウで以下のコマンドをコピー、ペーストそして実行して下さい。
 +
 [source,bash]
 ----
@@ -132,10 +132,10 @@ ls: cannot access /fsx: Host is down
 
 * 伝送データの常時暗号化のコンプライアンス要求を満たすために、SMB暗号化をサポートしたクライアントのみにファイルシステムへのアクセスを制限する事が出来ます。また、伝送データの暗号化はファイル共有単位、またはファイルシステム全体で有効化、無効化が可能です。
 +
-. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+. "FSx/W Workshop Windows Instance"のリモートデスクトップセッションへ戻って下さい。
 . FSx file serverのリモートPowerShellセッションへ戻って下さい。
 . 伝送データの暗号化を無効化します。
-* *リモートWindows PowerShellセッション*で、以下のスクリプトを*_実行_*して下さい。
+* "リモートWindows PowerShellセッション"で、以下のコマンドを実行して下さい。
 
 +
 [source,bash]
@@ -143,9 +143,9 @@ ls: cannot access /fsx: Host is down
 Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $False
 ----
 +
-. プロンプトが表示された場合、*A*を_*入力*_して下さい。
-. *FSx/W Workshop Linux Instance*のブラウザベースのSSH接続に戻って下さい。
-. デフォルトファイル共有のディレクトリの一覧を表示するため、以下のコマンドを*_再実行_*して下さい。
+. プロンプトが表示された場合、"A"を入力して下さい。
+. "FSx/W Workshop Linux Instance"のブラウザベースのSSH接続に戻って下さい。
+. デフォルトファイル共有のディレクトリの一覧を表示するため、以下のコマンドを再度実行して下さい。
 +
 [source,bash]
 ----
@@ -167,7 +167,7 @@ drwxr-xr-x 2 root root            0 Jun  1 16:25 AVHRR
 -rwxr-xr-x 1 root root            7 Jun  1 18:22 MySecondFile.rtf
 ----
 +
-. デフォルトファイル共有をアンマウントするため、ブラウザベースのSSH接続ウィンドウで以下のコマンドを*_コピー_*、*_ペースト_*そして*_実行_*して下さい。
+. デフォルトファイル共有をアンマウントするため、ブラウザベースのSSH接続ウィンドウで以下のコマンドをコピー、ペーストそして実行して下さい。
 +
 [source,bash]
 ----
@@ -181,7 +181,7 @@ sudo umount -f /fsx
 
 
 
-テキストエディターに以下のスクリプトを*_コピー_*して下さい。
+テキストエディターに以下のスクリプトをコピーして下さい。
 +
 [source,bash]
 ----
@@ -191,11 +191,11 @@ enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationN
 ----
 +
 
-. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、"MAZ"ファイルシステムのリンクをクリックし、"Network & security"タブを選択して下さい。"Windows Remote PowerShell Endpoint"(例 amznfsx0123abcde.example.com)をクリップボードにコピーして下さい。
 
-. テキストエディターに戻り、*"windows_remote_powershell_endpoint"*の部分をクリップボードにコピーした値に入れ替えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+. テキストエディターに戻り、"windows_remote_powershell_endpoint"の部分をクリップボードにコピーした値に入れ替えて下さい。アップデートしたスクリプトをコピーして下さい。
 
-. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+. "FSx/W Workshop Windows Instance"のリモートデスクトップセッションへ戻って下さい。
 
 
 

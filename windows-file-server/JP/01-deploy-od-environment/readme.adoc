@@ -1,62 +1,62 @@
-= Deploy On-Demand Workshop
+= オンデマンドワークショップのデプロイ
 :toc:
 :icons:
 :linkattrs:
 :imagesdir: ../resources/images
 
 
-== Summary
+== 概要
 
-Deploy a new AWS environment for use during this workshop. See the *Workshop Diagram* below.
-It will take approximately 40 minutes for the workshop environment to be created.
+このワークショップで使用する環境をデプロイします。以下の"ワークショップ構成図"を確認して下さい。
+環境の構築完了まで約40分かかります。
 
-== Workshop Diagram
+== ワークショップ構成図
 
 image::fsx-windows-workshop-architecture-v1.png[align="center"]
 
-=== Deploy the workshop using AWS CloudFormation
+=== AWS CloudFormationを使用したワークショップ環境のデプロイ
 
-IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+重要: "Deploy to AWS"ボタンを押す前に以下の手順解説動画を視聴して下さい。
 
 image::create-environment.gif[align="left", width=600]
 
-. Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin.
+. "Deploy to AWS"ボタンをクリックして、CloudFormationのデプロイを開始して下さい。
 +
-Amazon FSx is currently available in 14 AWS regions.
+Amazon FSxは現在14のAWSリージョンで使用可能です。
 +
-File system creation is currently not supported in the following Availability Zones:
+各リージョンの中でも以下のアベイラビリティーゾーンはファイルシステムの作成に対応していないので注意して下さい。
 +
 [cols="1,1,2", options="header"]
 |===
 |Region | Availability Zone ID | Mapping
 | *N. Virginia* (us-east-1)
 | *use1-az3*
-| Open the link:https://us-east-1.console.aws.amazon.com/vpc/home?region=us-east-1#subnets:[us-east-1 VPC] console for AZ mapping.
+| link:https://us-east-1.console.aws.amazon.com/vpc/home?region=us-east-1#subnets:[us-east-1 VPC] でアベイラビリティーゾーンのマッピングの確認が出来ます。
 
 | *Oregon* (us-west-2)
 | *usw2-az4*
-| Open the link:https://us-west-2.console.aws.amazon.com/vpc/home?region=us-west-2#subnets:[us-west-2 VPC] console for AZ mapping.
+| link:https://us-west-2.console.aws.amazon.com/vpc/home?region=us-west-2#subnets:[us-west-2 VPC] でアベイラビリティーゾーンのマッピングの確認が出来ます。
 
 | *Sydney* (ap-southeast-2)
 | *apse2-az3*
-| Open the link:https://ap-southeast-2.console.aws.amazon.com/vpc/home?region=ap-southeast-2#subnets:[ap-southeast-2 VPC] console for AZ mapping.
+| link:https://ap-southeast-2.console.aws.amazon.com/vpc/home?region=ap-southeast-2#subnets:[ap-southeast-2 VPC] でアベイラビリティーゾーンのマッピングの確認が出来ます。
 
 | *Tokyo* (ap-northeast-1)
 | *apne1-az3*
-| Open the link:https://ap-northeast-1.console.aws.amazon.com/vpc/home?region=ap-northeast-1#subnets:[ap-northeast-1 VPC] console for AZ mapping.
+| link:https://ap-northeast-1.console.aws.amazon.com/vpc/home?region=ap-northeast-1#subnets:[ap-northeast-1 VPC] でアベイラビリティーゾーンのマッピングの確認が出来ます。
 
 | *Frankfurt* (eu-central-1)
 | *euc1-az1*
-| Open the link:https://eu-central-1.console.aws.amazon.com/vpc/home?region=eu-central-1#subnets:[eu-central-1 VPC] console for AZ mapping.
+| link:https://eu-central-1.console.aws.amazon.com/vpc/home?region=eu-central-1#subnets:[eu-central-1 VPC] でアベイラビリティーゾーンのマッピングの確認が出来ます。
 
 |===
 +
-When selecting availability zones in the CloudFormation create stack wizard, take care not to select an availability zone mapped to one of the Availability Zone IDs listed above.
+CloudFormationのスタック作成ウィザードの中でアベイラビリティーゾーンを選択する際、上記アベイラビリティーゾーンを使用しないように注意して下さい。
 +
-TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github tutorial and the AWS Console.
+補足: "Deploy to AWS"ボタンを"右クリック"し、新規のタブかウィンドウで開く事で、このチュートリアルとAWSコンソールの切り替えを容易に行えます。
 +
 |===
-|Region | Launch template with a new VPC
+|リージョン | 新規VPCの起動テンプレート
 | *N. Virginia* (us-east-1)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=fsx-windows-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/windows-file-server/templates/fsx-windows-od-workshop.yaml]
 
@@ -100,34 +100,34 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-east-1#/stacks/new?stackName=fsx-windows-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/windows-file-server/templates/fsx-windows-od-workshop.yaml]
 |===
 +
-. Accept the defaults on the *Prerequisite - Prepare template* page and *_click_* *Next*.
+. "前提条件 - テンプレートの準備"はデフォルトのままで"次へ"をクリックして下さい。
 +
-. Accept the default stack name and *_click_* *Next*. *_Enter_* values for all parameters.
+. スタックの名前はデフォルトをそのまま使用して下さい。以下のパラメーターを入力して下さい。
 +
 [cols="3,10"]
 |===
 | *VPC CIDR*
-a| Select a CIDR that will be used for the VPC.
+a| VPCで使用するCIDRを選択して下さい。
 
 | *Availability Zones*
-a| Select two (2) availability zones for your VPC.
+a| VPCで使用する2つのアベイラビリティゾーンを選択して下さい。
 
 |===
 +
-. After you have entered values for all parameters, *_click_* *Next*.
-. *_Accept_* the default values of the *Configure stack options* and *Advanced options* sections and *_click_* *Next*.
-. *_Review_* the CloudFormation stack settings.
-. *_Click_* both checkboxes in the blue *Capabilities* box at the bottom of the page.
+. 全てのパラメーターを入力したら"次へ"をクリックして下さい。
+. "スタックオプションの設定"と"詳細オプション"はデフォルトのまま"次へ"をクリックして下さい。
+. 設定のレビュー画面で、下の方にスクロールして下さい。
+. 青い枠の中にある"AWS CloudFormation によって IAM リソースが作成される場合があることを承認します"のチェックボックスを有効にして下さい。
 +
 image::cloudformation-capabilities.png[align="left", width=420]
 +
-. *_Click_* *Create stack*.
+. "スタックの作成"をクリックして下さい。
 
-The tutorial environment will be available in approximately 40 minutes.
+完了まで40分ほどかかります。
 
 
-== Next section
+== 次の章
 
-Click the button below to go to the next section.
+以下のリンクをクリックして次の章に進んで下さい。
 
 image::connect-to-instances.png[link=../02-connect-to-instances/, align="right",width=420]

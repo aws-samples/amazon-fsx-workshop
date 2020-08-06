@@ -23,9 +23,9 @@
 
 image::mount-default-file-share.gif[align="left", width=600]
 
-. *FSx/W Workshop Linux instance*のブラウザベースSSH接続に戻ります。
+. "FSx/W Workshop Linux instance"のブラウザベースSSH接続に戻ります。
 +
-補足: もしSSH接続がタイムアウトしている場合、例えばセッションが反応しない場合、一度ウィンドウを閉じて再度新しいウィンドウを開きます。link:https://console.aws.amazon.com/ec2/[Amazon EC2] コンソールに戻って下さい。*FSx/W Workshop Linux Instance*の横のラジオボタンを*_クリック_*して下さい。*Connect*ボタンを*_クリック_*して下さい。*EC2 Instance Connect (browser-based SSH connection)*の横のラジオボタンを*_クリック_*して下さい。ユーザー名をデフォルトの*ec2-user*のままにして*Connect*を*_クリック_*して下さい。
+補足: もしSSH接続がタイムアウトしている場合、例えばセッションが反応しない場合、一度ウィンドウを閉じて再度新しいウィンドウを開きます。link:https://console.aws.amazon.com/ec2/[Amazon EC2] コンソールに戻って下さい。"FSx/W Workshop Linux Instance"の横のラジオボタンをクリックして下さい。"Connect"ボタンをクリックして下さい。"EC2 Instance Connect (browser-based SSH connection)"の横のラジオボタンをクリックして下さい。ユーザー名をデフォルトの"ec2-user"のままにして"Connect"をクリックして下さい。
 +
 . どのCIFS/SMB共有がマウントされているかを確認するため、以下のコマンドを実行して下さい。
 +
@@ -39,7 +39,7 @@ mount -t cifs
 . どのCIFS/SMBファイル共有がマウントされていますか？
 注意: この段階ではマウントされている共有は存在しないはずです。
 
-. 以下のスクリプトをテキストエディタに*_コピー_*して下さい。
+. 以下のスクリプトをテキストエディタにコピーして下さい。
 +
 [source,bash]
 ----
@@ -53,27 +53,27 @@ sudo mkdir -p ${mountpoint}
 sudo mount -t cifs //${dnsname}/share ${mountpoint} -o vers=2.0,user=${username}
 ----
 +
-. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_クリック_*して下さい。*DNS name*をクリップボードに*_コピー_*するために、*DNS name*の隣のimage:copy-to-clipboard.png[align="left",width=20] ショートカットを*_クリック_*して下さい。
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、"MAZ"ファイルシステムのリンクをクリックし、"Network & security"タブをクリックして下さい。"DNS name"をクリップボードにコピーするために、"DNS name"の隣のimage:copy-to-clipboard.png[align="left",width=20] ショートカットをクリックして下さい。
 
-. テキストエディタに戻り、*"dns_name"* をクリップボードにコピーした*dns name*に入れ替えて下さい。スクリプト全体を*_コピー_*して下さい。
+. テキストエディタに戻り、"dns_name"をクリップボードにコピーした"dns name"に入れ替えて下さい。編集したスクリプト全体をコピーして下さい。
 +
-補足: スクリプトの後の*線*をコピーしないように注意して下さい。以降のステップで次のようなエラーが発生する原因になります。: *mount error(115): Operation now in progres*
+補足: スクリプトの末尾に"改行"をコピーしないように注意して下さい。以降のステップで次のようなエラーが発生する原因になります。: "mount error(115): Operation now in progres"
 +
-. *FSx/W Workshop Linux instance*のブラウザベースSSH接続に戻ります。
+. "FSx/W Workshop Linux instance"のブラウザベースSSH接続に戻ります。
 +
 補足: もしSSH接続がタイムアウトしている場合、例えばセッションが反応しない場合、一度ウィンドウを閉じて再度新しいウィンドウを開きます。
 +
-. ブラウザベースSSH接続にクリップボードにコピーしたスクリプトを*_ペースト_*して実行します。
+. ブラウザベースSSH接続にクリップボードにコピーしたスクリプトをペーストして実行します。
 
-. link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] コンソールに*_戻り_*ます。
+. link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] コンソールに戻ります。
 +
-補足: *_コンテキストクリック (右クリック)_* で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールの切り替えがし易く便利です。
+補足: "右クリック"で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールとの切り替えがし易く便利です。
 +
-. *username*と*password*の*Secret key/value*ペアを使用し、*password*をクリップボードにコピーします。
+. "username"と"password"の"Secret key/value"ペアを使用し、"password"をクリップボードにコピーします。
 
-. ブラウザベースSSH接続のプロンプトにクリップボードのパスワードを*_貼り付け_*ます (例 *Password for admin@example.com@//amznfsx0123abcde.example.com/share:*). パスワードはマスクして表示されます。(例 ************)
+. ブラウザベースSSH接続のプロンプトにクリップボードのパスワードを貼り付けます (例 Password for admin@example.com@//amznfsx0123abcde.example.com/share:). パスワードはマスクして表示されます。(例 ************)
 
-. マウントが成功したかどうか確認します。ブラウザベースSSH接続ウィンドウで以下のコマンドを*_実行_*して下さい。
+. マウントが成功したかどうか確認します。ブラウザベースSSH接続ウィンドウで以下のコマンドを実行して下さい。
 +
 [source,bash]
 ----
@@ -84,9 +84,9 @@ ll /fsx
 +
 . CIFSマウントについてどのような情報が出力されますか？
 
-. */fsx*マウントポイントにどのようなディレクトリやファイルが見えますか？
+. "/fsx"マウントポイントにどのようなディレクトリやファイルが見えますか？
 
-. Amazon S3から何個のファイル、ディレクトリ、データがプリロードされていますか？ ブラウザベースSSH接続ウィンドウで以下のコマンドを*_実行_*して下さい。
+. Amazon S3から何個のファイル、ディレクトリ、データがプリロードされていますか？ ブラウザベースSSH接続ウィンドウで以下のコマンドを実行して下さい。
 +
 [source,bash]
 ----

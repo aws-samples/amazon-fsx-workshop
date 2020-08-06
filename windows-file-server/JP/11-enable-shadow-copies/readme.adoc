@@ -22,7 +22,7 @@
 
 image::enable-shadow-copies.gif[align="left", width=600]
 
-. テキストエディターに以下のスクリプトを*_コピー_*して下さい。
+. テキストエディターに以下のスクリプトをコピーして下さい。
 +
 [source,bash]
 ----
@@ -32,22 +32,22 @@ enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationN
 ----
 +
 
-. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、"MAZ"ファイルシステムのリンクをクリックし、"Network & security"タブを選択して下さい。"Windows Remote PowerShell Endpoint"(例 amznfsx0123abcde.example.com)をクリップボードにコピーして下さい。
 
-. テキストエディターに戻り、*"windows_remote_powershell_endpoint"*の部分をクリップボードにコピーした値に入れ替えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+. テキストエディターに戻り、"windows_remote_powershell_endpoint"の部分をクリップボードにコピーした値に入れ替えて下さい。アップデートしたスクリプトをコピーして下さい。
 
-. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+. "FSx/W Workshop Windows Instance"のリモートデスクトップセッションへ戻って下さい。
 
-. *Start* >> *Windows PowerShell*の順で*_クリック_*して下さい。
+. "Start" >> "Windows PowerShell"の順でクリックして下さい。
 
-. *Windows PowerShell*ウィンドウで先ほどコピーしたスクリプトを貼り付け、*_実行_*して下さい。
+. "Windows PowerShell"ウィンドウで先ほどコピーしたスクリプトを貼り付け、実行して下さい。
 
 +
 注意: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
 +
 
-. *Amazon FSx CLI for remote management on PowerShell*を使用して、シャドーコピー設定のためのパワーシェルコマンドを確認します。
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+. "Amazon FSx CLI for remote management on PowerShell"を使用して、シャドーコピー設定のためのパワーシェルコマンドを確認します。
+* "Remote Windows PowerShell Session"で以下のコマンドを実行して下さい。
 
 +
 [source,bash]
@@ -59,7 +59,7 @@ Get-Command *-FSxShadow*
 . どのようなコマンドが使えますか？
 
 . ファイルシステム全体に対してシャドーコピーの設定を行います。デフォルト設定では、ファイルシステム全体の容量の10％までシャドーコピーで使えるようになっています。また、デフォルトスケジュールとして、毎週月曜日、火曜日、水曜日、木曜日、金曜日の午前7:00と午後12:00(UTC)にシャドーコピーを取得するようになっています。
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。確認のプロンプトが現れた場合は*Yes to All*の質問に対して*A*を*_入力_*して下さい。
+* "Remote Windows PowerShell Session"で以下のスクリプトを実行して下さい。確認のプロンプトが現れた場合は"Yes to All"の質問に対して"A"を入力して下さい。
 
 +
 [source,bash]
@@ -98,7 +98,7 @@ image::modify-shadow-copies.gif[align="left", width=600]
 
 
 . ファイルシステム内でシャドーコピーが使用できる最大容量を20％へ増やします。
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+* "Remote Windows PowerShell Session"で以下のスクリプトを実行して下さい。
 
 +
 [source,bash]
@@ -109,7 +109,7 @@ Set-FSxShadowStorage -maxsize "20%"
 
 . シャドーコピーコマンドのmaxizeオプションとして他に何が使えますか？
 
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+* "Remote Windows PowerShell Session"で以下のスクリプトを実行して下さい。
 
 +
 [source,bash]
@@ -132,7 +132,7 @@ image::new-shadow-copy.gif[align="left", width=600]
 
 . ファイルシステムの新しいシャドーコピーを作成します。
 
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+* "Remote Windows PowerShell Session"で以下のスクリプトを実行して下さい。
 
 +
 [source,bash]
@@ -141,18 +141,18 @@ New-FSxShadowCopy
 ----
 +
 
-. *ファイルエクスプローラー*で、最初にデフォルトファイル共有を作成した時に作成したテストファイルの中身を変更します。(例 新規テキストドキュメントまたは新規リッチテキストドキュメント）
+. "ファイルエクスプローラー"で、前の章でデフォルトファイル共有を作成した時に作成したテストファイルの中身を変更します。(例 新規テキストドキュメントまたは新規リッチテキストドキュメント）
 * ドキュメントを開き、何か追記して下さい。（例えばあなたのお名前）
 * ドキュメントを保存して閉じて下さい。
 * ドキュメントをサイド開き、変更が反映されているか確認して下さい。
-* ファイルを*_コンテキストクリック (右クリック)_* し、*Restore previous versions*を*_選択_*して下さい。
-* 以前のバージョンのファイルかどうかを確認するため、*Open*ボタンを*_選択_*してファイルを開きます。空のファイルが表示されるはずです。
-* ファイルを*_閉じて_*下さい。
-* ファイルを以前のバージョンに戻すために*Restore*ボタンを*_選択_*して下さい。*Previous version*ポップアップウィンドウで*Restore*を*_選択_*し、リストアを確定させて下さい。
-* *OK*を*選択*し、再度*OK*を押して下さい。
+* ファイルを"右クリック"し、"Restore previous versions"を選択して下さい。
+* 以前のバージョンのファイルかどうかを確認するため、"Open"ボタンを選択してファイルを開きます。空のファイルが表示されるはずです。
+* ファイルを閉じて下さい。
+* ファイルを以前のバージョンに戻すために"Restore"ボタンを選択して下さい。"Previous version"ポップアップウィンドウで"Restore"を選択し、リストアを確定させて下さい。
+* "OK"を選択し、再度"OK"を押して下さい。
 * 再度ファイルを開き、以前のバージョン（空のファイル）にリストアされている事を確認して下さい。
 
-. 新規ファイルやフォルダーを作り、シャドーコピーを取って色々と試してみて下さい。
+. 余裕があれば、新規ファイルやフォルダーを作り、シャドーコピーを取って色々と試してみて下さい。
 
 == 次の章
 

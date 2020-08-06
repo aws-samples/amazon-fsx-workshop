@@ -24,7 +24,7 @@ image::access-as-workshop.gif[align="left", width=600]
 . link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run]をクリックするか、担当者から案内のあるリンク先へアクセスして下さい。
 * AWSイベントエンジンとは、AWSのチームがワークショップ、ゲームデイ、ブートキャンプ、イマージョンデイと言ったハンズオンが必要なイベントに一時的なAWSアカウントを払い出すシステムです。
 . "Terms & Conditions"に目を通して下さい。
-. 担当者から与えられたハッシュ文字列を入力し、"[Accept terms and login]*"をクリックして下さい。
+. 担当者から与えられたハッシュ文字列を入力し、"[Accept terms and login]"をクリックして下さい。
 . "Team Dashboard"ページで"[AWS Console]"をクリックして下さい。
 . "AWS Console Login"ページで、"Login Link"セクションの"[Open AWS Console]"リンクをクリックし、AWS管理コンソールを開いて下さい。
 

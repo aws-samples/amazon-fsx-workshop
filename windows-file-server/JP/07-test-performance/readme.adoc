@@ -7,7 +7,7 @@
 
 == 概要
 
-世の中には多くのディスクパフォーマンス測定ツールが存在します。link:https://aka.ms/diskspd[DiskSpd] と link:https://bsdio.com/fio/[fio] が*FSx/W Workshop Windows Instance*にプリインストールされています。もし他に使い慣れたツールが有る場合はダウンロードして使って頂いても問題ありません。
+世の中には多くのディスクパフォーマンス測定ツールが存在します。link:https://aka.ms/diskspd[DiskSpd] と link:https://bsdio.com/fio/[fio] が"FSx/W Workshop Windows Instance"にプリインストールされています。もし他に使い慣れたツールが有る場合はダウンロードして使って頂いても問題ありません。
 
 
 == 所要時間
@@ -24,27 +24,27 @@ image::test-performance.gif[align="left", width=600]
 
 === DiskSpd Read テスト
 
-. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションで、*Start* >> *Windows PowerShell*の順に*_クリック_*して下さい。
+. "FSx/W Workshop Windows Instance"のリモートデスクトップセッションで、"Start" >> "Windows PowerShell"の順にクリックして下さい。
 
 +
-重要: この章では*MAZ*ファイルシステムが*Z:/*ドライブとしてマップされている事を想定しています。もし*Z:/*ドライブにマップされていない場合、最初に*MAZ*を*Z:/*ドライブとしてマップして下さい。(手順は*デフォルトマップ共有をマップする*の章を参考にして下さい。)
+重要: この章では"MAZ"ファイルシステムが"Z:/"ドライブとしてマップされている事を想定しています。もし"Z:/"ドライブにマップされていない場合、最初に"MAZ"を"Z:/"ドライブとしてマップして下さい。(手順は*デフォルトマップ共有をマップする*の章を参考にして下さい。)
 +
-. 100GBのスパース（Sparse）ファイルを作成するため、PowerShellで以下のスクリプトを*_実行_*して下さい。
+. 100GBのスパース（Sparse）ファイル（テストファイル）を作成するため、PowerShellで以下のスクリプトを実行して下さい。
 +
 ```sh
 $random = $(Get-Random)
 fsutil file createnew Z:\${env:computername}-$random.dat 100000000000
 ```
 +
-. マップした**Z:**ドライブへのリードパフォーマンスを測定するため、以下のDiskSpeedスクリプトを実行して下さい。
+. マップした"Z:"ドライブへのリードパフォーマンスを測定するため、以下のDiskSpeedスクリプトを実行して下さい。
 +
 ```sh
 C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b64K -Su -L Z:\${env:computername}-$random.dat
 ```
 +
-スクリプトが実行されている間に*Task Manager*を開き、ネットワークパフォーマンスをモニターして下さい。(例 Start >> Task Manager >> More details >> Performance (tab) >> Ethernet)
+スクリプトが実行されている間に"Task Manager"を開き、ネットワークパフォーマンスをモニターして下さい。(例 Start >> Task Manager >> More details >> Performance (tab) >> Ethernet)
 +
-* ファイルシステムのベースラインスループットはいくつですか？ - この値はファイルシステム作成時に設定され、link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから調べることが出来ます。
+* ファイルシステムのベースラインスループットはいくつですか？ - この値はファイルシステム作成時に決定されます。詳細はlink:https://docs.aws.amazon.com/fsx/latest/WindowsGuide/performance.html[Amazon FSx for Windows File Server Performance] で確認して下さい。
 * 最大どのくらいのリードスループットを達成出来ましたか？
 * テスト結果のP99 (99th %-tile) の値はいくつですか？
 * Total Read IO MiB/sはいくつですか？
@@ -85,16 +85,16 @@ a| ソフトウェアキャッシュを無効化します。
 
 === DiskSpd Write テスト
 
-. PowerShellウィンドウで、マップした**Z:**ドライブへのライトパフォーマンスを測定するため、以下のDiskSpeedスクリプトを*_実行_*して下さい。
+. PowerShellウィンドウで、マップした"Z:"ドライブへのライトパフォーマンスを測定するため、以下のDiskSpeedスクリプトを実行して下さい。
 +
 ```sh
 $random = $(Get-Random)
 C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -c2G -s64K -w100 -t1 -o32 -b64K -Sh -L Z:\${env:computername}-$random.dat
 ```
 +
-スクリプトが実行されている間に*Task Manager*を開き、ネットワークパフォーマンスをモニターして下さい。(例 Start >> Task Manager >> More details >> Performance (tab) >> Ethernet)
+スクリプトが実行されている間に"Task Manager"を開き、ネットワークパフォーマンスをモニターして下さい。(例 Start >> Task Manager >> More details >> Performance (tab) >> Ethernet)
 +
-* ファイルシステムのベースラインスループットはいくつですか？ - この値はファイルシステム作成時に設定され、link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから調べることが出来ます。
+* ファイルシステムのベースラインスループットはいくつですか？ - この値はファイルシステム作成時に決定されます。詳細はlink:https://docs.aws.amazon.com/fsx/latest/WindowsGuide/performance.html[Amazon FSx for Windows File Server Performance] で確認して下さい。
 * 最大どのくらいのライトスループットを達成出来ましたか？
 * テスト結果のP99 (99th %-tile) の値はいくつですか？
 * Total Write IO MiB/sはいくつですか？
@@ -140,7 +140,7 @@ a| ソフトウェアキャッシュを無効化します。
 
 === fio read テスト
 
-. PowerShellウィンドウで、マップした**Z:**ドライブへのリードパフォーマンスを測定するため、以下のfioスクリプトを*_実行_*して下さい。
+. PowerShellウィンドウで、マップした**Z:**ドライブへのリードパフォーマンスを測定するため、以下のfioスクリプトを実行して下さい。
 
 +
 ```sh
@@ -148,7 +148,7 @@ $random = $(Get-Random)
 C:\Tools\fio-3.16-x64\fio --randrepeat=1 --direct=1 --name="Z:\${env:computername}-$random.dat" --numjobs=1 --bs=64K --iodepth=32 --size=1024M --readwrite=read --rwmixread=100 --thread --time_based --runtime=120
 ```
 +
-スクリプトが実行されている間に*Task Manager*を開き、ネットワークパフォーマンスをモニターして下さい。(例 Start >> Task Manager >> More details >> Performance (tab) >> Ethernet)
+スクリプトが実行されている間に"Task Manager"を開き、ネットワークパフォーマンスをモニターして下さい。(例 Start >> Task Manager >> More details >> Performance (tab) >> Ethernet)
 +
 * 最大どのくらいのリードスループットを達成出来ましたか？
 * 平均リードスループットはどの程度でしたか？
@@ -188,7 +188,7 @@ a| リードIOの割合。指定した残りの％はライトになる。
 
 === fio write テスト
 
-. PowerShellウィンドウで、マップした**Z:**ドライブへのライトパフォーマンスを測定するため、以下のfioスクリプトを*_実行_*して下さい。
+. PowerShellウィンドウで、マップした"Z:"ドライブへのライトパフォーマンスを測定するため、以下のfioスクリプトを実行して下さい。
 
 +
 ```sh
@@ -196,7 +196,7 @@ $random = $(Get-Random)
 C:\Tools\fio-3.16-x64\fio --randrepeat=1 --direct=1 --name="Z:\${env:computername}-$random.dat" --numjobs=1 --bs=64K --iodepth=32 --size=1024M --readwrite=write --rwmixwrite=100 --thread --time_based --runtime=120
 ```
 +
-スクリプトが実行されている間に*Task Manager*を開き、ネットワークパフォーマンスをモニターして下さい。(例 Start >> Task Manager >> More details >> Performance (tab) >> Ethernet)
+スクリプトが実行されている間に"Task Manager"を開き、ネットワークパフォーマンスをモニターして下さい。(例 Start >> Task Manager >> More details >> Performance (tab) >> Ethernet)
 +
 * 最大どのくらいのライトスループットを達成出来ましたか？
 * 平均ライトスループットはどの程度でしたか？
@@ -234,9 +234,9 @@ a| リードIOの割合。指定した残りの％はライトになる。
 * どのような異なるパラメーターを試しましたか？
 * パラメーターを変えて結果はどのように変わりましたか？
 
-. 全てのPowerShellウィンドウを閉じます。*exit*を*_実行_*して下さい。 
+. 全てのPowerShellウィンドウを閉じます。"exit"を実行して下さい。 
 
-. File Explorerウィンドウを閉じて下さい。
+. ファイルエクスプローラーウィンドウを閉じて下さい。
 
 . Task Managerウィンドウを閉じて下さい。
 

@@ -23,11 +23,11 @@
 
 image::map-default-file-share.gif[align="left", width=600]
 
-. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+. "FSx/W Workshop Windows Instance"のリモートデスクトップセッションへ戻って下さい。
 
-. *File Explorer*を*_起動_*して下さい。
+. "ファイルエクスプローラー"を開いて下さい。
 
-. *This PC*を*_コンテキストクリック (右クリック)_*し、*Map network drive...*を*_選択_*して下さい。
+. "This PC"を"右クリック"し、"Map network drive..."を選択して下さい。
 
 . 以下の情報を使用してファイル共有をマップして下さい。
 +
@@ -37,7 +37,7 @@ image::map-default-file-share.gif[align="left", width=600]
 a| Z:
 
 | *Folder*
-a| ここにはデフォルトファイル共有のUNCパスが入ります。link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。*DNS name*の隣のimage:copy-to-clipboard.png[align="left",width=20] ショートカットを*_クリック_*し、UNCパスの先頭部分をクリップボードへ*_コピー_*します。デフォルトファイル共有へのUNCパスを完成させるために*DNS Name*の後ろに*\share*を*_追加_*して下さい。(例 \\amznfsx0123abcde.example.com\share)。
+a| ここにはデフォルトファイル共有のUNCパスが入ります。link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、"MAZ"ファイルシステムのリンクをクリックし、"Network & security"タブを選択して下さい。"DNS name"の隣のimage:copy-to-clipboard.png[align="left",width=20] ショートカットをクリックし、UNCパスの先頭部分をクリップボードへコピーします。デフォルトファイル共有へのUNCパスを完成させるために"DNS Name"の後ろに"\share"を追加して下さい。(例 \\amznfsx0123abcde.example.com\share)。
 
 | *Reconnect at sign-in*
 a| チェックしたまま
@@ -46,8 +46,8 @@ a| チェックしたまま
 a| チェック無しのまま
 |===
 +
-. *Z:*ドライブの*File Explorer*ウィンドウに、事前に用意された*AVHRR*というフォルダが見えるはずです。
-. *Z:*ドライブのルートディレクトリに新規のテストファイルを作成します。*_コンテキストクリック (右クリック)_* >> *New* >> *Text Document*の順にクリックします。複数の異なるタイプのテストファイルを作成してみて下さい。
+. "Z:"ドライブの"ファイルエクスプローラー"ウィンドウに、事前に用意された"AVHRR"というフォルダが見えるはずです。
+. "Z:"ドライブのルートディレクトリに新規のテストファイルを作成します。"右クリック" >> "New" >> "Text Document"の順にクリックします。複数の異なるタイプのテストファイルを作成してみて下さい。
 
 
 == 次の章

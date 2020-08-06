@@ -25,33 +25,33 @@ image::connect-windows-instance.gif[align="left", width=600]
 
 . link:https://console.aws.amazon.com/ec2/[Amazon EC2]コンソールを開いて下さい。
 +
-補足: *_コンテキストクリック (右クリック)_* で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールの切り替えがし易く便利です。
+補足: "右クリック" で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールとの切り替えがし易く便利です。
 +
-. ワークショップ環境と同じ*AWS Region*に居る事を確認して下さい。もしEC2コンソールの*AWS Region*を変更する必要がある場合は、ブラウザ画面上部右側*サポート*のリージョン名を*_クリック_*し、適切な*AWS Region*を選んで再度*_クリック_*して下さい。
+. ワークショップ環境と同じ"AWS Region"に居る事を確認して下さい。もしEC2コンソールの"AWS Region"を変更する必要がある場合は、ブラウザ画面上部右側"サポート"の隣に有るリージョン名をクリックし、適切な"AWS Region"を選んで再度クリックして下さい。
 
-. *実行中のインスタンス*を*_クリック_*して下さい。
+. "実行中のインスタンス"をクリックして下さい。
 
-. *FSx/W Workshop Windows Instance*という名前のインスタンスのラジオボタンを*_クリック_*して下さい。
+. "FSx/W Workshop Windows Instance"という名前のインスタンスのラジオボタンをクリックして下さい。
 
-. *FSx/W Workshop Windows Instance*インスタンスの*Public DNS (IPv4)*をコピーして下さい。
+. "FSx/W Workshop Windows Instance"インスタンスの説明タブの中に有る"パブリック DNS (IPv4)"をコピーして下さい。
 
 . お使いのPCのリモートデスクトップアプリケーションを起動し、新しい接続を作成して下さい。
-* Windowsの方 - Windowsに組み込まれている*リモートデスクトップ接続*アプリケーションを使用して下さい。
+* Windowsの方 - Windowsに組み込まれている"リモートデスクトップ接続"アプリケーションを使用して下さい。
 * Macの方 - AppStoreから入手出来るlink:https://apps.apple.com/us/app/microsoft-remote-desktop/id1295203466?mt=12/[Microsoft Remote Desktop] を使用して下さい。
 
 . 新しい接続のホスト名に、先の手順でコピーしたDNS名を使用して下さい。
 
-. 新しい接続のリモートデスクトップセッションを開始して下さい。(*user name*と*password*は*AWS Secrets Manager*から入手出来ます)
+. 新しい接続のリモートデスクトップセッションを開始して下さい。("user name"と"password"は"AWS Secrets Manager"から入手出来ます)
 
 . link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] コンソールを開いてください。
 +
-補足: *_コンテキストクリック (右クリック)_* で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールの切り替えがし易く便利です。
+補足: "右クリック" で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールとの切り替えがし易く便利です。
 +
-. *Password-<GUID>*の*Secret name*リンクを*_クリック_*して下さい。
+. "Password-<GUID>"の"Secret name"リンクをクリックして下さい。
 
-. *Secret value*のセクションまで*_スクロール_*し、*Retrieve secret value*ボタンを*_クリック_*して下さい。
+. "Secret value"のセクションまで下にスクロールし、"Retrieve secret value"ボタンをクリックして下さい。
 
-. *username*と*password*の*Secret key/value*ペアを*Windows Instance*インスタンスへのリモートデスクトップ接続の認証情報として使用して下さい。
+. "username"と"password"の"Secret key/value"ペアをWindowsインスタンスへのリモートデスクトップ接続の認証情報として使用して下さい。
 
 
 === Linuxインスタンスへの接続
@@ -63,17 +63,17 @@ image::connect-linux-instance.gif[align="left", width=600]
 
 . link:https://console.aws.amazon.com/ec2/[Amazon EC2] コンソールへ戻って下さい。
 +
-補足: *_コンテキストクリック (右クリック)_* で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールの切り替えがし易く便利です。
+補足: "右クリック"で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールとの切り替えがし易く便利です。
 +
-. ワークショップ環境と同じ*AWS Region*に居る事を確認して下さい。もしEC2コンソールの*AWS Region*を変更する必要がある場合は、ブラウザ画面上部右側*サポート*のリージョン名を*_クリック_*し、適切な*AWS Region*を選んで再度*_クリック_*して下さい。
+. ワークショップ環境と同じ"AWS Region"に居る事を確認して下さい。もしEC2コンソールの"AWS Region"を変更する必要がある場合は、ブラウザ画面上部右側"サポート"の隣に有るリージョン名をクリックし、適切な"AWS Region"を選んで再度クリックして下さい。
 
-. *FSx/W Workshop Linux Instance*という名前のインスタンスのラジオボタンを*_クリック_*して下さい。
+. "FSx/W Workshop Linux Instance"という名前のインスタンスのラジオボタンをクリックして下さい。
 
-. *[Connect]* ボタンを*_クリック_*して下さい。
+. "[Connect]" ボタンをクリックして下さい。
 
-. *EC2 Instance Connect (browser-based SSH connection)*の隣のラジオボタンを*_クリック_*して下さい。
+. "EC2 Instance Connect (browser-based SSH connection)"の隣のラジオボタンをクリックして下さい。
 
-. デフォルトユーザー名を*ec2-user*のままにして*[Connect]*を*_クリック_*して下さい。
+. デフォルトユーザー名を"ec2-user"のままにして"[Connect]"をクリックして下さい。
 
 == 次の章
 

@@ -7,7 +7,7 @@
 
 == 概要
 
-この章では*マルチAZ構成* のAmazon FSx for Windowsファイルサーバーのパフォーマンスモニタリングについて学習します。
+この章ではマルチAZ構成のAmazon FSx for Windowsファイルサーバーのパフォーマンスモニタリングについて学習します。
 
 
 == 所要時間
@@ -23,40 +23,40 @@
 
 image::monitor-performance.gif[align="left", width=600]
 
-. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、*MAZ*ファイルシステムのリンクを*_クリック_*し、*Monitoring*タブを*_クリック_*して下さい。
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールから、"MAZ"ファイルシステムのリンクをクリックし、"Monitoring"タブをクリックして下さい。
 +
-補足: *_コンテキストクリック (右クリック)_* で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールの切り替えがし易く便利です。
+補足: "右クリック"で上記のリンク先を新規のタブ、又はウィンドウで開くと、このワークショップページとコンソールとの切り替えがし易く便利です。
 +
-. 3つのAmazon CloudWatchウィジェットを*_確認して_*下さい。 - *Free storage capacity*、 *Total throughput (bytes/sec)*、 *Total IOPS (operations/sec)*。
+. 3つのAmazon CloudWatchウィジェットを確認して下さい。 - "Free storage capacity"、 "Total throughput (bytes/sec)"、 "Total IOPS (operations/sec)"。
 . ストレージの空き容量はいくつですか？
 . パフォーマンステスト実行中のトータルスループットはどの程度ですか？
 . パフォーマンステスト実行中のトータルIOPSはどの程度ですか？
-. カーソルを*Total throughput (bytes/sec)* ウィジェットの所に*_動かし_*、image:widgets-action.png[align="left",width=20] のショートカットアイコンを*_クリック_*し、*View in metrics*を選択して下さい。
-. グラフを*_クリック_* して *_ドラッグ_*すると、特定期間を*_ズームイン_*して見ることが出来ます。
-. 右上の虫眼鏡アイコンを*_クリック_*するとズームを*_リセット_*出来ます。
-. カーソルをグラフ上に*_動かし_*様々なスループット値を見てみて下さい。これらの値はbytes/secondで表されます。Y (垂直) 軸はmillions of bytes per second または (MB/s)で表されます。
+. カーソルを"Total throughput (bytes/sec)"ウィジェットの所に動かし、image:widgets-action.png[align="left",width=20] のショートカットアイコンをクリックし、"View in metrics"を選択して下さい。
+. グラフをクリックしてドラッグすると、特定期間をズームインして見ることが出来ます。
+. 右上の虫眼鏡アイコンをクリックするとズームをリセット出来ます。
+. カーソルをグラフ上に動かし様々なスループット値を見てみて下さい。これらの値はbytes/secondで表されます。Y (垂直) 軸はmillions of bytes per second または (MB/s)で表されます。
 
 === CloudWatch アラーム
 
-重要: 以下の手順に従い、アラームを*_作成_*する前に、手順解説動画を視聴して下さい。
+重要: 以下の手順に従い、アラームを作成する前に、手順解説動画を視聴して下さい。
 
 image::create-cloudwatch-alarm.gif[align="left", width=600]
 
-. Amazon CloudWatchコンソールの*Total throughput (bytes/sec)* メトリックのところで、image:create-alarm.png[align="left",width=20] *Create alarm* リンクを*_クリック_*して下さい。
-. *Conditions*セクションまで下に*_スクロール_*して下さい。*Threshold type*と*Greater* アラームコンディションの部分をデフォルトのまま*_受け入れ_*、*Define the threshold value* 欄に200000000を*_入力_*して下さい。これにより*Total Data Throughput (B/s)*が200 MB/sを超えた場合にアラームが出力されるようになります。
-. *Next*を*_クリック_*して下さい。
-. *Select an SNS topic*セクション部分で*Create new topic*を*_クリック_*して下さい。
-. *Create new topic...* のところで*High_Throughput_*と*_入力_*し、続けてFSxのファイルシステムIDを*_ペースト_*して下さい。
-. *Email endpoints that will receive the notification...* のところで、今アクセス可能なメールアドレスを*_入力_*して下さい。
-. *Create topic*を*_クリック_*して下さい。
-. *Next*を*_クリック_*して下さい。
-. アラーム名の所に*High_Throughput_*に続いてFSxのファイルシステムIDを*_ペースト_*して下さい。
-. *Next*を*_クリック_*して下さい。
-. 一番下まで*_スクロール_*し、*Create alarm*を*_クリック_*して下さい。
-. 入力したメールアドレスに*AWS Notification - Subscription Confirmation*というメールが届きます。メールを*_開いて_*、*Confirm subscription*を*_クリック_*して下さい。
-. アラームの状態が*Insufficient data*から*OK*になるまで数分*_待って_*下さい。
-. 前章の*パフォーマンスをテストする*まで*_戻り_*、再度ファイルシステムに対し、書き込み及び読み出しテストを実行して下さい。最低限２分間はテストを実行して下さい。
-* *High throughput alarm*は出力されましたか？
+. Amazon CloudWatchコンソールの"Total throughput (bytes/sec)"メトリックのところで、image:create-alarm.png[align="left",width=20] "Create alarm"リンクをクリックして下さい。
+. "Conditions"セクションまで下にスクロールして下さい。"Threshold type"と"Greater" アラームコンディションの部分をデフォルトのまま受け入れ、"Define the threshold value"欄に200000000を入力して下さい。これにより"Total Data Throughput (B/s)"が200 MB/sを超えた場合にアラームが出力されるようになります。
+. "Next"をクリックして下さい。
+. "Select an SNS topic"セクション部分で"Create new topic"をクリックして下さい。
+. "Create new topic..." のところで"High_Throughput_"と入力し、続けてFSxのファイルシステムIDをペーストして下さい。
+. "Email endpoints that will receive the notification..." のところで、今アクセス可能なメールアドレスを入力して下さい。
+. "Create topic"をクリックして下さい。
+. "Next"をクリックして下さい。
+. アラーム名の所に"High_Throughput_"に続いてFSxのファイルシステムIDをペーストして下さい。
+. "Next"をクリックして下さい。
+. 一番下までスクロールし、"Create alarm"をクリックして下さい。
+. 入力したメールアドレスに"AWS Notification - Subscription Confirmation"というメールが届きます。メールを開いて、"Confirm subscription"をクリックして下さい。
+. アラームの状態が"Insufficient data"から"OK"になるまで数分待って下さい。
+. 前章の"パフォーマンスをテストする"の所に戻り、再度ファイルシステムに対し、書き込み及び読み出しテストを実行して下さい。最低限２分間はテストを実行して下さい。
+* "High throughput alarm"は出力されましたか？
 * アラーム通知メールは届きましたか？
 
 == 次の章

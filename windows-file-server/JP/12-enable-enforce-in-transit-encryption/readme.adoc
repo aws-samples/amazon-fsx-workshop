@@ -22,7 +22,7 @@
 
 image::enable-enforce-in-transit-encryption.gif[align="left", width=600]
 
-. 以下のスクリプトをお使いのテキストエディタに*_コピー_*して下さい。
+. 以下のスクリプトをお使いのテキストエディタにコピーして下さい。
 +
 [source,bash]
 ----
@@ -32,22 +32,22 @@ enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationN
 ----
 +
 
-. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールで*MAZ*ファイルシステムのリンクを*_クリック_*し、*Network & security*タブを*_選択_*して下さい。ファイルシステムの*Windows Remote PowerShell Endpoint*(例 amznfsx0123abcde.example.com)をクリップボードに*_コピー_*して下さい。
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールで"MAZ"ファイルシステムのリンクをクリックし、"Network & security"タブを選択して下さい。ファイルシステムの"Windows Remote PowerShell Endpoint"(例 amznfsx0123abcde.example.com)をクリップボードにコピーして下さい。
 
-. お使いのテキストエディタに戻り、*"windows_remote_powershell_endpoint"*の部分を先ほどコピーした*Windows Remote PowerShell Endpoint*に置き換えて下さい。アップデートしたスクリプトを*_コピー_*して下さい。
+. お使いのテキストエディタに戻り、"windows_remote_powershell_endpoint"の部分を先ほどコピーした"Windows Remote PowerShell Endpoint"に置き換えて下さい。アップデートしたスクリプトをコピーして下さい。
 
-. *FSx/W Workshop Windows Instance*のリモートデスクトップセッションへ戻って下さい。
+. "FSx/W Workshop Windows Instance"のリモートデスクトップセッションへ戻って下さい。
 
-. *Start* >> *Windows PowerShell*の順で*_クリック_*して下さい。
+. "Start" >> "Windows PowerShell"の順でクリックして下さい。
 
-. *Windows PowerShell*ウィンドウで先ほどコピーしたスクリプトを貼り付け、*_実行_*して下さい。
+. "Windows PowerShell"ウィンドウで先ほどコピーしたスクリプトを貼り付け、実行して下さい。
 
 +
 注意: 以降の複数の手順はFSxファイルサーバーへのリモートパワーシェルセッションで実行して下さい。
 +
 
-. *Amazon FSx CLI for remote management on PowerShell*を使用して、SMBサーバー設定のためのパワーシェルコマンドを確認します。
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+. "Amazon FSx CLI for remote management on PowerShell"を使用して、SMBサーバー設定のためのパワーシェルコマンドを確認します。
+* "Remote Windows PowerShell Session"で以下のコマンドを実行して下さい。
 
 +
 [source,bash]
@@ -59,7 +59,7 @@ Get-Command *-FSxSmbServerConfiguration*
 . どのようなコマンドが使えますか？
 
 . 伝送データ強制暗号化の現在の設定を確認します。
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+* "Remote Windows PowerShell Session"で以下のスクリプトを実行して下さい。
 
 +
 [source,bash]
@@ -68,10 +68,10 @@ Get-FSxSmbServerConfiguration
 ----
 +
 
-. *RejectUnencryptedAccess*の値は何ですか?
+. "RejectUnencryptedAccess"の値は何ですか?
 
 . 伝送データ強制暗号化を有効化します。
-* *Remote Windows PowerShell Session*で以下のスクリプトを*_実行_*して下さい。
+* "Remote Windows PowerShell Session"で以下のコマンドを実行して下さい。
 
 +
 [source,bash]
@@ -79,7 +79,7 @@ Get-FSxSmbServerConfiguration
 Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $True
 ----
 +
-. 実行するかどうかプロンプトが現れた場合は*A*を*_入力_*して下さい。
+. 実行するかどうかプロンプトが現れた場合は"A"を入力して下さい。
 
 == 次の章
 
