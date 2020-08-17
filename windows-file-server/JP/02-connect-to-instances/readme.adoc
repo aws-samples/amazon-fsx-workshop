@@ -69,11 +69,11 @@ image::connect-linux-instance.gif[align="left", width=600]
 
 . "FSx/W Workshop Linux Instance"という名前のインスタンスのラジオボタンをクリックして下さい。
 
-. "[Connect]" ボタンをクリックして下さい。
+. "[接続]" ボタンをクリックして下さい。
 
 . "EC2 Instance Connect (browser-based SSH connection)"の隣のラジオボタンをクリックして下さい。
 
-. デフォルトユーザー名を"ec2-user"のままにして"[Connect]"をクリックして下さい。
+. デフォルトユーザー名を"ec2-user"のままにして"[接続]"をクリックして下さい。
 
 == 次の章
 
