@@ -49,7 +49,7 @@ image::connect-windows-instance.gif[align="left", width=600]
 +
 . "Password-<GUID>"の"Secret name"リンクをクリックして下さい。
 
-. "Secret value"のセクションまで下にスクロールし、"Retrieve secret value"ボタンをクリックして下さい。
+. "シークレットの値"のセクションまで下にスクロールし、"シークレットの値を取得する"ボタンをクリックして下さい。
 
 . "username"と"password"の"Secret key/value"ペアをWindowsインスタンスへのリモートデスクトップ接続の認証情報として使用して下さい。
 
