@@ -202,6 +202,8 @@ Get-FSxDedupStatus
 | SavedSpace
 |===
 
+. Continue and wait until the optimization job completes, periodically executing the *Get-FSxDedupStatus* command. This will be indicated by the *LastOptimizationResultMessage* value changing to *The operation completed successfully*.
+
 == Next section
 
 Click the button below to go to the next section.
