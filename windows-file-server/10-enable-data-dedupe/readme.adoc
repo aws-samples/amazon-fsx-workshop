@@ -79,8 +79,6 @@ Enable-FSxDedup
 
 | Get-FSxDedupStatus
 
-| Get-FSxDedupJob
-
 | Get-FSxDedupMetadata
 
 | Get-FSxDedupSchedule
@@ -90,7 +88,6 @@ Enable-FSxDedup
 |===
 +
 
-* Were all these commands successful? Why not?
 * When is the next scheduled "Optimization" task?
 
 . End the remote PowerShell session. *_Run_* *Exit-PSSession*.
@@ -124,9 +121,9 @@ enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationN
 . *_Click_* *Start* >> *Windows PowerShell*.
 
 . *_Run_* the updated script in the *Windows PowerShell* window.
-
++
 IMPORTANT: Complete the next few steps using the remote PowerShell session to the FSx file server.
-
++
 . Create a new data deduplication optimization schedule.
 
 * *_Run_* the command in the *Remote Windows PowerShell Session*.
@@ -177,7 +174,8 @@ Set-FSxDedupSchedule -Name DailyOptimization -Start start_time
 
 * Wait for the time of the DailyOptimization scheduled job to pass (i.e. 1 minute after the start_time you entered above) and run the command below to check the status.
 
-* *_Run_* the command in the *Remote Windows PowerShell Session*.
+* *_Run_* the command in the *Remote Windows PowerShell Session* a new times over the next 5 minutes.
+* Are some of the FSxDedupStatus values changing?
 
 +
 [source,bash]
@@ -185,10 +183,6 @@ Set-FSxDedupSchedule -Name DailyOptimization -Start start_time
 Get-FSxDedupStatus
 ----
 +
-
-. Did the optimization schedule run?
-
-* Look at the LastOptimizationTime value of the Get-FSxDedupStatus output.
 
 . How many files were optimized and how much space is saved?
 
@@ -208,102 +202,6 @@ Get-FSxDedupStatus
 | SavedSpace
 |===
 +
-
-. Do you see any optimization? Why not?
-
-. Quickly read the *_Enabling data deduplication_* section of the link:https://docs.aws.amazon.com/fsx/latest/WindowsGuide/using-data-dedup.html[Amazon FSx for Windows File Server User Guide] to find the answer.
-
-* *_Run_* the command in the *Remote Windows PowerShell Session*.
-
-+
-[source,bash]
-----
-Get-FSxDedupConfiguration
-----
-+
-
-. What is the MinimumFileAgeDays attribute value?
-
-. Update the data deduplication configuration and set the minimum file age days attribute to 0.
-
-* *_Run_* the command in the *Remote Windows PowerShell Session*.
-
-+
-[source,bash]
-----
-Set-FSxDedupConfiguration -MinimumFileAgeDays 0
-----
-+
-
-. Update the DailyOptimization data deduplication schedule to run in 2 minutes.
-
-. *_Copy_* the command below into your favorite text editor and update the *start_time* parameter with the current time plus 2 minutes. Look at the clock in bottom right corner of the remote desktop window. Add 2 minutes to this time and replace the *start_time* parameter with this value. (i.e. 5:32pm)
-
-+
-[source,bash]
-----
-Set-FSxDedupSchedule -Name DailyOptimization -Start start_time
-----
-+
-
-* *_Run_* the updated command in the *Remote Windows PowerShell Session*.
-
-* Wait for the time of the DailyOptimization scheduled job to pass (i.e. 1 minute after the start_time you entered above) and run the command below to check on the status.
-
-* *_Run_* the command in the *Remote Windows PowerShell Session*.
-
-+
-[source,bash]
-----
-Get-FSxDedupStatus
-
-----
-+
-
-. Did the optimization schedule run?
-* Look at the LastOptimizationTime value of the Get-FSxDedupStatus output.
-
-. The active data deduplication job may still be running. *_run_* the following command in the *Remote Windows PowerShell Session* to check on the status of the data deduplication job.
-+
-[source,bash]
-----
-Get-FSxDedupJob
-----
-+
-
-. Continue to re-run the Get-FSxDedupJob command every few minutes to check on the status of the job. This may take 5-10 minutes depending on the amount of data you creating during the *test performance* section.
-
-. Continue with the workshop while the data deduplication job runs in the background.
-
-. If the Get-FSxDedupJob command returns an error, then there are no more active jobs and the job has completed.
-
-. *_Run_* the command in the *Remote Windows PowerShell Session*.
-
-+
-[source,bash]
-----
-Get-FSxDedupStatus
-----
-+
-
-. How many files were optimized and how much space is saved?
-
-* Find the corresponding Get-FSxDedupStatus output for the command attributes in the table below.
-
-+
-|===
-| *Attribute*
-| LastOptimizationResult
-
-| OptimizedFilesCount
-
-| OptimizedFilesSavingsRate
-
-| OptimizedFilesSize
-
-| SavedSpace
-|===
-
 
 == Next section
 

@@ -141,7 +141,7 @@ a| Disables both software caching and hardware write caching.
 
 Click the button below to go to the next section.
 
-image::scale-throughput-capacity.png[link=../08-scale-throughput-capacity/, align="left",width=420]
+image::enable-data-dedupe.png[link=../10-enable-data-dedupe/, align="left",width=420]
 
 
 
