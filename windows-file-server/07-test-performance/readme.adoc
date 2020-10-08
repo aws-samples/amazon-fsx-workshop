@@ -7,7 +7,7 @@
 
 == Summary
 
-There are many disk performance tools out there. link:https://aka.ms/diskspd[DiskSpd] and link:https://bsdio.com/fio/[fio] have been pre-installed on the *FSx/W Workshop Windows Instance*. If you are familiar with another tool and would prefer using it to test performance, feel free to download and use it.
+There are many disk performance tools out there. link:https://aka.ms/diskspd[DiskSpd] have been pre-installed on the *FSx/W Workshop Windows Instance*.
 
 
 == Duration
@@ -138,109 +138,6 @@ a| Disables both software caching and hardware write caching.
 * What different parameters did you test?
 * How did the different parameter options alter the results?
 
-=== fio read tests
-
-. From the PowerShell window, *_run_* the DiskSpeed script below to test write performance of the mapped **Z:** drive
-
-. Run the fio script below to test read performance of the mapped **Z:** drive
-+
-```sh
-$random = $(Get-Random)
-C:\Tools\fio-3.16-x64\fio --randrepeat=1 --direct=1 --name="Z:\${env:computername}-$random.dat" --numjobs=1 --bs=64K --iodepth=32 --size=1024M --readwrite=read --rwmixread=100 --thread --time_based --runtime=120
-```
-+
-While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> Performance (tab) >> Ethernet).
-+
-* What was the peak read throughput?
-* What was the average read throughput?
-* What was the average IOPS?
-* How many GB did you read in 120 seconds?
-+
-. Experiment with different fio parameter settings. Use the table below as a guide. Test with direct I/O enabled or disabled (--direct), different block sizes (--bs), number of outstanding I/O requests (--iodepth), number of jobs (--numjobs), random read, random write, sequential read, sequential write (--readwrite), and mixture of reads and writes (--rwmixread).
-
-+
-[cols="3,10"]
-|===
-| Parameter | Description
-
-| `--direct=[0\|1]`
-a| Use buffered (0) or non-buffered (1) I/O.
-
-| `--bs=<size>[K\|M\|G]`
-a| Block size in bytes or KiB, MiB, or GiB (default = 64K).
-
-| `--numjobs=<count>`
-a| Number of clones (processes/threads performing the same workload) of this job. Default: 1.
-
-| `--readwrite=[read\|write\|randread\|randwrite]`
-a| Type of I/O pattern (read = sequential read; write = sequential write; randread = random read; randwrite = random write).
-
-| `--iodepth=<count>`
-a| Number of I/O units to keep in flight against the file.
-
-| `--rwmixread=<percent>`
-a| Percentage of a mixed workload that should be reads. The outstanding percentage will be writes.
-
-|===
-+
-
-* What different parameters did you test?
-* How did the different parameter options alter the results?
-
-=== fio write tests
-
-. From the PowerShell window, *_run_* the DiskSpeed script below to test write performance of the mapped **Z:** drive
-
-. Run the fio script below to test write performance of the mapped **Z:** drive
-+
-```sh
-$random = $(Get-Random)
-C:\Tools\fio-3.16-x64\fio --randrepeat=1 --direct=1 --name="Z:\${env:computername}-$random.dat" --numjobs=1 --bs=64K --iodepth=32 --size=1024M --readwrite=write --rwmixwrite=100 --thread --time_based --runtime=120
-```
-+
-While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> Performance (tab) >> Ethernet).
-+
-* What was the peak write throughput?
-* What was the average write throughput?
-* What was the average IOPS?
-* How many GB did you write in 120 seconds?
-+
-. Experiment with different fio parameter settings. Use the table below as a guide. Test with direct I/O enabled or disabled (--direct), different block sizes (--bs), number of outstanding I/O requests (--iodepth), number of jobs (--numjobs), random read, random write, sequential read, sequential write (--readwrite), and mixture of reads and writes (--rwmixwrite).
-
-+
-[cols="3,10"]
-|===
-| Parameter | Description
-
-| `--direct=[0\|1]`
-a| Use buffered (0) or non-buffered (1) I/O.
-
-| `--bs=<size>[K\|M\|G]`
-a| Block size in bytes or KiB, MiB, or GiB (default = 64K).
-
-| `--numjobs=<count>`
-a| Number of clones (processes/threads performing the same workload) of this job. Default: 1.
-
-| `--readwrite=[read\|write\|randread\|randwrite]`
-a| Type of I/O pattern (read = sequential read; write = sequential write; randread = random read; randwrite = random write).
-
-| `--iodepth=<count>`
-a| Number of I/O units to keep in flight against the file.
-
-| `--rwmixwrite=<percent>`
-a| Percentage of a mixed workload that should be writes. The outstanding percentage will be reads.
-
-|===
-+
-
-* What different parameters did you test?
-* How did the different parameter options alter the results?
-
-. Close all the PowerShell windows. *_Run_* *exit*.
-
-. Close the File Explorer window.
-
-. Close the Task Manager window.
 
 == Next section
 

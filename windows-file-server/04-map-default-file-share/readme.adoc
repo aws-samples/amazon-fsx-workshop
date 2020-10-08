@@ -54,7 +54,7 @@ a| Leave unchecked
 
 Click the link below to go to the next section.
 
-image::mount-default-file-share.png[link=../05-mount-default-file-share/, align="left",width=420]
+image::create-new-file-shares.png[link=../06-create-new-file-shares/, align="left",width=420]
 
 
 

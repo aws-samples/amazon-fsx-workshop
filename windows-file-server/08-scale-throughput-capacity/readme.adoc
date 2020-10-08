@@ -34,7 +34,7 @@ image::scale-throughput-capacity.gif[align="left", width=600]
 
 Click the button below to go to the next section.
 
-image::monitor-performance.png[link=../09-monitor-performance/, align="left",width=420]
+image::enable-data-dedupe.png[link=../10-enable-data-dedupe/, align="left",width=420]
 
 
 

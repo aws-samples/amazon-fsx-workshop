@@ -7,7 +7,7 @@
 
 == Summary
 
-In this section you will establish a connection to a Windows instance you will use for the remainder of the workshop.
+In this section you will establish connections with a Windows instance that you will use for the remainder of the workshop.
 
 
 == Duration
@@ -53,7 +53,6 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 . *_Scroll_* to the *Secret value* section and *_click_* the *Retrieve secret value* button.
 
 . Use the *Secret key/value* pairs of *username* and *password* as the credentials to authenticate to the *Windows Instance* instance for the remote desktop session.
-
 
 == Next section
 

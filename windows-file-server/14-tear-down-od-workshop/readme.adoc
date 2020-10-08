@@ -1,7 +1,29 @@
-= Tear down workshop
+= Tear down On-demand workshop
 :icons:
 :linkattrs:
 :imagesdir: ../resources/images
 
 
-== Coming soon!
+= Tear down AWS sponsored workshop
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+*Congratulation!* You have completed the Amazon FSx for Windows File Server Workshop.
+
+=== Delete *Workshop Environment* via CloudFormation
+
+IMPORTANT: Read through all steps below before continuing.
+
+. Open the link:https://console.aws.amazon.com/cloudformation/[Amazon CloudFormation] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
+. *_Click_* the *radio button* next to the *fsx-windows-workshop* stack.
+. *_Click_* the *Actions* button then *Delete stack*.
+. *_Click_* *Yes, Delete* to delete the workshop environment.
+
+IMPORTANT: It may take approximately 5 minutes to delete all AWS resources created by the CloudFormation template. Check the status periodically to verify all resources have been delete.
+
+
