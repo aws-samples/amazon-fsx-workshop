@@ -3,12 +3,6 @@
 :linkattrs:
 :imagesdir: ../resources/images
 
-
-= Tear down AWS sponsored workshop
-:icons:
-:linkattrs:
-:imagesdir: ../resources/images
-
 *Congratulation!* You have completed the Amazon FSx for Windows File Server Workshop.
 
 === Delete *Workshop Environment* via CloudFormation
