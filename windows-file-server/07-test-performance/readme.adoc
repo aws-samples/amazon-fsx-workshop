@@ -91,14 +91,13 @@ $random = $(Get-Random)
 C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -c2G -s64K -w100 -t1 -o32 -b64K -Sh -L Z:\${env:computername}-$random.dat
 ```
 +
-While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> More details >> Performance (tab) >> Ethernet).
+While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> More details >> Performance (tab) >> Ethernet). The DiskSpd script will complete in 120 seconds. After the script has completed, the output will be displayed in the PowerShell window.
 +
 * What is the baseline throughput of the file system? - This was configured when the file system was created and is available from the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
-* What was the peak write throughput you achieved?
-* What was the P99 (99th %-tile) of your test?
-* What was the Total Write IO MiB/s?
-* What was the I/O per second?
-* What was the AvgLat?
+* What was the P99 (99th %-tile) latency in ms of your test? - This is found in the DiskSpd output. It is in the *total* table at the bottom.
+* What was the Total Write IO MiB/s? - This is found in the DiskSpd output. It is under *Write IO* under the *MiB/s* column.
+* What was the I/O per second? - This is found in the DiskSpd output. It is under *Write IO* under the *I/O per s* column.
+* What was the AvgLat? - This is found in the DiskSpd output. It is under *Write IO* under the *AvgLat* column.
 * Why is your current throughput greater than the baseline throughput?
 +
 . Experiment with different DiskSpd parameter settings. Use the table below as a guide. Test with different file sizes (-c), different block sizes (-b), number of outstanding I/O requests (-o), number of threads per file (-t), random I/O (-r) or sequential I/O (-s), and enable/disable software & hardware write caching (-Sh).
