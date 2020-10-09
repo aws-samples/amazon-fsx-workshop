@@ -90,10 +90,6 @@ Enable-FSxDedup
 
 * When is the next scheduled "Optimization" task?
 
-. End the remote PowerShell session. *_Run_* *Exit-PSSession*.
-
-. Close the PowerShell window. *_Run_* *exit*.
-
 
 === Create new data deduplication optimization schedule
 
@@ -101,29 +97,6 @@ IMPORTANT: Read through all steps below and watch the quick video before continu
 
 image::new-data-dedup-schedule.gif[align="left", width=600]
 
-
-. *_Copy_* the script below into your favorite text editor.
-+
-[source,bash]
-----
-$WindowsRemotePowerShellEndpoint = "windows_remote_powershell_endpoint" # e.g. "amznfsx0123abcde.example.com"
-enter-pssession -ComputerName ${WindowsRemotePowerShellEndpoint} -ConfigurationName FsxRemoteAdmin
-
-----
-+
-
-. From the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *MAZ* file system and *_select_* the *Network & security* tab. *_Copy_* the *Windows Remote PowerShell Endpoint* of the file system to the clipboard (e.g. amznfsx0123abcde.example.com).
-
-. Return to your favorite text editor and replace *"windows_remote_powershell_endpoint"* with the *Windows Remote PowerShell Endpoint* of *MAZ*. *_Copy_* the updated script.
-
-. Go to the remote desktop session for your *FSx/W Workshop Windows Instance*.
-
-. *_Click_* *Start* >> *Windows PowerShell*.
-
-. *_Run_* the updated script in the *Windows PowerShell* window.
-+
-IMPORTANT: Complete the next few steps using the remote PowerShell session to the FSx file server.
-+
 . Create a new data deduplication optimization schedule.
 
 * *_Run_* the command in the *Remote Windows PowerShell Session*.
@@ -172,9 +145,8 @@ Set-FSxDedupSchedule -Name DailyOptimization -Start start_time
 
 * Run the updated command in the *Windows PowerShell* window.
 
-* Wait for the time of the DailyOptimization scheduled job to pass (i.e. 1 minute after the start_time you entered above) and run the command below to check the status.
+* Wait for the time of the DailyOptimization scheduled job to pass (i.e. 1 minute after the start_time you entered above) and run the command below (Get-FSxDedupStatus) to check the status. Run the command a few more times over to next 5 minutes to periodically check on the status.
 
-* *_Run_* the command in the *Remote Windows PowerShell Session* a new times over the next 5 minutes.
 * Are some of the FSxDedupStatus values changing?
 
 +
@@ -202,7 +174,7 @@ Get-FSxDedupStatus
 | SavedSpace
 |===
 
-. Continue and wait until the optimization job completes, periodically executing the *Get-FSxDedupStatus* command. This will be indicated by the *LastOptimizationResultMessage* value changing to *The operation completed successfully*.
+. Continue and wait until the optimization job completes (approx. 8-10 minutes), periodically executing the *Get-FSxDedupStatus* command. Job completion will be indicated by the *LastOptimizationResultMessage* value changing to *The operation completed successfully*.
 
 == Next section
 
