@@ -85,5 +85,5 @@ Set-FSxSmbServerConfiguration -RejectUnencryptedAccess $True
 
 Click the button below to go to the next section.
 
-image::scale-storage-capacity.png[link=../13-scale-storage-capacity/, align="left",width=420]
+image::scale-throughput-capacity.png[link=../08-scale-throughput-capacity/, align="left",width=420]
 
