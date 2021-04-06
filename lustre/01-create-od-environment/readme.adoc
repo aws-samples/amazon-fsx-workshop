@@ -72,6 +72,9 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 | *Oregon* (us-west-2)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
 
+| *Africa (Cape Town)* (af-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=af-south-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+
 | *Hong Kong* (ap-east-1)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-east-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
 
@@ -94,7 +97,7 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
 
 | *Frankfurt* (eu-central-1)
-a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
 
 | *Ireland* (eu-west-1)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
@@ -102,11 +105,17 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 | *London* (eu-west-2)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
 
+| *Milan* (eu-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-south-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+
 | *Paris* (eu-west-3)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
 
 | *Stockholm* (eu-north-1)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-north-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
+
+| *Middle East (Bahrain)* (me-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=me-south-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
 
 | *São Paulo* (sa-east-1)
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=fsx-lustre-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/lustre/templates/00-fsx-workshop.yaml]
