@@ -51,7 +51,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 
 . Use the *Secret key/value* pairs of *username* and *password* as the credentials to authenticate to the *Windows Instance* instance for the remote desktop session.
 
-TIP: If the domain credentials you used to authenticate and log on to the Windows instance don't work, wait another five minutes and try again. It could take 5-10 minutes for the Windows instance to launch and automatically join the examples.com domain.
+TIP: If the domain credentials you used to authenticate and log on to the Windows instance don't work, wait another five minutes and try again. It could take 5-10 minutes for the Windows instance to launch and automatically join the example.com domain.
 
 == Next section
 
