@@ -40,7 +40,7 @@ Below are some sample times recorded when accessing these files from a Windows I
 +
 [cols="3,10,10"]
 |===
-| File | FSx for Windows File Server (us-east-1) duration | FSx File Gateway (us-west-2)
+| File | FSx for Windows File Server (us-east-1) duration | FSx File Gateway (us-west-2) duration
 
 | 10k Sales Records.csv
 a| 2 seconds
