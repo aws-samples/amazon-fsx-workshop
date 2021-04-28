@@ -1,0 +1,159 @@
+= Phase 1 - Deploy the Amazon FSx for Windows File Server environment
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+Deploy the Region 1 - Amazon FSx for Windows File Server environment. See the *Phase 1 Diagram* below.
+It will take approximately 30 minutes for this phase of the workshop environment to be created.
+
+== Phase 1 Diagram
+
+image::fsx-gateway-workshop-architecture-phase-1.png[align="center"]
+
+=== Deploy the environment using AWS CloudFormation
+
+IMPORTANT: Read through all steps below before *_clicking_* the *Deploy to AWS* button.
+
+. Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin.
++
+Amazon FSx is currently available all commercial AWS regions.
++
+File system creation is currently not supported in the following Availability Zones:
++
+[cols="1,1,2", options="header"]
+|===
+|Region | Availability Zone ID | Mapping
+| *N. Virginia* (us-east-1)
+| *use1-az3*
+| Open the link:https://us-east-1.console.aws.amazon.com/vpc/home?region=us-east-1#subnets:[us-east-1 VPC] console for AZ mapping.
+
+| *Oregon* (us-west-2)
+| *usw2-az4*
+| Open the link:https://us-west-2.console.aws.amazon.com/vpc/home?region=us-west-2#subnets:[us-west-2 VPC] console for AZ mapping.
+
+| *Sydney* (ap-southeast-2)
+| *apse2-az3*
+| Open the link:https://ap-southeast-2.console.aws.amazon.com/vpc/home?region=ap-southeast-2#subnets:[ap-southeast-2 VPC] console for AZ mapping.
+
+| *Tokyo* (ap-northeast-1)
+| *apne1-az3*
+| Open the link:https://ap-northeast-1.console.aws.amazon.com/vpc/home?region=ap-northeast-1#subnets:[ap-northeast-1 VPC] console for AZ mapping.
+
+| *Frankfurt* (eu-central-1)
+| *euc1-az1*
+| Open the link:https://eu-central-1.console.aws.amazon.com/vpc/home?region=eu-central-1#subnets:[eu-central-1 VPC] console for AZ mapping.
+
+|===
++
+When selecting availability zones in the CloudFormation create stack wizard, take care not to select an availability zone mapped to one of the Availability Zone IDs listed above.
++
+TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github tutorial and the AWS Console.
++
+|===
+|Region | Launch template with a new VPC
+| *N. Virginia* (us-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Ohio* (us-east-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *N. California* (us-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Oregon* (us-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Africa (Cape Town)* (af-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=af-south-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Hong Kong* (ap-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-east-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Mumbai* (ap-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Seoul* (ap-northeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Singapore* (ap-southeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Sydney* (ap-southeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Tokyo* (ap-northeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Canada* (ca-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Frankfurt* (eu-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Ireland* (eu-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *London* (eu-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Milan* (eu-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-south-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Paris* (eu-west-3)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Stockholm* (eu-north-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-north-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *Middle East (Bahrain)* (me-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=me-south-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+
+| *São Paulo* (sa-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=fsx-gateway-workshop-fsxw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxw-environment.yaml]
+|===
++
+. Accept the defaults on the *Prerequisite - Prepare template* page and *_click_* *Next*.
++
+. Accept the default stack name and *_click_* *Next*. *_Enter_* values for all parameters.
++
+[cols="3,10"]
+|===
+| *VPC CIDR*
+a| Select a CIDR that will be used for the VPC. This CIDR block must not overlap the CIDR block in Phase 2 - Region 2.
+
+| *Availability Zones*
+a| Select two (2) availability zones for your VPC.
+
+| *Instance Type*
+a| Accept the default.
+
+| *Key Pair*
+a| Select an existing key pair.
+
+|===
++
+. After you have entered or accepted values for all parameters, *_click_* *Next*.
+. *_Accept_* the default values of the *Configure stack options* and *Advanced options* sections and *_click_* *Next*.
+. *_Review_* the CloudFormation stack settings.
+. *_Click_* the checkbox in the blue *Capabilities* box at the bottom of the page.
++
+image::cloudformation-capabilities.png[align="left", width=420]
++
+. *_Click_* *Create stack*.
+
+The environment will be available in approximately 30 minutes.
+
+Do not move to the next section until the Microsoft Active Directory resource is *Active* in Region 1 (about 20 minutes)
+
+. Find the Directory ID of the AWS-Managed Microsoft Active Directory. From the CloudFormation stack window, *_Click_* the *Resources* tab and scroll down until you see the Logical ID *Directory*. Make note of its corresponding Physical ID (e.g. d-9067664e43).
+. From the link:https://console.aws.amazon.com/directoryservicev2/[Amazon Directory Service] console, monitor the *Status* of the *Directory ID* from the previous step. Only continue to the next section once the *Status* shows *Active*.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::deploy-fsx-gateway-environment.png[link=../03-deploy-fsx-gateway-environment/, align="right",width=420]

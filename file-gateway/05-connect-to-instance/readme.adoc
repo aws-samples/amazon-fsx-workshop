@@ -1,0 +1,62 @@
+= Connect to instances
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+In this section you will establish connections with a Windows instance that you will use for the remainder of the workshop.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Connect to the Windows instance
+
+IMPORTANT: Read through all steps below before continuing.
+
+. Open the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. Make sure you are in the same *AWS Region* where you deployed Phase 2 - Deploy the Amazon FSx File Gateway environment (Region 2). If you need to change the *AWS Region* of the Amazon EC2 console, from the top right corner of the browser window, *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
+
+. *_Click_* *Instances (running)*.
+
+. *_Click_* the radio button next to the instance with the name *WindowsInstance*.
+
+. Copy the *Public IPv4 DNS* name of the *WindowsInstance* by *_selecting_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the DNS name to *_copy_* the DNS Name to the clipboard.
+
+. Launch your remote desktop application and create a new connection.
+* Windows Users - use the built-in *Remote Desktop Connection* application.
+* Mac Users - use the link:https://apps.apple.com/us/app/microsoft-remote-desktop/id1295203466?mt=12/[Microsoft Remote Desktop] app available from the Mac App Store.
+
+. Use the DNS name copied above as the host name of the new connection.
+
+. Start a remote desktop session to the new connection (you will retrieve the *user name* and *password* from *AWS Secrets Manager*).
+
+. Open the link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. *_Click_* the *Secret name* link for *Password-<GUID>*.
+
+. *_Scroll_* to the *Secret value* section and *_click_* the *Retrieve secret value* button.
+
+. Use the *Secret key/value* pairs of *username* and *password* as the credentials to authenticate to the *Windows Instance* instance for the remote desktop session.
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::map-file-shares.png[link=../06-map-file-shares/, align="left",width=420]
+
+
+
+

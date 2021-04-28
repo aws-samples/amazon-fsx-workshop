@@ -1,0 +1,86 @@
+= Map File Shares
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will map drives to the Amazon FSx for Windows File Server default file share in Region 1 and the Amazon FSx File Gateway default file share in Region 2.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Map a drive to the Amazon FSx for Windows File Server default share in Region 1
+
+IMPORTANT: Read through all steps below before continuing.
+
+. Go to the Remote Desktop Session where you connected to the *WindowsInstance*.
+
+. *_Launch_* *File Explorer*.
+
+. *_Context-click (right-click)_* *This PC* and *_select_* *Map network drive...*
+
+. Map the file share using the following information:
++
+[cols="3,10"]
+|===
+| *Drive*
+a| Z:
+
+| *Folder*
+a| This is the UNC path of the file system's default file share. Return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_change_* the *AWS Region* to where you deployed the Amazon FSx for Windows File Server environment (Phase 1, Region 1). *_Click_* the link to the *SAZ2* file system and *_select_* the *Network & security* tab. *_Click_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the *DNS name* to *_copy_* the *DNS Name* to the clipboard and paste it as the first part of the UNC path. *_Add_* *\share* to the end of the *DNS Name* to complete the UNC path to the file system's default file share (e.g. \\amznfsx0123abcde.example.com\share).
+
+| *Reconnect at sign-in*
+a| Leave checked
+
+| *Connect using different credentials*
+a| Leave unchecked
+|===
++
+. In the *File Explorer* window of the *Z:* drive you should see sample data that was preloaded into your file system.
+
+=== Map a drive to the Amazon FSx File Gateway default share in Region 2
+
+IMPORTANT: Read through all steps below before continuing.
+
+. Go to the Remote Desktop Session where you connected to the *WindowsInstance*.
+
+. *_Launch_* a new *File Explorer* window.
+
+. *_Context-click (right-click)_* *This PC* and *_select_* *Map network drive...*
+
+. Map the file share using the following information:
++
+[cols="3,10"]
+|===
+| *Drive*
+a| Y:
+
+| *Folder*
+a| This is the UNC path of the file gateway's default file share. Return to the link:https://console.aws.amazon.com/storagegateway/[AWS Storage Gateway] console and *_change_* the *AWS Region* to where you created the Amazon FSx File Gateway service components (Phase 3, Region 1). From the *Storage Gateway* console select *FSx file systems* from the left window frame. *_Select_* the *File system ID* of the file system you attached when creating the FSx File Gateway service components in Phase 3. The *Gateway* name should be *FSx File Gateway Workshop*. In the *Examples Commands* section of the *Details* tab, copy the UNC path of the internal IP address of the FSx File Gateway (e.g. \\172.31.0.25\). *_Paste_* it as the first part of the UNC path. *_Add_* *share* to the end of the *IP address* to complete the UNC path to the file gateway's default file share (e.g. \\172.31.0.25\share).
+
+| *Reconnect at sign-in*
+a| Leave checked
+
+| *Connect using different credentials*
+a| Leave unchecked
+|===
++
+. In the *File Explorer* window of the *Y:* drive you should see sample data that was preloaded into your file system. This sample data should be identical to the sample data visible in the File Explorer window mapped to the *Z:* drive pointing to the FSx for Windows File Server in Region 1.
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::test-read-performance.png[link=../07-test-read-performance/, align="left",width=420]
+
+
+
+

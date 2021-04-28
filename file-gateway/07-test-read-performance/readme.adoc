@@ -1,0 +1,286 @@
+= Test Read Performance
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will test the read performance of the local FSx File Gateway in Region 2, the same region as this Windows instance, and compare it to the read performance of the remote FSx for Windows File Server in Region 1.
+
+There are many disk performance tools out there. link:https://aka.ms/diskspd[DiskSpd] have been pre-installed on the *WindowsInstance*.
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below before continuing.
+
+=== Compare read durations of large files from the local FSx File Gateway and the remote FSx for Windows File Server
+
+There are three CSV files preloaded on the file system. This is sample sales data downloaded from link:http://eforexcel.com/wp/downloads-18-sample-csv-files-data-sets-for-testing-sales/[eforexcel.com]. There is a 10,000 records file (10k Sales Records.csv @ 1.18 MB), a 1,000,000 records file (1m Sales Records.csv @ 119 MB), and a 5,000,000 records file (5m Sales Records.csv @ 595 MB).
+
+. On your local computer, Amazon EC2 Windows Instance, or your Smart Phone, open any stopwatch application (e.g. link:https://stopwatchtimers.com/stopwatch/[Stopwatch]). In the next few steps you will time how long it takes for the Windows Instance to open these three CSV files and compare the durations between opening them from the FSx file Gateway in the local region and the FSx for Windows File Server in the remote region.
+
+. From the *File Explorer* window mapped to the *Z:* drive pointing to the remote FSx for Windows File Server, *_context-click_* (*_right-click_*) the 10k Sales Records.csv file and *_select_* *Open With > Notepad*. *_Start_* the stopwatch. *_Stop_* the stopwatch once data first appears in Notepad. *_Record_* the time.
+
+. From the *File Explorer* window mapped to the *Y:* drive pointing to the local FSx File Gateway, *_context-click_* (*_right-click_*) the 10k Sales Records.csv file and *_select_* *Open With > Notepad*. *_Start_* the stopwatch. *_Stop_* the stopwatch once data first appears in Notepad. *_Record_* the time.
+
++
+Due to the small size of the 10k Sales Records.csv file, the time to read the entire file is so short that it will be difficult to measure this using the stopwatch.
++
+. Repeat the two steps above with the 1m Sales Records.csv and 5m Sales Records.csv files.
+. What times did you record?
++
+Below are some sample times recorded when accessing these files from a Windows Instance and FSx File Gateway in the us-west-2 (Oregon) region and an FSx for Windows File Server in the us-east-1 (N. Virginia) region.
++
+[cols="3,10,10"]
+|===
+| File | FSx for Windows File Server (us-east-1) duration | FSx File Gateway (us-west-2)
+
+| 10k Sales Records.csv
+a| 2 seconds
+a| 1 second
+
+| 1m Sales Records.csv
+a| 12.4 seconds
+a| 2.9 seconds
+
+| 5m Sales Records.csv
+a| 59.4 seconds
+a| 6.5 seconds
+|===
++
+. Repeat the tests to see if you continue to see a difference between accessing files from the remote FSx for Windows File Server and the local FSx File Gateway.
+
+
+=== DiskSpd Read tests
+
+==== Test read performance accessing the remote FSx for Windows File Server.
+
+. From the remote desktop session to the *Windows Instance*, *_click_* *Start* >> *Windows PowerShell*.
+
++
+IMPORTANT: This section assumes the remote FSx for Windows File Server is mapped as the *Z:/* drive.
++
+. *_Run_* the script below in the PowerShell session to create a 1 GB sparse file.
++
+```sh
+fsutil file createnew Z:\${env:computername}-read.dat 1000000000
+```
++
+. Run the DiskSpeed script below to test read performance of the remote FSx for Windows File Server mapped as the **Z:** drive.
++
+```sh
+C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b64K -Sr -L Z:\${env:computername}-read.dat
+```
++
+While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> More details >> Performance (tab) >> Ethernet). The DiskSpd script will complete in 120 seconds. After the script has completed, the output will be displayed in the PowerShell window.
++
+* What was the P99 (99th %-tile) latency in ms of your test? - This is found in the DiskSpd output. It is in the *total* table at the bottom.
+* What was the P99.99 (99.99th %-tile) latency in ms of your test? - This is found in the DiskSpd output. It is in the *total* table at the bottom.
+* What was the Total Read IO MiB/s? - This is found in the DiskSpd output. It is under *Read IO* under the *MiB/s* column.
+* What was the I/O per second? - This is found in the DiskSpd output. It is under *Read IO* under the *I/O per s* column.
+* What was the AvgLat? - This is found in the DiskSpd output. It is under *Read IO* under the *AvgLat* column.
++
+. Copy the following table to your local computer and records the results
++
+[cols="3,10"]
+|===
+| DiskSpd Metric | FSx for Windows File Server
+
+| Read IO throughput (MiB/s)
+a|
+
+| Read IO I/O per s
+a|
+
+| Read IO AvgLat (ms)
+a|
+
+| Min %-tile
+a|
+
+| 50th %-tile
+a|
+
+| 90th %-tile
+a|
+
+| 99th %-tile
+a|
+
+| 99.99th %-tile
+a|
+|===
++
+. Experiment with different DiskSpd parameter settings. Use the table below as a guide. Test with different block sizes (-b), number of outstanding I/O requests (-o), number of threads per file (-t), and disable local caching (-Sr).
++
+[cols="3,10"]
+|===
+| Parameter | Description
+
+| `-b<size>[K\|M\|G]`
+a| Block size in bytes or KiB, MiB, or GiB (default = 64K).
+
+| `-o<count>`
+a| Number of outstanding I/O requests per-target per-thread. (1 = synchronous I/O, unless more than one thread is specified with by using `-F`.) (default = 2)
+
+| `-r<size>[K\|M\|G]`
+a| Random I/O aligned to the specified number of <alignment> bytes or KiB, MiB, GiB, or blocks. Overrides -s (default stride = block size).
+
+| `-s<size>[K\|M\|G]`
+a| Sequential stride size, offset between subsequent I/O operations in bytes or KiB, MiB, GiB, or blocks. Ignored if -r is specified (default access = sequential, default stride = block size).
+
+| `-t<count>`
+a| Number of threads per target. Conflicts with `-F`, which specifies the total number of threads.
+
+| `-Sr`
+a| Disable local caching.
+
+|===
+
+* What different parameters did you test?
+* How did the different parameter options alter the results?
+
+
+==== Test read performance accessing the local FSx File Gateway.
+
+. From the remote desktop session to the *Windows Instance*, open another *Windows PowerShell* window by *_clicking_* *Start* >> *Windows PowerShell*.
+
++
+IMPORTANT: This section assumes the local FSx File Gateway is mapped as the *Y:/* drive.
++
+. Run the DiskSpeed script below to test read performance of the remote FSx File Gateway mapped as the **Y:** drive.
++
+```sh
+C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b64K -Sr -L Y:\${env:computername}-read.dat
+```
++
+While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> More details >> Performance (tab) >> Ethernet). The DiskSpd script will complete in 120 seconds. After the script has completed, the output will be displayed in the PowerShell window.
++
+* What was the P99 (99th %-tile) latency in ms of your test? - This is found in the DiskSpd output. It is in the *total* table at the bottom.
+* What was the P99.99 (99.99th %-tile) latency in ms of your test? - This is found in the DiskSpd output. It is in the *total* table at the bottom.
+* What was the Total Read IO MiB/s? - This is found in the DiskSpd output. It is under *Read IO* under the *MiB/s* column.
+* What was the I/O per second? - This is found in the DiskSpd output. It is under *Read IO* under the *I/O per s* column.
+* What was the AvgLat? - This is found in the DiskSpd output. It is under *Read IO* under the *AvgLat* column.
++
+. Copy the following table to your local computer and records the results
++
+[cols="3,10"]
+|===
+| DiskSpd Metric | FSx File Gateway
+
+| Read IO throughput (MiB/s)
+a|
+
+| Read IO I/O per s
+a|
+
+| Read IO AvgLat (ms)
+a|
+
+| Min %-tile
+a|
+
+| 50th %-tile
+a|
+
+| 90th %-tile
+a|
+
+| 99th %-tile
+a|
+
+| 99.99th %-tile
+a|
+|===
++
+. Repeat the test. The first run of this test will experience higher latencies as the FSx File Gateway writes the file into its cache from the remote FSx for Windows File Server. Subsequent reads will read the file directly from the local FSx File Gateway.
+. Experiment with different DiskSpd parameter settings. Use the table below as a guide. Test with different block sizes (-b), number of outstanding I/O requests (-o), number of threads per file (-t), and disable local caching (-Sr).
++
+[cols="3,10"]
+|===
+| Parameter | Description
+
+| `-b<size>[K\|M\|G]`
+a| Block size in bytes or KiB, MiB, or GiB (default = 64K).
+
+| `-o<count>`
+a| Number of outstanding I/O requests per-target per-thread. (1 = synchronous I/O, unless more than one thread is specified with by using `-F`.) (default = 2)
+
+| `-r<size>[K\|M\|G]`
+a| Random I/O aligned to the specified number of <alignment> bytes or KiB, MiB, GiB, or blocks. Overrides -s (default stride = block size).
+
+| `-s<size>[K\|M\|G]`
+a| Sequential stride size, offset between subsequent I/O operations in bytes or KiB, MiB, GiB, or blocks. Ignored if -r is specified (default access = sequential, default stride = block size).
+
+| `-t<count>`
+a| Number of threads per target. Conflicts with `-F`, which specifies the total number of threads.
+
+| `-Sr`
+a| Disable local caching.
+
+|===
++
+
+* What different parameters did you test?
+* How did the different parameter options alter the results?
+
+
+=== DiskSpd Read Results
+
+Below is a table with the results from a previous test. These results show a significant improvement when an Amazon EC2 Windows instance (us-west-2) reads this large test file from the local FSx File Gateway (us-west-2) compared to a remote FSx for Windows File Server (us-east-1).
+
+[cols="3,10,10"]
+|===
+| DiskSpd Metric (us-west-2) | FSx for Windows File Server (us-east-1) | FSx File Gateway (us-west-2)
+
+| Read IO throughput (MiB/s)
+a| 26.79
+a| 456.46
+
+| Read IO I/O per s
+a| 428.64
+a| 7303.40
+
+| Read IO AvgLat (ms)
+a| 74.654
+a| 4.380
+
+| Min %-tile
+a| 72.147
+a| 0.717
+
+| 50th %-tile
+a| 72.553
+a| 4.2311
+
+| 90th %-tile
+a| 81.753
+a| 5.054
+
+| 99th %-tile
+a| 82.844
+a| 7.300
+
+| 99.99th %-tile
+a| 88.122
+a| 15.962
+|===
+
+* Compare your test results with those in the previous table. Do they differ substantially? Why?
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::test-write-performance.png[link=../08-test-write-performance/, align="left",width=420]
+
+
+
+
