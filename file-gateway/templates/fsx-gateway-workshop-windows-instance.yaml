@@ -51,7 +51,8 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
   Password:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
-    Description: Copy in the Secret Value of the Secret Key 'Password-<GUID>' from Secrets Manager created in Phase 1 - Amazon FSx for Windows File Server environment.
+    Description: Password for the domain admin user. Must be at least 8 characters,
+      containing letters, numbers, and symbols.
     MaxLength: '32'
     MinLength: '8'
     NoEcho: 'true'
@@ -62,7 +63,7 @@ Parameters:
   SecurityGroup:
     Description: Select the fsx-gateway-workshop-fsxgw-environment-WindowsSecurityGroup-<GUID> (e.g., sg-7f16e91a87390).
     Type: AWS::EC2::SecurityGroup::Id
-  LatestWS2019AmiId:
+  LatestAmiId:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: "/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base"
 
@@ -76,9 +77,11 @@ Resources:
             ExpirationInDays: 30
             Status: Enabled
             Prefix: 'logs/'
-  Password:
+  DomainJoinSecrets:
     Type: AWS::SecretsManager::Secret
     Properties:
+      Name: !Sub 'DomainJoinSecrets-${AWS::StackName}'
+      Description: Secrets to join AD domain
       SecretString: !Sub '{"username":"admin@example.com","password":"${Password}"}'
   LambdaSSMRole:
     Type: AWS::IAM::Role
@@ -168,7 +171,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential1ref
         {
         Password = "managementgovernancesample";
-         UserName = "${Password}";
+         UserName = "${DomainJoinSecrets}";
         
         };
         instance of DSC_Computer as $DSC_Computer1ref
@@ -214,7 +217,7 @@ Resources:
                   - secretsmanager:GetSecretValue
                   - secretsmanager:DescribeSecret
                 Resource: 
-                  - !Ref 'Password'
+                  - !Ref 'DomainJoinSecrets'
           PolicyName: ssm-secrets-policy
         - PolicyDocument:
             Version: '2012-10-17'
@@ -250,7 +253,7 @@ Resources:
   WindowsInstance:
     Type: "AWS::EC2::Instance"
     Properties:
-      ImageId: !Ref LatestWS2019AmiId
+      ImageId: !Ref LatestAmiId
       InstanceType: !Ref InstanceType
       KeyName: !Ref KeyPair
       IamInstanceProfile: !Ref SSMInstanceProfile

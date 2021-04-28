@@ -391,7 +391,7 @@ Resources:
             - ip_address=$(aws fsx describe-file-systems --file-system-ids ${WindowsFileSystem} --query 'FileSystems[].[WindowsConfiguration.PreferredFileServerIp]' --region ${!region} --output text)
             - password=$(aws secretsmanager get-secret-value --secret-id ${Password} --region ${!region} --output json | jq --raw-output .SecretString | jq -r ."password")
             - mount -t cifs -o vers=3.0,sec=ntlmsspi,user=admin@example.com,password=${!password} //${!ip_address}/share /fsx
-            - aws s3 cp s3://amazon-fsx/workshop/fsx-file-gateway/sample-data/ /fsx/. --recursive
+            - aws s3 cp s3://darrylsosborne-us-west-2/workshop/fsx-file-gateway/sample-data/ /fsx/. --recursive
 
             - yum update -y
             - reboot
