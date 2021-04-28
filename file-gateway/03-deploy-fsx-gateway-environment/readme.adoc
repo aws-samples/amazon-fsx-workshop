@@ -156,7 +156,7 @@ Update the Private Routing Table and add a route to the VPC CIDR in Region 2 usi
 +
 . *_Select_* *Save routes* and *Close*.
 
-=== Deploy an Amazon Windows EC2 instance in Region 2 using AWS CloudFormation that automatically joins the AWS-managed Active Direction in Region 2
+=== Deploy an Amazon Windows EC2 instance in Region 2 using AWS CloudFormation that automatically joins the AWS-managed Active Directory in Region 2
 
 IMPORTANT: Read through all steps below before *_clicking_* the *Deploy to AWS* button.
 

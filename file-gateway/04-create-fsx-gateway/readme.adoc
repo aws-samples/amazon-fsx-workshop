@@ -19,13 +19,13 @@ image::fsx-gateway-workshop-architecture-phase-3.png[align="center"]
 
 IMPORTANT: Read through all steps below before *_clicking_* the *Deploy to AWS* button.
 
-. From the link:https://console.aws.amazon.com/storagegateway/[Amazon Storage Gateway] console, *_select_* the AWS Region where you created the Amazon FSx for Windows File Server environment (Phase 1 and Region 1).
+. From the link:https://console.aws.amazon.com/storagegateway/[AWS Storage Gateway] console, *_select_* the AWS Region where you created the Amazon FSx for Windows File Server environment (Phase 1 and Region 1).
 . *_Select_* *Create gateway*.
 . *_Select_* *Amazon FSx File Gateway*, then *_select_* *Next*.
 . *_Select_* *Amazon EC2* as the *host platform*, then *_select_* *Next*.
 . *_Select_* *Public* as the service endpoint, then *_select_* *Next*.
 . *_Open_* the link:https://console.aws.amazon.com/cloudformation/[AWS CloudFormation] console, *_select_* the AWS Region where you created the Amazon FSx File Gateway environment (Phase 2 and Region 2). *_Select_* the *fsx-gateway-workshop-fsxgw-environment* stack and *_select_* the *Outputs* tab. *_Copy_* the value of the key/value pair for *GatewayPublicIp*. This is the public IP address for the FSx File Gateway instance.
-. *_Return_* to the link:https://console.aws.amazon.com/storagegatewayv3/[Amazon Storage Gateway] console and *_paste_* in the value of the *GatewayPublicIp* into the *IP address* text field. *_Select_* *Next*.
+. *_Return_* to the link:https://console.aws.amazon.com/storagegatewayv3/[AWS Storage Gateway] console and *_paste_* in the value of the *GatewayPublicIp* into the *IP address* text field. *_Select_* *Next*.
 . From the *Gateway time zone* dropdown menu, *_select_* the appropriate time zone where you deployed the Amazon FSx File Gateway environment (Region 2).
 . *_Enter_* the gateway name. Give it a name like *FSx File Gateway Workshop*. *_Select_* *Activate gateway*.
 +
