@@ -227,8 +227,9 @@ Resources:
         - DeviceName: /dev/sdb
           Ebs:
             DeleteOnTermination: true
+            Iops: 4000
             VolumeSize: 150
-            VolumeType: gp2
+            VolumeType: io1
       IamInstanceProfile: !Ref GatewayInstanceProfile
       ImageId: !Ref LatestSgwAmiId
       InstanceType: !Ref GatewayInstanceType
