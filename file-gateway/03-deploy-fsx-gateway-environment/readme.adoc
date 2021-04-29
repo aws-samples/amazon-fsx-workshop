@@ -95,7 +95,7 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 a| Select a CIDR that will be used for the VPC. This CIDR block must not overlap the CIDR block from Phase 1 - Amazon FSx for Windows File Server environment.
 
 | *Availability Zones*
-a| Select two (2) availability zones for your VPC.
+a| Select one availability zone for your VPC.
 
 | *Peer region*
 a| Select the region where you deployed Phase 1 - Amazon FSx for Windows File Server environment.
