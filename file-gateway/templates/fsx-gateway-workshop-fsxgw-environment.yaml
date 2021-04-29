@@ -45,15 +45,15 @@ Metadata:
 
 Parameters:
   AvailabilityZones:
-    Description: Select two (2) Availability Zones (AZ). One public subnet and one private subnet will be created in each AZ.
-    Type: List<AWS::EC2::AvailabilityZone::Name>
+    Description: Select one Availability Zones. One public subnet will be created in the AZ.
+    Type: AWS::EC2::AvailabilityZone::Name
   DnsIpAddresses:
     Description: Enter the two Ip addresses of the DNS servers from Region 0 (e.g. 10.0.0.7, 10.0.0.23)
     Type: String
   GatewayInstanceType:
     AllowedValues:
-    - m5n.2xlarge
-    Default: m5n.2xlarge
+    - m5.2xlarge
+    Default: m5.2xlarge
     Type: String
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
@@ -142,20 +142,20 @@ Resources:
         - Key: Network
           Value: Public
       VpcId: !Ref Vpc
-  PublicRouteTableAssociation1:
+  PublicRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicSubnet1
+      SubnetId: !Ref PublicSubnet
       RouteTableId: !Ref PublicRouteTable
-  PublicSubnet1:
+  PublicSubnet:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !Select [ 1, !Ref AvailabilityZones ]
+      AvailabilityZone: !Ref AvailabilityZones
       CidrBlock: !Select [ 1, !Cidr [ !GetAtt Vpc.CidrBlock, 2, 4 ] ]
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Join [ '', [ 'Public Subnet 1 | ', !Ref 'AWS::StackName' ] ]
+          Value: !Join [ '', [ 'Public Subnet | ', !Ref 'AWS::StackName' ] ]
         - Key: SubnetType
           Value: Public
       VpcId: !Ref Vpc
@@ -236,7 +236,7 @@ Resources:
       Monitoring: true
       SecurityGroupIds: 
         - !Ref GatewaySecurityGroup
-      SubnetId: !Ref PublicSubnet1
+      SubnetId: !Ref PublicSubnet
       Tags:
         - Key: Name
           Value: FSx Workshop Gateway Instance
