@@ -101,10 +101,10 @@ a| Select two (2) availability zones for your VPC.
 a| Select the region where you deployed Phase 1 - Amazon FSx for Windows File Server environment.
 
 | *Peer VPC Id*
-a| Copy in the VPC Id of the VPC created in Phase 1 - Amazon FSx for Windows File Server environment. This can be easily found from the Parameters tab of the CloudFormation stack you created in Region 1. From the CloudFormation stack window for Phase 1 in Region 1, *_select_* the Parameters tab. Copy to clipboard the corresponding Value of the key VpcCidr and paste it here in the Cloudformaton stack wizard *Peer VPC Id* parameter input test field.
+a| Copy in the VPC Id of the VPC created in Phase 1 - Amazon FSx for Windows File Server environment. From the CloudFormation stack window for Phase 1 in Region 1, *_select_* the Resources tab and scroll down until you see the Logical ID *Vpc*. Copy to clipboard the corresponding Physical ID (e.g. vpc-083db1b5659eab9b4) and paste it here in the CloudFormation stack wizard *Peer VPC Id* parameter input text field.
 
 | *Peer VPC CIDR*
-a| Select the VPC CIDR of the VPC created in Phase 1 - Amazon FSx for Windows File Server environment. From the CloudFormation stack window for Phase 1 in Region 1, *_select_* the Resources tab and scroll down until you see the Logical ID *Vpc*. Copy to clipboard the corresponding Physical ID (e.g. vpc-083db1b5659eab9b4) and paste it here in the CloudFormation stack wizard *Peer VPC CIDR* parameter input text field.
+a| Select the VPC CIDR of the VPC created in Phase 1 - Amazon FSx for Windows File Server environment. From the CloudFormation stack window for Phase 1 in Region 1, *_select_* the Parameters tab. Copy to clipboard the corresponding Value of the key VpcCidr and paste it here in the Cloudformaton stack wizard *Peer VPC CIDR* parameter input test field.
 
 | *DNS Ip Addresses*
 a| Copy in the two DNS Ip addresses of the AWS-managed Active Directory created in Phase 1 - Amazon FSx for Windows File Server environment. This can be found from the link:https://console.aws.amazon.com/directoryservicev2/[AWS Directory Service] console for the directory created in Phase 1 - Amazon FSx for Windows File Server environment deployed in Region 1. Copy to clipboard the *DNS address* values as a single string (e.g. 10.0.0.21, 10.0.1.9) and paste it here in the CloudFormation stack wizard *DNS Ip Addresses* parameter input text field.
