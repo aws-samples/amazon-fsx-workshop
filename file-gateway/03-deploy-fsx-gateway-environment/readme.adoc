@@ -237,7 +237,7 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 a| Accept the default.
 
 | *Subnet*
-a| *_Select_* the *Public Subnet 1 - fsx-gateway-workshop-fsxgw-environment* subnet.
+a| *_Select_* the *Public Subnet - fsx-gateway-workshop-fsxgw-environment* subnet.
 
 | *Security Group*
 a| Select the *fsx-gateway-workshop-fsxgw-environment-WindowsSecurityGroup-<GUID>* security group.
