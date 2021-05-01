@@ -173,15 +173,11 @@ a| Disable local caching.
 
 ==== Test write performance accessing the local FSx File Gateway.
 
-. From the remote desktop session to the *Windows Instance*, open another *Windows PowerShell* window by *_clicking_* *Start* >> *Windows PowerShell*.
-
-+
 IMPORTANT: This section assumes the local FSx File Gateway is mapped as the *Y:* drive.
 +
 . *_Run_* the script below in the PowerShell session to create a 1 GB sparse file.
 +
 ```sh
-$random = $(Get-Random)
 fsutil file createnew Y:\${env:computername}-fsxgw.dat 1000000000
 ```
 +
