@@ -106,7 +106,7 @@ While the script is running, open *Task Manager* and monitor network performance
 +
 [width="50%",cols="d,d,d",frame="topbot",options="header"]
 |===
-h| EC2 Instance (us-west-2) | FSx for Windows File Server (us-east-1) | FSx File Gateway (us-west-2)
+h| EC2 Instance (us-west-1) | FSx for Windows File Server (us-east-1) | FSx File Gateway (us-west-1)
 s| DiskSpd Write (metric) h| Write h| Write
 | Read IO throughput (MiB/s)
 |
@@ -233,7 +233,7 @@ a| Disable local caching.
 
 === DiskSpd Write Results
 
-The following table and charts show the results from a previous test. These results show a significant improvement when an Amazon EC2 Windows instance (us-west-2) writes to a large file on the local FSx File Gateway (us-west-2) compared to a remote FSx for Windows File Server (us-east-1).
+The following table and charts show the results from a previous test. These results show a significant improvement when an Amazon EC2 Windows instance (us-west-1) writes to a large file on the local FSx File Gateway (us-west-1) compared to a remote FSx for Windows File Server (us-east-1).
 
 * Compare your test results with those in following. Do they differ substantially? Why?
 

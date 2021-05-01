@@ -40,11 +40,11 @@ Due to the small size of the 10k Sales Records.csv file, the time to read the en
 NOTE: The initial read from the FSx File Gateway will experience higher latencies as the FSx File Gateway reads the file into its cache from the remote FSx for Windows File Server. Subsequent reads deliver the file directly from the local FSx File Gateway.
 +
 +
-Below are some sample times recorded when accessing these files from a Windows Instance and FSx File Gateway in the us-west-2 (Oregon) region and an FSx for Windows File Server in the us-east-1 (N. Virginia) region.
+Below are some sample times recorded when accessing these files from a Windows Instance and FSx File Gateway in the us-west-1 (N. California) region and an FSx for Windows File Server in the us-east-1 (N. Virginia) region.
 +
 [cols="3,10,10"]
 |===
-| File | FSx for Windows File Server (us-east-1) duration | FSx File Gateway (us-west-2) duration
+| File | FSx for Windows File Server (us-east-1) duration | FSx File Gateway (us-west-1) duration
 
 | 10k Sales Records.csv
 a| 2 seconds
@@ -90,7 +90,7 @@ While the script is running, open *Task Manager* and monitor network performance
 +
 [width="50%",cols="d,d,d,d,d",frame="topbot",options="header"]
 |===
-h| EC2 Instance (us-west-2) 2+h| FSx for Windows File Server (us-east-1) 2+h| FSx File Gateway (us-west-2)
+h| EC2 Instance (us-west-1) 2+h| FSx for Windows File Server (us-east-1) 2+h| FSx File Gateway (us-west-1)
 s| DiskSpd Read (metric) h| Test 1 h| Test 2 h| Test 1 h| Test 2
 | Read IO throughput (MiB/s)
 |
@@ -230,7 +230,7 @@ a| Disable local caching.
 
 === DiskSpd Read Results
 
-The following table and charts show the results from a previous test. These results show a significant improvement when an Amazon EC2 Windows instance (us-west-2) reads a large file from the local FSx File Gateway (us-west-2) compared to a remote FSx for Windows File Server (us-east-1). Remember, the initial read from the FSx File Gateway will experience higher latencies as the FSx File Gateway reads the file into its cache from the remote FSx for Windows File Server. Subsequent reads deliver the file directly from the local FSx File Gateway.
+The following table and charts show the results from a previous test. These results show a significant improvement when an Amazon EC2 Windows instance (us-west-1) reads a large file from the local FSx File Gateway (us-west-1) compared to a remote FSx for Windows File Server (us-east-1). Remember, the initial read from the FSx File Gateway will experience higher latencies as the FSx File Gateway reads the file into its cache from the remote FSx for Windows File Server. Subsequent reads deliver the file directly from the local FSx File Gateway.
 
 * Compare your test results with those in following. Do they differ substantially? Why?
 
