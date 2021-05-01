@@ -112,46 +112,31 @@ s| DiskSpd Write (metric) h| Write h| Write
 |
 |
 
-
 | Read IO I/O per s
-|
-|
 |
 |
 
 | Read IO AvgLat (ms)
 |
 |
-|
-|
 
 | Min %-tile (ms)
-|
-|
 |
 |
 
 | 50th %-tile (ms)
 |
 |
-|
-|
 
 | 90th %-tile (ms)
-|
-|
 |
 |
 
 | 99th %-tile (ms)
 |
 |
-|
-|
 
 | 99.99th %-tile (ms)
-|
-|
 |
 |
 |===
