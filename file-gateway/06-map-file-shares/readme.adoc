@@ -19,7 +19,9 @@ NOTE: It will take approximately 5 minutes to complete this section.
 
 === Map a drive to the Amazon FSx for Windows File Server default share in Region 1
 
-IMPORTANT: Read through all steps below before continuing.
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::map-drives.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 . Go to the Remote Desktop Session where you connected to the *WindowsInstance*.
 
@@ -79,7 +81,7 @@ a| Leave unchecked
 
 Click the link below to go to the next section.
 
-image::test-read-performance.png[link=../07-test-read-performance/, align="left",width=420]
+image::test-write-performance.png[link=../07-test-write-performance/, align="left",width=420]
 
 
 

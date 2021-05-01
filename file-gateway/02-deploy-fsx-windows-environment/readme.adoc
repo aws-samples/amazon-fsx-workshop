@@ -12,11 +12,13 @@ It will take approximately 30 minutes for this phase of the workshop environment
 
 == Phase 1 Diagram
 
-image::fsx-gateway-workshop-architecture-phase-1.png[align="center"]
+image::fsx-gateway-workshop-architecture-phase-1.png[title="Amazon FSx for Windows File Server Workshop Architecture", align="center"]
 
 === Deploy the environment using AWS CloudFormation
 
-IMPORTANT: Read through all steps below before *_clicking_* the *Deploy to AWS* button.
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::phase-1-deploy-fsxw.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 . Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin.
 +

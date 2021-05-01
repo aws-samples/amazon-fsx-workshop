@@ -1,26 +1,23 @@
-= Windows File Storage the AWSome Way!
+= Amazon FSx File Gateway Workshop
 :icons:
 :linkattrs:
 :imagesdir: ../resources/images
 
 image:fsx-windows-aws-logos.png[alt="fsx for windows and aws logos", align="left",width=420]
 
-This workshop is for re:invent 2019 - *_STG326 - Deploy fully managed FSx for Windows File Server instances in minutes_*.
-
 This is a workshop designed for architects and engineers who would like to learn more about Amazon Web Services (AWS) native Windows file storage.
 
 === Duration
 
-NOTE: It will take approximately 90 minutes to complete and you will run it using an AWS account that we provide at the workshop.
+NOTE: It will take approximately 90 minutes to complete and you will run it using an AWS account.
 
 === Pricing
 
-NOTE: You will not incur charges for this workshop as it will be running in an AWS account that we provide.
-
+NOTE:
 
 Click the button below to start the *Amazon FSx for Windows File Server* workshop.
 
-image::01-access-environment.png[link=01-access-workshop-environment/, align="left",width=420]
+image::01-environment-overview.png[link=01-environment-overview/, align="left",width=420]
 
 === Participation
 

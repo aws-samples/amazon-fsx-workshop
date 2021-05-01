@@ -12,11 +12,13 @@ It will take approximately 5 minutes for this phase of the workshop environment 
 
 == Phase 2 Diagram
 
-image::fsx-gateway-workshop-architecture-phase-2.png[align="center"]
+image::fsx-gateway-workshop-architecture-phase-2.png[title="Amazon FSx File Gateway Workshop Architecture", align="center"]
 
 === Deploy the Amazon FSx File Gateway environment using AWS CloudFormation
 
-IMPORTANT: Read through all steps below before *_clicking_* the *Deploy to AWS* button.
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::phase-2-deploy-fsxfgw.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 . Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin. To simulate a real-world scenario of deploying the FSx File Gateway remote from the FSx for Windows File Server, select a region below that is different than the region you selected in Phase 1.
 +
@@ -132,7 +134,9 @@ Do not move to the next section until CloudFormation stack has a status of CREAT
 
 === Update Routing Tables with VPC Peering Connection routes in Region 1
 
-IMPORTANT: Read through all steps below before continuing.
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::phase-2-create-route.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 IMPORTANT: This section must be completed in Region 1 where you deployed the Amazon FSx for Windows File Server environment.
 
@@ -158,7 +162,9 @@ Update the Private Routing Table and add a route to the VPC CIDR in Region 2 usi
 
 === Deploy an Amazon Windows EC2 instance in Region 2 using AWS CloudFormation that automatically joins the AWS-managed Active Directory in Region 2
 
-IMPORTANT: Read through all steps below before *_clicking_* the *Deploy to AWS* button.
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::phase-2-deploy-instance.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 . Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin. This should be the same region you selected above for Region 2.
 +
