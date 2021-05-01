@@ -240,11 +240,11 @@ The following table and charts show the results from a previous test. These resu
 * Compare your test results with those in following. Do they differ substantially? Why?
 
 
-image::write-results-table.png[title="DiskSpd Write Results Table - sample", align="left", width=1000]
+image::write-results-table-a.png[title="DiskSpd Write Results Table - sample", align="left", width=1000]
 ---
-image::write-results-throughput-chart.png[title="DiskSpd Write Throughput Chart - sample", align="left", width=800]
+image::write-results-throughput-chart-a.png[title="DiskSpd Write Throughput Chart - sample", align="left", width=800]
 ---
-image::write-results-latencies-chart.png[title="DiskSpd Write Latencies Chart - sample", align="left", width=800]
+image::write-results-latencies-chart-a.png[title="DiskSpd Write Latencies Chart - sample", align="left", width=800]
 ---
 
 * Using different hardware resources to host the FSx File Gateway will affect performance (e.g. allocating more CPUs, network bandwidth, larger/faster disks, more memory, etc.).
