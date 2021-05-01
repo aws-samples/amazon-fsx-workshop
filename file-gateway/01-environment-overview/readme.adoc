@@ -15,7 +15,9 @@ In the *Workshop Diagram*, Region 1 represents the AWS environment where the Ama
 - Phase 2 - Deploy the Region 2 environment hosting the remote Amazon FSx File Gateway EC2 instance using AWS CloudFormation
 - Phase 3 - Create the Amazon FSx File Gateway service components using the AWS Management Console in Region 1
 
-It will take approximately 40 minutes for the entire workshop environment to be created.
+It will take approximately 2 hours to complete the entire workshop, including 40 minutes for the workshop environments to be deployed and created.
+
+IMPORTANT: This tutorial environment will exceed your free-usage tier. You will incur charges as a result of deploying and running this workshop. This workshop will take approximately 2 hours to complete with an estimated cost of ~$7.50.
 
 == Workshop Diagram
 
