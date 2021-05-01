@@ -89,7 +89,7 @@ While the script is running, open *Task Manager* and monitor network performance
 +
 [width="50%",cols="d,d,d,d,d",frame="topbot",options="header"]
 |===
-h| EC2 Instance (us-west-1) 2+h| FSx for Windows File Server 2+h| FSx File Gateway
+h| EC2 Instance 2+h| FSx for Windows File Server 2+h| FSx File Gateway
 s| DiskSpd Read (metric) h| Test 1 h| Test 2 h| Test 1 h| Test 2
 | Read IO throughput (MiB/s)
 |
