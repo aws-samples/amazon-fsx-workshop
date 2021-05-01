@@ -18,7 +18,9 @@ NOTE: It will take approximately 15 minutes to complete this section.
 
 == Step-by-step Guide
 
-IMPORTANT: Read through all steps below before continuing.
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::create-update-delete.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 === Compare file creations between the local FSx File Gateway and the remote FSx for Windows File Server
 
@@ -74,6 +76,10 @@ NOTE: Changes made to the underlying FSx for Windows File Server are periodicall
 NOTE: Changes made to the FSx File Gateway are immediately pushed to the attached FSx for Windows File Server.
 
 === DiskSpd Write tests
+
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::write-test.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 ==== Test write performance accessing the remote FSx for Windows File Server.
 
