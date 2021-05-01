@@ -46,16 +46,16 @@ Below are some sample times recorded when accessing these files from a Windows I
 | File | FSx for Windows File Server (us-east-1) duration | FSx File Gateway (us-west-1) duration
 
 | 10k Sales Records.csv
-a| 2 seconds
-a| 1 second
+a| ~2.0 seconds
+a| ~0.5 seconds
 
 | 1m Sales Records.csv
-a| 12.4 seconds
-a| 2.9 seconds
+a| ~15.5 seconds
+a| ~1.5 seconds
 
 | 5m Sales Records.csv
-a| 59.4 seconds
-a| 6.5 seconds
+a| ~81.6 seconds
+a| ~7.9 seconds
 |===
 +
 . Repeat the tests to see if you continue to see differences between accessing files from the remote FSx for Windows File Server and the local FSx File Gateway.
@@ -84,8 +84,8 @@ While the script is running, open *Task Manager* and monitor network performance
 * What was the I/O per second? - This is found in the DiskSpd output. It is under *Read IO* under the *I/O per s* column.
 * What was the AvgLat? - This is found in the DiskSpd output. It is under *Read IO* under the *AvgLat* column.
 +
-. Copy the following table to your local computer and record the results in the *FSx for Windows File Server Test 1* column.
-. Repeat the test and record the results in the *FSx for Windows File Server Test 2* column.
+. Copy the following table to your local computer and record the results in the *FSx for Windows File Server* Test 1 column.
+. Repeat the test and record the results in the *FSx for Windows File Server* Test 2 column.
 +
 [width="50%",cols="d,d,d,d,d",frame="topbot",options="header"]
 |===
