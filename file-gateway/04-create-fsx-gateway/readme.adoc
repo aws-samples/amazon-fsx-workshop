@@ -19,7 +19,7 @@ image::fsx-gateway-workshop-architecture-phase-3.png[title="Amazon FSx File Gate
 
 IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
 
-image::phase-3-create-gateway.gif[title="Quick Step-by-step Video", align="left", width=600]
+//image::phase-3-create-gateway.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 . From the link:https://console.aws.amazon.com/storagegateway/[AWS Storage Gateway] console, *_select_* the AWS Region where you created the Amazon FSx for Windows File Server environment (Phase 1 and Region 1).
 . *_Select_* *Create gateway*.

@@ -18,7 +18,7 @@ image::fsx-gateway-workshop-architecture-phase-1.png[title="Amazon FSx for Windo
 
 IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
 
-image::phase-1-deploy-fsxw.gif[title="Quick Step-by-step Video", align="left", width=600]
+//image::phase-1-deploy-fsxw.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 . Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin.
 +
