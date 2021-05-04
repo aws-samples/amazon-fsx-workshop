@@ -180,7 +180,7 @@ a| Disable local caching.
 ==== Test write performance accessing the local FSx File Gateway.
 
 IMPORTANT: This section assumes the local FSx File Gateway is mapped as the *Y:* drive.
-+
+
 . *_Run_* the script below in the PowerShell session to create a 1 GB sparse file.
 +
 ```sh
