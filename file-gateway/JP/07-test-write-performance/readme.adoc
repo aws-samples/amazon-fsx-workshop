@@ -24,35 +24,35 @@ image::create-update-delete.gif[title="ステップバイステップのクイ�
 
 === ローカルのFSx File GatewayとリモートのFSx for Windows File Server間でのファイル作成の比較
 
-. 2つの*File Explorer*ウィンドウを配置して、両方の内容を同時に確認できるようにします。
+. 2つの"File Explorer"ウィンドウを配置して、両方の内容を同時に確認できるようにします。
 
-. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで右クリックし、*New >> TextDocument*を選択し、ファイルに名前を付けます （例 Test1）。
-. 両方の*File Explorer*ウィンドウにファイルを確認出来ますか？
-. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウをリフレッシュして下さい。
-. 1分待ってからもう一度試してみてください。ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウをリフレッシュし続けて下さい。
+. リモートFSx for Windows File Serverを"Z:"ドライブとしてマウントしている"File Explorer"ウィンドウで右クリックし、"New >> TextDocument"を選択し、ファイルに名前を付けます （例 Test1）。
+. 両方の"File Explorer"ウィンドウにファイルを確認出来ますか？
+. ローカルFSx File Gatewayを"Y:"ドライブとしてマウントしている"File Explorer"ウィンドウをリフレッシュして下さい。
+. 1分待ってからもう一度試してみてください。ローカルFSx File Gatewayを"Y:"ドライブとしてマウントしている"File Explorer"ウィンドウをリフレッシュし続けて下さい。
 +
 注：元となるFSx for Windows File Serverに加えられた変更は、接続されたFSx File Gatewaysに定期的にプッシュされます。
 +
-. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで右クリックし、*New >> TextDocument*を選択し、ファイルに名前を付けます （例 Test2）。
-. 両方の*File Explorer*ウィンドウにファイルを確認出来ますか？
+. ローカルFSx File Gatewayを"Y:"ドライブとしてマウントしている"File Explorer"ウィンドウで右クリックし、"New >> TextDocument"を選択し、ファイルに名前を付けます （例 Test2）。
+. 両方の"File Explorer"ウィンドウにファイルを確認出来ますか？
 +
 注：FSxファイルゲートウェイに加えられた変更は、接続されているFSx for Windows File Serverに直ちにプッシュされます。
 
 === ローカルのFSx File GatewayとリモートのFSx for Windows File Server間でのファイル更新の比較
 
-. 2つの*File Explorer*ウィンドウを配置して、両方の内容を同時に確認できるようにします。
+. 2つの"File Explorer"ウィンドウを配置して、両方の内容を同時に確認できるようにします。
 
-. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順で作成した*Test1*ファイルを開き、内容をアップデートします。（例：ファーストネームを入力）
+. リモートFSx for Windows File Serverを"Z:"ドライブとしてマウントしている"File Explorer"ウィンドウで、前の手順で作成した"Test1"ファイルを開き、内容をアップデートします。（例：ファーストネームを入力）
 . ファイルをセーブして閉じます。
-. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順でアップデートした*Test1*ファイルを開きます。
+. ローカルFSx File Gatewayを"Y:"ドライブとしてマウントしている"File Explorer"ウィンドウで、前の手順でアップデートした"Test1"ファイルを開きます。
 . アップデートは反映されていますか？
 . 1分待ってからもう一度試してみてください。アップデートが確認できるまで、継続してファイルを開いてみて下さい。
 +
 注：元となるFSx for Windows File Serverに加えられた変更は、接続されたFSx File Gatewaysに定期的にプッシュされます。
 +
-. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順で作成した*Test2*ファイルを開き、内容をアップデートします。（例：ラストネームを入力）
+. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている"File Explorer"ウィンドウで、前の手順で作成した"Test2"ファイルを開き、内容をアップデートします。（例：ラストネームを入力）
 . ファイルをセーブして閉じます。
-. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順でアップデートした*Test2*ファイルを開きます。
+. リモートFSx for Windows File Serverを"Z:"ドライブとしてマウントしている"File Explorer"ウィンドウで、前の手順でアップデートした"Test2"ファイルを開きます。
 . アップデートは反映されていますか？
 +
 注：FSxファイルゲートウェイに加えられた変更は、接続されているFSx for Windows File Serverに直ちにプッシュされます。
@@ -60,18 +60,18 @@ image::create-update-delete.gif[title="ステップバイステップのクイ�
 
 === ローカルのFSx File GatewayとリモートのFSx for Windows File Server間のファイル削除の比較
 
-. 2つの*File Explorer*ウィンドウを配置して、両方の内容を同時に確認できるようにします。
+. 2つの"File Explorer"ウィンドウを配置して、両方の内容を同時に確認できるようにします。
 
-. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順で作成した*Test1*ファイルを削除します。
-. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで、*Test1*ファイルを確認出来ますか？
-. 1分待ってからもう一度試してみてください。ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウをリフレッシュし続けて下さい。
+. リモートFSx for Windows File Serverを"Z:"ドライブとしてマウントしている"File Explorer"ウィンドウで、前の手順で作成した"Test1"ファイルを削除します。
+. ローカルFSx File Gatewayを"Y:"ドライブとしてマウントしている"File Explorer"ウィンドウで、"Test1"ファイルを確認出来ますか？
+. 1分待ってからもう一度試してみてください。ローカルFSx File Gatewayを"Y:"ドライブとしてマウントしている"File Explorer"ウィンドウをリフレッシュし続けて下さい。
 +
 注：元となるFSx for Windows File Serverに加えられた変更は、接続されたFSx File Gatewaysに定期的にプッシュされます。
 +
-. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順で作成した*Test2*ファイルを削除します。
-. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで、*Test2*ファイルを確認出来ますか？
-. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウリフレッシュし続けて下さい。
-. *Test2*ファイルを確認出来ますか？
+. ローカルFSx File Gatewayを"Y:"ドライブとしてマウントしている"File Explorer"ウィンドウで、前の手順で作成した"Test2"ファイルを削除します。
+. リモートFSx for Windows File Serverを"Z:"ドライブとしてマウントしている"File Explorer"ウィンドウで、"Test2"ファイルを確認出来ますか？
+. リモートFSx for Windows File Serverを"Z:"ドライブとしてマウントしている"File Explorer"ウィンドウリフレッシュし続けて下さい。
+. "Test2"ファイルを確認出来ますか？
 +
 注：FSxファイルゲートウェイに加えられた変更は、接続されているFSx for Windows File Serverに直ちにプッシュされます。
 
@@ -83,10 +83,10 @@ image::write-test.gif[title="ステップバイステップのクイックビデ
 
 ==== リモートのFSx for Windows File Serverへの書き込みパフォーマンステスト
 
-. *Windows Instance*のリモートデスクトップセッションで、*Start* >> *Windows PowerShell*の順で選択して下さい。
+. "Windows Instance"のリモートデスクトップセッションで、"Start" >> "Windows PowerShell"の順で選択して下さい。
 
 +
-重要: このセクションではリモートFSx for Windows File Serverが*Z:*ドライブとしてマウントされていることを想定しています。
+重要: このセクションではリモートFSx for Windows File Serverが"Z:"ドライブとしてマウントされていることを想定しています。
 +
 . PowerShellセッションで以下のスクリプトを実行し、1GBのスパースファイルを作成します。
 +
@@ -94,7 +94,7 @@ image::write-test.gif[title="ステップバイステップのクイックビデ
 fsutil file createnew Z:\${env:computername}-fsxw.dat 1000000000
 ```
 +
-. PowerShellセッションで以下のDiskSpeedスクリプトを実行して、**Z:**ドライブとしてマウントされたリモートFSx for Windows File Serverの書き込みパフォーマンスをテストします。
+. PowerShellセッションで以下のDiskSpeedスクリプトを実行して、"Z:"ドライブとしてマウントされたリモートFSx for Windows File Serverの書き込みパフォーマンスをテストします。
 +
 ```sh
 C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Z:\${env:computername}-fsxw.dat
@@ -102,11 +102,11 @@ C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Z
 +
 スクリプトの実行中に、タスクマネージャーを開き、ネットワークのパフォーマンスを監視します（例：Start >> Task Manager >> More details >> Performance (tab) >> Ethernet）。DiskSpdのスクリプトは120秒で完了します。スクリプトが完了すると、PowerShellウィンドウに出力が表示されます。
 +
-* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
-* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
-* Total Write IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の*MiB/s*列の*Write IO*の下にあります。
-* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の*I/O per s*列の下の*Write IO*の下にあります。
-* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の*AvgLat*列の下の*Write IO*の下にあります。
+* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の"total"テーブルにあります。
+* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の"total"テーブルにあります。
+* Total Write IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の"MiB/s"列の"Write IO"の下にあります。
+* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の"I/O per s"列の下の"Write IO"の下にあります。
+* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の"AvgLat"列の下の"Write IO"の下にあります。
 +
 . 次の表をローカルコンピュータにコピーして、結果を記録します。
 +
@@ -179,7 +179,7 @@ a| Disable local caching.
 
 ==== ローカルFSx File Gatewayへの書き込みパフォーマンステスト
 
-重要: このセクションではローカルFSx File Gatewayが*Y:*ドライブとしてマウントされていることを想定しています。
+重要: このセクションではローカルFSx File Gatewayが"Y:"ドライブとしてマウントされていることを想定しています。
 
 . PowerShellセッションで以下のスクリプトを実行し、1GBのスパースファイルを作成します。
 +
@@ -187,7 +187,7 @@ a| Disable local caching.
 fsutil file createnew Y:\${env:computername}-fsxgw.dat 1000000000
 ```
 +
-. PowerShellセッションで以下のDiskSpeedスクリプトを実行して、*Y:*ドライブとしてマウントされたローカルFSx File Gatewayの書き込みパフォーマンスをテストします。
+. PowerShellセッションで以下のDiskSpeedスクリプトを実行して、"Y:"ドライブとしてマウントされたローカルFSx File Gatewayの書き込みパフォーマンスをテストします。
 +
 ```sh
 C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Y:\${env:computername}-fsxgw.dat
@@ -195,11 +195,11 @@ C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Y
 +
 スクリプトの実行中に、タスクマネージャーを開き、ネットワークのパフォーマンスを監視します（例：Start >> Task Manager >> More details >> Performance (tab) >> Ethernet）。DiskSpdのスクリプトは120秒で完了します。スクリプトが完了すると、PowerShellウィンドウに出力が表示されます。
 +
-* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
-* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
-* Total Write IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の*MiB/s*列の*Write IO*の下にあります。
-* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の*I/O per s*列の下の*Write IO*の下にあります。
-* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の*AvgLat*列の下の*Write IO*の下にあります。
+* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の"total"テーブルにあります。
+* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の"total"テーブルにあります。
+* Total Write IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の"MiB/s"列の"Write IO"の下にあります。
+* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の"I/O per s"列の下の"Write IO"の下にあります。
+* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の"AvgLat"列の下の"Write IO"の下にあります。
 +
 . 結果を、先ほどローカルコンピュータにコピーした表に記録します。
 +

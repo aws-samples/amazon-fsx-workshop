@@ -9,7 +9,7 @@
 
 Amazon FSx File Gateway Workshopの環境を構築するには、3つのフェーズがあります。以下は、3つのセットアップフェーズがすべて完了した後の環境全体を示すワークショップ図です。
 
-*ワークショップ図*では、リージョン1はAmazon FSx for Windows File Serverが稼働しているAWS環境を表しています。リージョン2は、リージョン1とは異なるAWSリージョンで、FSxファイルゲートウェイが稼働しているリモート環境をシミュレートしています。このリージョン（リージョン2）は、Amazon FSx for Windows File Serverを実行しているAWSリージョンから離れたオンプレミスサイト、リモートオフィス、ブランチオフィス、または何らかの施設を表します。
+"ワークショップ構成図"では、リージョン1はAmazon FSx for Windows File Serverが稼働しているAWS環境を表しています。リージョン2は、リージョン1とは異なるAWSリージョンで、FSxファイルゲートウェイが稼働しているリモート環境をシミュレートしています。このリージョン（リージョン2）は、Amazon FSx for Windows File Serverを実行しているAWSリージョンから離れたオンプレミスサイト、リモートオフィス、ブランチオフィス、または何らかの施設を表します。
 
 - フェーズ 1 - AWS CloudFormationを使用して、Amazon FSx for Windows File ServerをホストするRegion 1環境をデプロイします。
 - フェーズ 2 - AWS CloudFormationを使用して、リモートのAmazon FSx File Gateway EC2インスタンスをホストするRegion 2環境をデプロイします。
@@ -19,7 +19,7 @@ Amazon FSx File Gateway Workshopの環境を構築するには、3つのフェ�
 
 重要: このチュートリアル環境は、お客様の無料使用枠を超えます。このワークショップを展開して実行すると、料金が発生します。このワークショップの所要時間は約2時間で、費用は約7.50ドルです。
 
-== ワークショップ図
+== ワークショップ構成図
 
 image::fsx-gateway-workshop-architecture-complete.png[align="center"]
 

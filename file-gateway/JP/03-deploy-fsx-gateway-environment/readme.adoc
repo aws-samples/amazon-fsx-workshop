@@ -7,7 +7,7 @@
 
 == 概要
 
-Region 2環境のデプロイ - Amazon FSx File Gateway環境。以下の*フェーズ 2 図* を参照して下さい。
+Region 2環境のデプロイ - Amazon FSx File Gateway環境。以下の"フェーズ 2 構成図" を参照して下さい。
 このフェーズでのワークショップ環境の構築には、約5分かかります。
 
 == フェーズ 2 構成図
@@ -20,7 +20,7 @@ image::fsx-gateway-workshop-architecture-phase-2.png[title="Amazon FSx File Gate
 
 image::phase-2-deploy-fsxfgw.gif[title="ステップバイステップのクイックビデオ", align="left", width=600]
 
-. *Deploy to AWS*ボタンをクリックし、CloudFormationのプロンプトに従って進めます。FSx for Windows File ServerからFSx File Gatewayをリモートで展開する実運用のシナリオをシミュレートするために、フェーズ1で選択したリージョンとは異なるリージョンを以下で選択します。
+. "Deploy to AWS"ボタンをクリックし、CloudFormationのプロンプトに従って進めます。FSx for Windows File ServerからFSx File Gatewayをリモートで展開する実運用のシナリオをシミュレートするために、フェーズ1で選択したリージョンとは異なるリージョンを以下で選択します。
 +
 TIP: *Deploy to AWS* ボタンを右クリックして、リンクを新しいタブまたはウィンドウで開くと、このgithubチュートリアルとAWSコンソールの間を簡単に移動できます。
 +
@@ -87,9 +87,9 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
 |===
 +
-. *Prerequisite - Prepare template* ページのデフォルトを受け入れ、*Next*をクリックします。
+. *Prerequisite - Prepare template* ページのデフォルトを受け入れ、"Next"をクリックします。
 +
-. デフォルトスタック名を受け入れ、*Next*をクリックします。 以下を参考にして全てのパラメーターを入力して下さい。
+. デフォルトスタック名を受け入れ、"Next"をクリックします。 以下を参考にして全てのパラメーターを入力して下さい。
 +
 [cols="3,10"]
 |===
@@ -119,14 +119,14 @@ a| 既存のキーペアを選択します。
 
 |===
 +
-. すべてのパラメータの値を入力した後に、*Next*をクリックして下さい。
-. *Configure stack options* と *Advanced options* セクションのデフォルト値を受け入れ、*Next* をクリックします。
+. すべてのパラメータの値を入力した後に、"Next"をクリックして下さい。
+. *Configure stack options* と *Advanced options* セクションのデフォルト値を受け入れ、"Next" をクリックします。
 . CloudFormationのスタック設定を確認します。
 . ページ下部の青い *Capabilities* ボックスのチェックボックスをチェックしてください。
 +
 image::cloudformation-capabilities.png[align="left", width=420]
 +
-. *Create stack*をクリックして下さい。
+. "Create stack"をクリックして下さい。
 
 約5分後にデプロイが完了します。
 
@@ -156,7 +156,7 @@ VPC Peering Connectionを使用してプライベートルーティングテー�
 +
 . リージョン2（Amazon FSx File Gateway環境）で作成したVPCのCIDRを入力します。これは、リージョン2でデプロイしたCloudFormationスタックの「Output」タブから確認できます。(例：172.31.0.0/16)。
 +
-. *Target*ドロップダウンメニューから*Peering Connection* を選択し、フェーズ２（Amazon FSx File Gateway環境CloudFormationスタックのデプロイ）で作成したVPC peering connectionを選択します。これは、リージョン2でデプロイしたCloudFormationスタックの「Output」タブから簡単に確認できます。
+. "Target"ドロップダウンメニューから"Peering Connection" を選択し、フェーズ２（Amazon FSx File Gateway環境CloudFormationスタックのデプロイ）で作成したVPC peering connectionを選択します。これは、リージョン2でデプロイしたCloudFormationスタックの「Output」タブから簡単に確認できます。
 +
 . *Save routes* をクリックして*Close*をクリックします。
 
@@ -167,7 +167,7 @@ AWS CloudFormationを使ってリージョン2にAmazon Windows EC2インスタ�
 
 image::phase-2-deploy-instance.gif[title="Quick Step-by-step Video", align="left", width=600]
 
-. *Deploy to AWS*ボタンをクリックし、CloudFormationのプロンプトに従って開始します。これは、上記のリージョン2で選択したものと同じリージョンである必要があります。
+. "Deploy to AWS"ボタンをクリックし、CloudFormationのプロンプトに従って開始します。これは、上記のリージョン2で選択したものと同じリージョンである必要があります。
 +
 TIP: *Deploy to AWS* ボタンを右クリックして、リンクを新しいタブまたはウィンドウで開くと、このgithubチュートリアルとAWSコンソールの間を簡単に移動できます。
 +
@@ -234,9 +234,9 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
 |===
 +
-. *Prerequisite - Prepare template* ページのデフォルトを受け入れ、*Next*をクリックします。
+. *Prerequisite - Prepare template* ページのデフォルトを受け入れ、"Next"をクリックします。
 +
-. デフォルトスタック名を受け入れ、*Next*をクリックします。 以下を参考にして全てのパラメーターを入力して下さい。
+. デフォルトスタック名を受け入れ、"Next"をクリックします。 以下を参考にして全てのパラメーターを入力して下さい。
 +
 [cols="3,10"]
 |===
@@ -257,14 +257,14 @@ a| 既存のキーペアを選択します。
 
 |===
 +
-. すべてのパラメータの値を入力した後に、*Next*をクリックして下さい。
-. *Configure stack options* と *Advanced options* セクションのデフォルト値を受け入れ、*Next* をクリックします。
+. すべてのパラメータの値を入力した後に、"Next"をクリックして下さい。
+. *Configure stack options* と *Advanced options* セクションのデフォルト値を受け入れ、"Next" をクリックします。
 . CloudFormationのスタック設定を確認します。
 . ページ下部の青い *Capabilities* ボックスのチェックボックスをチェックしてください。
 +
 image::cloudformation-capabilities.png[align="left", width=420]
 +
-. *Create stack*をクリックして下さい。
+. "Create stack"をクリックして下さい。
 
 約5分後にデプロイが完了します。
 

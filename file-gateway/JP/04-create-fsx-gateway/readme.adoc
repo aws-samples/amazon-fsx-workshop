@@ -22,25 +22,25 @@ image::fsx-gateway-workshop-architecture-phase-3.png[title="Amazon FSx File Gate
 image::phase-3-create-gateway.gif[title="ステップバイステップのクイックビデオ", align="left", width=600]
 
 . link:https://console.aws.amazon.com/storagegateway/[AWS Storage Gateway] コンソールから、フェーズ１でAmazon FSx for Windows File Server環境を作成したリージョン1を選択して下さい。
-. *Create gateway*をクリックして下さい。
-. *Amazon FSx File Gateway*を選択し、*Next*をクリックして下さい。
-. *host platform*として*Amazon EC2*を選択し、*Next*をクリックして下さい。
-. サービスエンドポイントとして*Public*を選択し、*Next*をクリックして下さい。
-. link:https://console.aws.amazon.com/cloudformation/[AWS CloudFormation] コンソールを開き、フェーズ２でAmazon FSx File Gateway環境を構築したリージョン２を選択します。*fsx-gateway-workshop-fsxgw-environment*スタックを選択し、*Outputs*タブをクリックします。*GatewayPublicIp*の値をコピーします。これはFSx File GatewayインスタンスのパブリックIPアドレスです。
-. link:https://console.aws.amazon.com/storagegatewayv3/[AWS Storage Gateway] コンソールに戻り、*IP address*の入力欄にコピーしたIPアドレスを貼り付け、*Next*をクリックして下さい。
-. *Gateway time zone* ドロップダウンメニューからAmazon FSx File Gateway環境をデプロイしたリージョン2に合ったタイムゾーンを選択して下さい。
-. *FSx File Gateway Workshop*のようなゲートウェイ名を入力して下さい。*Activate gateway*をクリックします。
+. "Create gateway"をクリックして下さい。
+. "Amazon FSx File Gateway"を選択し、"Next"をクリックして下さい。
+. "host platform"として"Amazon EC2"を選択し、"Next"をクリックして下さい。
+. サービスエンドポイントとして*Public*を選択し、"Next"をクリックして下さい。
+. link:https://console.aws.amazon.com/cloudformation/[AWS CloudFormation] コンソールを開き、フェーズ２でAmazon FSx File Gateway環境を構築したリージョン２を選択します。"fsx-gateway-workshop-fsxgw-environment"スタックを選択し、"Outputs"タブをクリックします。"GatewayPublicIp"の値をコピーします。これはFSx File GatewayインスタンスのパブリックIPアドレスです。
+. link:https://console.aws.amazon.com/storagegatewayv3/[AWS Storage Gateway] コンソールに戻り、"IP address"の入力欄にコピーしたIPアドレスを貼り付け、"Next"をクリックして下さい。
+. "Gateway time zone" ドロップダウンメニューからAmazon FSx File Gateway環境をデプロイしたリージョン2に合ったタイムゾーンを選択して下さい。
+. "FSx File Gateway Workshop"のようなゲートウェイ名を入力して下さい。"Activate gateway"をクリックします。
 +
 FSx File Gatewayインスタンス上でのローカルディスクの準備に約30秒強かかります。
 +
-. *Save and continue* をクリックすると、150GiBのボリュームがFSx File GatewayインスタンスのCacheとして割り当てられます。
-. デフォルトの *Gateway Health log group* オプションの *Create new log group* を選択し、*Save and continue* を選択します。
-. *Review and finish*ページを確認し、*Finish*をクリックします。
+. "Save and continue" をクリックすると、150GiBのボリュームがFSx File GatewayインスタンスのCacheとして割り当てられます。
+. デフォルトの "Gateway Health log group" オプションの "Create new log group" を選択し、"Save and continue" を選択します。
+. "Review and finish"ページを確認し、"Finish"をクリックします。
 +
 数秒後、FSx File Gatewayの*Status*に*Running*と表示されます。
 +
-. 先ほど作成したFSx File Gatewayの横のチェックボックスを選択し、*Attach FSx file system*を選択します。
-. *Confirm gateway* ページで、*Active Directory settings* セクションに次の表の値を入力します。
+. 先ほど作成したFSx File Gatewayの横のチェックボックスを選択し、"Attach FSx file system"を選択します。
+. "Confirm gateway" ページで、"Active Directory settings" セクションに次の表の値を入力します。
 +
 [cols="3,10"]
 |===
@@ -63,9 +63,9 @@ a| デフォルトを受け入れます。 - 空欄のままです
 +
 Amazon FSxに接続するためには、最低限の権限を持つサービスアカウントを作成することがベスト プラクティスです。ワークショップ環境の作成を簡単にするために、フェーズ1 - Amazon FSx for Windows File Server環境のデプロイで作成したAWSマネージドActive Directoryのドメイン管理者を使用しています。
 +
-. *Next*をクリックします。
-. *Attach FSx file system*ページで、フェーズ1（Amazon FSx for Windows File Server環境）でリージョン１に作成した*SAZ2*ファイルシステムを選択します。
-. *Service account settings*の項目に以下の表から値を入力してください。
+. "Next"をクリックします。
+. "Attach FSx file system"ページで、フェーズ1（Amazon FSx for Windows File Server環境）でリージョン１に作成した"SAZ2"ファイルシステムを選択します。
+. "Service account settings"の項目に以下の表から値を入力してください。
 +
 [cols="3,10"]
 |===
@@ -76,12 +76,12 @@ a| *admin*
 a| フェーズ1（Amazon FSx for Windows File Server環境）で作成したSecrets ManagerからSecret Key 'Password'のSecret Valueをコピーします。これはリージョン１のlink:https://console.aws.amazon.com/secretsmanager/[Amazon Secrets Manager] で見つける事が出来ます。
 |===
 +
-. *Audit logs*のデフォルト設定*Disable logging*を受け入れます。
-. *Set refresh interval*を選択し、*5 minutes*を指定します。
-. *Next*をクリックします。
-. *Review and attach*ページを確認し、*Attach*をクリックします。
+. "Audit logs"のデフォルト設定"Disable logging"を受け入れます。
+. "Set refresh interval"を選択し、"5 minutes"を指定します。
+. "Next"をクリックします。
+. "Review and attach"ページを確認し、"Attach"をクリックします。
 +
-数分後、FSxファイルシステムの*Status*が*Updating*から*Available*に変わります。変わらない場合は更新ボタンを押して画面を更新して下さい。
+数分後、FSxファイルシステムの"Status"が"Updating"から"Available"に変わります。変わらない場合は更新ボタンを押して画面を更新して下さい。
 
 == 次のセクション
 

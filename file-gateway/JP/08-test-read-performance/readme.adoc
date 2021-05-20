@@ -28,9 +28,9 @@ image::read-csvs.gif[title="ステップバイステップのクイックビデ�
 
 . ローカルコンピュータ、Amazon EC2 Windows インスタンス、またはスマートフォンで、任意のストップウォッチアプリケーションを開きます。 (例： link:https://stopwatchtimers.com/stopwatch/[Stopwatch]). 次のいくつかのステップでは、Windowsインスタンスがこれらの3つのCSVファイルを開くのにかかる時間を計測し、ローカルリージョンのFSxファイルゲートウェイとリモートリージョンのFSx for Windowsファイルサーバーから開いた場合の時間を比較します。
 
-. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントした*File Explorer*ウィンドウから、10k Sales Records.csvファイルを右クリックし、*Open With > Notepad*を選択します。ストップウォッチを開始します。メモ帳にデータが表示されたら、ストップウォッチを止めます。時間を記録します。
+. リモートFSx for Windows File Serverを"Z:"ドライブとしてマウントした"File Explorer"ウィンドウから、10k Sales Records.csvファイルを右クリックし、"Open With > Notepad"を選択します。ストップウォッチを開始します。メモ帳にデータが表示されたら、ストップウォッチを止めます。時間を記録します。
 
-. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントした*File Explorer*ウィンドウから、10k Sales Records.csvファイルを右クリックし、*Open With > Notepad*を選択します。ストップウォッチを開始します。メモ帳にデータが表示されたら、ストップウォッチを止めます。時間を記録します。
+. ローカルFSx File Gatewayを"Y:"ドライブとしてマウントした"File Explorer"ウィンドウから、10k Sales Records.csvファイルを右クリックし、"Open With > Notepad"を選択します。ストップウォッチを開始します。メモ帳にデータが表示されたら、ストップウォッチを止めます。時間を記録します。
 
 +
 10k Sales Records.csvファイルのサイズが小さいため、ファイル全体を読むのにかかる時間は非常に短く、ストップウォッチで計測するのは難しいでしょう。
@@ -71,12 +71,12 @@ image::read-test.gif[title="Quick Step-by-step Video", align="left", width=600]
 
 ==== リモートFSx for Windows File Serverからの読み取りパフォーマンステスト
 
-. *Windows Instance*のリモートデスクトップセッションで、*Start* >> *Windows PowerShell*の順で選択して下さい。
+. "Windows Instance"のリモートデスクトップセッションで、"Start" >> "Windows PowerShell"の順で選択して下さい。
 
 +
-重要: このセクションではリモートFSx for Windows File Serverが*Z:*ドライブとしてマウントされていることを想定しています。
+重要: このセクションではリモートFSx for Windows File Serverが"Z:"ドライブとしてマウントされていることを想定しています。
 +
-. 以下のDiskSpeedスクリプトを実行して、**Z:**ドライブとしてマウントされたリモートFSx for Windows File Serverの読み取り性能をテストします。
+. 以下のDiskSpeedスクリプトを実行して、"Z:"ドライブとしてマウントされたリモートFSx for Windows File Serverの読み取り性能をテストします。
 +
 ```sh
 C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b1M -Sr -L Z:\${env:computername}-fsxw.dat
@@ -84,14 +84,14 @@ C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b1M -Sr -L Z:\
 +
 スクリプトの実行中に、タスクマネージャーを開き、ネットワークのパフォーマンスを監視します（例：Start >> Task Manager >> More details >> Performance (tab) >> Ethernet）。DiskSpdのスクリプトは120秒で完了します。スクリプトが完了すると、PowerShellウィンドウに出力が表示されます。
 +
-* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
-* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
-* Total Read IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の*MiB/s*列の*Read IO*の下にあります。
-* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の*I/O per s*列の下の*Read IO*の下にあります。
-* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の*AvgLat*列の下の*Read IO*の下にあります。
+* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の"total"テーブルにあります。
+* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の"total"テーブルにあります。
+* Total Read IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の"MiB/s"列の"Read IO"の下にあります。
+* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の"I/O per s"列の下の"Read IO"の下にあります。
+* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の"AvgLat"列の下の"Read IO"の下にあります。
 +
-. 次の表をローカルコンピュータにコピーして、*FSx for Windows File Server* Test 1の欄に結果を記録します。
-. テストを繰り返し、その結果を*FSx for Windows File Server* Test 2の欄に記録します。
+. 次の表をローカルコンピュータにコピーして、"FSx for Windows File Server" Test 1の欄に結果を記録します。
+. テストを繰り返し、その結果を"FSx for Windows File Server" Test 2の欄に記録します。
 +
 [width="50%",cols="d,d,d,d,d",frame="topbot",options="header"]
 |===
@@ -178,7 +178,7 @@ a| Disable local caching.
 
 ==== ローカルFSx File Gatewayからの読み取りパフォーマンステスト
 
-. *Windows Instance*のリモートデスクトップセッションで、*Start* >> *Windows PowerShell*の順で選択して下さい。
+. "Windows Instance"のリモートデスクトップセッションで、"Start" >> "Windows PowerShell"の順で選択して下さい。
 
 +
 重要: このセクションではローカルFSx File Gatewayが*Y:*ドライブとしてマウントされていることを想定しています。
@@ -191,14 +191,14 @@ C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b1M -Sr -L Y:\
 +
 スクリプトの実行中に、タスクマネージャーを開き、ネットワークのパフォーマンスを監視します（例：Start >> Task Manager >> More details >> Performance (tab) >> Ethernet）。DiskSpdのスクリプトは120秒で完了します。スクリプトが完了すると、PowerShellウィンドウに出力が表示されます。
 +
-* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
-* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
-* Total Read IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の*MiB/s*列の*Read IO*の下にあります。
-* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の*I/O per s*列の下の*Read IO*の下にあります。
-* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の*AvgLat*列の下の*Read IO*の下にあります。
+* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の"total"テーブルにあります。
+* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の"total"テーブルにあります。
+* Total Read IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の"MiB/s"列の"Read IO"の下にあります。
+* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の"I/O per s"列の下の"Read IO"の下にあります。
+* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の"AvgLat"列の下の"Read IO"の下にあります。
 +
-. 結果を、先ほどローカルコンピュータにコピーした表の*FSx File Gateway* Test 1欄に記録します。
-. テストを繰り返し、その結果を*FSx File Gateway* Test 2欄に記録します。
+. 結果を、先ほどローカルコンピュータにコピーした表の"FSx File Gateway" Test 1欄に記録します。
+. テストを繰り返し、その結果を"FSx File Gateway" Test 2欄に記録します。
 +
 注：FSxファイルゲートウェイからの最初の読み取りでは、FSxファイルゲートウェイがリモートのFSx for Windowsファイルサーバーからファイルをキャッシュに読み込むため、より高いレイテンシーが発生します。その後の読み取りでは、ローカルのFSxファイルゲートウェイから直接ファイルが配信されます。
 +
