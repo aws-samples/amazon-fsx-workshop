@@ -1,0 +1,66 @@
+= インスタンスへの接続
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+このセクションでは、以降のワークショップで使用するWindowsインスタンスとの接続を確立します。
+
+
+== このセクションに必要な時間
+
+注：このセクションの完了には約5分かかります。
+
+
+== ステップバイステップガイド
+
+=== Windowsインスタンスへの接続
+
+重要: 次の手順に進む前に以下の手順をお読みいただき、クイックビデオをご覧ください。
+
+image::connect-to-instances.gif[title="ステップバイステップのクイックビデオ", align="left", width=600]
+
+. link:https://console.aws.amazon.com/ec2/[Amazon EC2] コンソールを開きます。
++
+TIP: 上のリンクを右クリックし、新しいタブやウィンドウでリンクを開くと、このgithubワークショップとAWSコンソールの間を簡単に移動することができます。
++
+. *AWS Region*がフェーズ 2（Amazon FSx File Gateway環境のデプロイ）で作成したリージョン２になっている事を確認して下さい。Amazon EC2コンソールの*AWS Region*を変更する必要がある場合、 ブラウザウィンドウの右上にある *Support*の隣にあるリージョン名をクリックし、ドロップダウンメニューから適切な*AWS Region*を選択します。
+
+. *Instances (running)*をクリックして下さい。
+
+. *WindowsInstance*の横のラジオボタンをクリックして下さい。
+
+. DNS名の横にある image:copy-to-clipboard.png[align="left",width=20] のショートカットを選択して、*WindowsInstance*の*Public IPv4 DNS*名をクリップボードにコピーします。
+
+. リモートデスクトップアプリケーションを起動し、新しい接続を作成します。
+* Windowsユーザーの方は、内蔵の*Remote Desktop Connection*アプリケーションをご利用ください。
+* Macユーザーの方は、Mac App Storeから入手出来る link:https://apps.apple.com/us/app/microsoft-remote-desktop/id1295203466?mt=12/[Microsoft Remote Desktop]  アプリをご利用ください。
+
+. 新しい接続のホスト名として、上記でコピーしたDNS名を使用します。
+
+. 新しい接続先へのリモートデスクトップセッションを開始します（*user name*と*password*は*AWS Secrets Manager*から取得します）。
+
+. link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] コンソールを開きます。
++
+TIP: 上のリンクを右クリックし、新しいタブやウィンドウでリンクを開くと、このgithubワークショップとAWSコンソールの間を簡単に移動することができます。
++
+. *Password-<GUID>*の*Secret name*リンクをクリックしてください。
+
+. *Secret Value* セクションにスクロールし、*Retrieve Secret Value* ボタンをクリックします。
+
+. リモートデスクトップセッションで、*Windows Instance*インスタンスに接続するための資格情報として、*username*と*password*の*Secret key/value*のペアを使用します。
+
+TIP: Windowsインスタンスの認証とログオンに使用したドメイン認証情報が機能しない場合は、さらに5分待ってからもう一度試してみてください。Windows インスタンスが起動し、example.com ドメインに自動的に参加するまでには、5～10 分かかることがあります。
+
+== 次のセクション
+
+下のボタンをクリックすると、次のセクションに進みます。
+
+image::map-file-shares.png[link=../06-map-file-shares/, align="left",width=420]
+
+
+
+

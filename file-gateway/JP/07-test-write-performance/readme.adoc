@@ -1,0 +1,261 @@
+= 書き込み性能のテスト
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+このセクションでは、Windowsインスタンスと同じリージョンであるリージョン2のローカルFSxファイルゲートウェイの書き込みパフォーマンスをテストし、リージョン1のリモートFSx for Windowsファイルサーバーの書き込みパフォーマンスと比較します。
+
+世の中にはたくさんのディスクパフォーマンスツールがあります。本ワークショップでは*WindowsInstance*にlink:https://aka.ms/diskspd[DiskSpd] がプリインストールされています。
+
+== このセクションに必要な時間
+
+注：このセクションの完了には約15分かかります。
+
+
+== ステップバイステップガイド
+
+重要: 次の手順に進む前に以下の手順をお読みいただき、クイックビデオをご覧ください。
+
+image::create-update-delete.gif[title="ステップバイステップのクイックビデオ", align="left", width=600]
+
+=== ローカルのFSx File GatewayとリモートのFSx for Windows File Server間でのファイル作成の比較
+
+. 2つの*File Explorer*ウィンドウを配置して、両方の内容を同時に確認できるようにします。
+
+. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで右クリックし、*New >> TextDocument*を選択し、ファイルに名前を付けます （例 Test1）。
+. 両方の*File Explorer*ウィンドウにファイルを確認出来ますか？
+. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウをリフレッシュして下さい。
+. 1分待ってからもう一度試してみてください。ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウをリフレッシュし続けて下さい。
++
+注：元となるFSx for Windows File Serverに加えられた変更は、接続されたFSx File Gatewaysに定期的にプッシュされます。
++
+. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで右クリックし、*New >> TextDocument*を選択し、ファイルに名前を付けます （例 Test2）。
+. 両方の*File Explorer*ウィンドウにファイルを確認出来ますか？
++
+注：FSxファイルゲートウェイに加えられた変更は、接続されているFSx for Windows File Serverに直ちにプッシュされます。
+
+=== ローカルのFSx File GatewayとリモートのFSx for Windows File Server間でのファイル更新の比較
+
+. 2つの*File Explorer*ウィンドウを配置して、両方の内容を同時に確認できるようにします。
+
+. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順で作成した*Test1*ファイルを開き、内容をアップデートします。（例：ファーストネームを入力）
+. ファイルをセーブして閉じます。
+. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順でアップデートした*Test1*ファイルを開きます。
+. アップデートは反映されていますか？
+. 1分待ってからもう一度試してみてください。アップデートが確認できるまで、継続してファイルを開いてみて下さい。
++
+注：元となるFSx for Windows File Serverに加えられた変更は、接続されたFSx File Gatewaysに定期的にプッシュされます。
++
+. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順で作成した*Test2*ファイルを開き、内容をアップデートします。（例：ラストネームを入力）
+. ファイルをセーブして閉じます。
+. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順でアップデートした*Test2*ファイルを開きます。
+. アップデートは反映されていますか？
++
+注：FSxファイルゲートウェイに加えられた変更は、接続されているFSx for Windows File Serverに直ちにプッシュされます。
+
+
+=== ローカルのFSx File GatewayとリモートのFSx for Windows File Server間のファイル削除の比較
+
+. 2つの*File Explorer*ウィンドウを配置して、両方の内容を同時に確認できるようにします。
+
+. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順で作成した*Test1*ファイルを削除します。
+. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで、*Test1*ファイルを確認出来ますか？
+. 1分待ってからもう一度試してみてください。ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウをリフレッシュし続けて下さい。
++
+注：元となるFSx for Windows File Serverに加えられた変更は、接続されたFSx File Gatewaysに定期的にプッシュされます。
++
+. ローカルFSx File Gatewayを*Y:*ドライブとしてマウントしている*File Explorer*ウィンドウで、前の手順で作成した*Test2*ファイルを削除します。
+. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウで、*Test2*ファイルを確認出来ますか？
+. リモートFSx for Windows File Serverを*Z:*ドライブとしてマウントしている*File Explorer*ウィンドウリフレッシュし続けて下さい。
+. *Test2*ファイルを確認出来ますか？
++
+注：FSxファイルゲートウェイに加えられた変更は、接続されているFSx for Windows File Serverに直ちにプッシュされます。
+
+=== DiskSpdを使った書き込み性能テスト
+
+重要: 次の手順に進む前に以下の手順をお読みいただき、クイックビデオをご覧ください。
+
+image::write-test.gif[title="ステップバイステップのクイックビデオ", align="left", width=600]
+
+==== リモートのFSx for Windows File Serverへの書き込みパフォーマンステスト
+
+. *Windows Instance*のリモートデスクトップセッションで、*Start* >> *Windows PowerShell*の順で選択して下さい。
+
++
+重要: このセクションではリモートFSx for Windows File Serverが*Z:*ドライブとしてマウントされていることを想定しています。
++
+. PowerShellセッションで以下のスクリプトを実行し、1GBのスパースファイルを作成します。
++
+```sh
+fsutil file createnew Z:\${env:computername}-fsxw.dat 1000000000
+```
++
+. PowerShellセッションで以下のDiskSpeedスクリプトを実行して、**Z:**ドライブとしてマウントされたリモートFSx for Windows File Serverの書き込みパフォーマンスをテストします。
++
+```sh
+C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Z:\${env:computername}-fsxw.dat
+```
++
+スクリプトの実行中に、タスクマネージャーを開き、ネットワークのパフォーマンスを監視します（例：Start >> Task Manager >> More details >> Performance (tab) >> Ethernet）。DiskSpdのスクリプトは120秒で完了します。スクリプトが完了すると、PowerShellウィンドウに出力が表示されます。
++
+* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
+* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
+* Total Write IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の*MiB/s*列の*Write IO*の下にあります。
+* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の*I/O per s*列の下の*Write IO*の下にあります。
+* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の*AvgLat*列の下の*Write IO*の下にあります。
++
+. 次の表をローカルコンピュータにコピーして、結果を記録します。
++
+[width="50%",cols="d,d,d",frame="topbot",options="header"]
+|===
+h| EC2 Instance (us-west-1) | FSx for Windows File Server (us-east-1) | FSx File Gateway (us-west-1)
+s| DiskSpd Write (metric) h| Write h| Write
+| Write IO throughput (MiB/s)
+|
+|
+
+| Write IO I/O per s
+|
+|
+
+| Write IO AvgLat (ms)
+|
+|
+
+| Min %-tile (ms)
+|
+|
+
+| 50th %-tile (ms)
+|
+|
+
+| 90th %-tile (ms)
+|
+|
+
+| 99th %-tile (ms)
+|
+|
+
+| 99.99th %-tile (ms)
+|
+|
+|===
++
+. DiskSpdのパラメータ設定をいろいろと試してみてください。以下の表を参考にしてください。ブロックサイズ（-b）、未処理のI/O要求数（-o）、ファイルごとのスレッド数（-t）、ローカルキャッシュの無効化（-Sr）を変えてテストします。
++
+[cols="3,10"]
+|===
+| Parameter | Description
+
+| `-b<size>[K\|M\|G]`
+a| Block size in bytes or KiB, MiB, or GiB (default = 64K).
+
+| `-o<count>`
+a| Number of outstanding I/O requests per-target per-thread. (1 = synchronous I/O, unless more than one thread is specified with by using `-F`.) (default = 2)
+
+| `-r<size>[K\|M\|G]`
+a| Random I/O aligned to the specified number of <alignment> bytes or KiB, MiB, GiB, or blocks. Overrides -s (default stride = block size).
+
+| `-s<size>[K\|M\|G]`
+a| Sequential stride size, offset between subsequent I/O operations in bytes or KiB, MiB, GiB, or blocks. Ignored if -r is specified (default access = sequential, default stride = block size).
+
+| `-t<count>`
+a| Number of threads per target. Conflicts with `-F`, which specifies the total number of threads.
+
+| `-Sr`
+a| Disable local caching.
+
+|===
+
+* どのようなパラメータをテストしましたか？
+* パラメーターオプションの違いによる結果の変化はどうですか？
+
+
+==== ローカルFSx File Gatewayへの書き込みパフォーマンステスト
+
+重要: このセクションではローカルFSx File Gatewayが*Y:*ドライブとしてマウントされていることを想定しています。
+
+. PowerShellセッションで以下のスクリプトを実行し、1GBのスパースファイルを作成します。
++
+```sh
+fsutil file createnew Y:\${env:computername}-fsxgw.dat 1000000000
+```
++
+. PowerShellセッションで以下のDiskSpeedスクリプトを実行して、*Y:*ドライブとしてマウントされたローカルFSx File Gatewayの書き込みパフォーマンスをテストします。
++
+```sh
+C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Y:\${env:computername}-fsxgw.dat
+```
++
+スクリプトの実行中に、タスクマネージャーを開き、ネットワークのパフォーマンスを監視します（例：Start >> Task Manager >> More details >> Performance (tab) >> Ethernet）。DiskSpdのスクリプトは120秒で完了します。スクリプトが完了すると、PowerShellウィンドウに出力が表示されます。
++
+* テストのP99(99%-tile)レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
+* テストのP99.99 (99.99th %-tile) レイテンシーは何msでしたか？ - これは、DiskSpdの出力下部の*total*テーブルにあります。
+* Total Write IO MiB/sはどのくらいでしたか？ - これは、DiskSpdの出力の*MiB/s*列の*Write IO*の下にあります。
+* I/O per secondはどのくらいでしたか？ - これは、DiskSpdの出力の*I/O per s*列の下の*Write IO*の下にあります。
+* 平均レイテンシーはどのくらいでしたか？ - これは、DiskSpdの出力の*AvgLat*列の下の*Write IO*の下にあります。
++
+. 結果を、先ほどローカルコンピュータにコピーした表に記録します。
++
+. DiskSpdのパラメータ設定をいろいろと試してみてください。以下の表を参考にしてください。ブロックサイズ（-b）、未処理のI/O要求数（-o）、ファイルごとのスレッド数（-t）、ローカルキャッシュの無効化（-Sr）を変えてテストします。
++
+[cols="3,10"]
+|===
+| Parameter | Description
+
+| `-b<size>[K\|M\|G]`
+a| Block size in bytes or KiB, MiB, or GiB (default = 64K).
+
+| `-o<count>`
+a| Number of outstanding I/O requests per-target per-thread. (1 = synchronous I/O, unless more than one thread is specified with by using `-F`.) (default = 2)
+
+| `-r<size>[K\|M\|G]`
+a| Random I/O aligned to the specified number of <alignment> bytes or KiB, MiB, GiB, or blocks. Overrides -s (default stride = block size).
+
+| `-s<size>[K\|M\|G]`
+a| Sequential stride size, offset between subsequent I/O operations in bytes or KiB, MiB, GiB, or blocks. Ignored if -r is specified (default access = sequential, default stride = block size).
+
+| `-t<count>`
+a| Number of threads per target. Conflicts with `-F`, which specifies the total number of threads.
+
+| `-Sr`
+a| Disable local caching.
+
+|===
+
+* どのようなパラメータをテストしましたか？
+* パラメーターオプションの違いによる結果の変化はどうですか？
+
+
+=== DiskSpdを使った書き込み性能テスト結果
+
+次の表とグラフは、テストの結果の例です。この結果では、Amazon EC2のWindowsインスタンス(us-west-1)がローカルのFSx File Gateway(us-west-1)に大容量ファイルを書き込んだ場合、リモートのFSx for Windows File Server(us-east-1)と比較して、大幅な改善が見られます。
+
+* あなたのテスト結果と下記の結果を比較してください。大きな違いがありますか？なぜですか？
+
+
+image::write-results-table-a.png[title="DiskSpd Write Results Table - sample", align="left", width=1000]
+---
+image::write-results-throughput-chart-a.png[title="DiskSpd Write Throughput Chart - sample", align="left", width=800]
+---
+image::write-results-latencies-chart-a.png[title="DiskSpd Write Latencies Chart - sample", align="left", width=800]
+---
+
+* FSxファイルゲートウェイに異なるハードウェアリソースを使用すると、パフォーマンスに影響します（例：より多くのCPU、ネットワーク帯域幅、より大きく/高速なディスク、より多くのメモリを割り当てるなど）。
+
+== 次のセクション
+
+下のボタンをクリックすると、次のセクションに進みます。
+
+image::test-read-performance.png[link=../08-test-read-performance/, align="left",width=420]
+
+
+
+
+
