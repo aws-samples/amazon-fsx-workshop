@@ -114,15 +114,15 @@ While the script is running, open *Task Manager* and monitor network performance
 |===
 h| EC2 Instance (us-west-1) | FSx for Windows File Server (us-east-1) | FSx File Gateway (us-west-1)
 s| DiskSpd Write (metric) h| Write h| Write
-| Read IO throughput (MiB/s)
+| Write IO throughput (MiB/s)
 |
 |
 
-| Read IO I/O per s
+| Write IO I/O per s
 |
 |
 
-| Read IO AvgLat (ms)
+| Write IO AvgLat (ms)
 |
 |
 
