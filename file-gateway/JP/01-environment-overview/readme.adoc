@@ -1,4 +1,4 @@
-= Amazon FSx File ワークショップ概要
+= Amazon FSx File Gatewayワークショップ概要
 :toc:
 :icons:
 :linkattrs:
