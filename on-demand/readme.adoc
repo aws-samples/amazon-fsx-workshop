@@ -13,7 +13,7 @@ Click the link below to access the type of on-demand workshop you want to run, *
 |===
 a|image::fsx-lustre-od-workshop.png[link=../lustre/01-create-od-environment/]
 a|image::fsx-windows-od-workshop.png[link=../windows-file-server/01-deploy-od-environment/]
-a|image::fsx-ontap-od-workshop.png
+a|
 a|image::fsx-file-gateway-od-workshop-w.png[link=../file-gateway/01-environment-overview/]
 |===
 
