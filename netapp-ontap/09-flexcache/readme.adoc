@@ -1,0 +1,294 @@
+= FlexCache
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will cover the how you can setup FlexCache on your *Amazon FSx for NetApp ONTAP* file system, cache only the actively-read data instead of copying entire datasets or volumes. You can use FlexCache to:
+
+* Increase throughput for read-intensive applications like Seismic analysis, media rendering workflows, chip design, financial simulation etc.
+* Provide low-latency access to data in your Amazon FSx for NetApp ONTAP file system from another region and extend your workflows across multiple AWS regions or to on-premises NetApp environments.
+* Burst your workloads to Cloud by creating a FlexCache volume on the FSx file system and link it to a origin volume on your on-premises NetApp storage.
+
+
+=== FlexCache Overview
+
+A FlexCache volume is a sparsely populated volume that acts as a cache for your source volume also referred as origin volume and stores frequently accessed data. If a file is not available in the FlexCache volume its read from the origin volume and served to clients. Subsequent access to data will be faster at lower latencies.
+
+Media Rendering, Electronic Design Automation (EDA), Financial applications and other use cases often need generated in one region to be accessed from compute instances or end user workstations in another region at lower latencies. While data can be replicated to another volume in second region to make it available locally, this is not ideal (duplication of data, additional infrastructure, replication delays administration overhead etc.)  Instead, You can use FlexCache volume to speed up access to data or to offload traffic for read-intensive volumes. You can have FlexCache volume in same file system to accelerate performance for frequently accessed data or distribute data across multiple file systems in another region to reduce WAN latencies. You can create a FlexCache volume on FSx, linked to a origin volume located on-premises NetApp storage and burst to cloud, or you can create a FlexCache volume in different AWS region/on-premises NetApp filer and link it to a origin volume on FSx to provide low latency access to data.
+
+
+== Duration
+
+NOTE: It will take approximately 10 minutes to complete this section.
+
+
+== Step-by-step Guide (FlexCache)
+
+IMPORTANT: Read through all steps below before continuing.
+
+//image::xxx.gif[align="left", width=600]
+
+
+=== Verify cluster peering relationships
+
+. *_Return_* to the SSH connection of the *FSx for ONTAP Workshop Linux instance* and SSH to the *primary* file system  management endpoint.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+. In a new terminal window *_create_* a new SSH connection to the *FSx for ONTAP Workshop Linux instance* and SSH to the *secondary* file system  management endpoint.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${DRMGMTENDPOINT}
+----
++
+. *_Verify_* if the Cluster Peer Relationship already exists.The clusters are already peered if you completed the SnapMirror section of this workshop.
++
+[source,bash]
+----
+cluster peer show
+----
++
+. If the file systems are already peered, *_Run_* below command to exit the ONTAP CLI session on your *primary* file system and return to the *FSx for ONTAP Workshop Linux instance*
++
+[source,bash]
+----
+quit
+----
+
+=== Generate Test data
+
+. *_Return_* to the SSH session of your *FSx for ONTAP Workshop Linux instance* and run script below to create a 1 GB file.
++
+[source,bash]
+----
+mkdir ${MOUNTPOINT}/1GB
+threads=1
+filesize=1024000
+filecount=1
+sudo python3 /home/ec2-user/smallfile/smallfile_cli.py --operation create --threads $threads --file-size $filesize --files $filecount --top ${MOUNTPOINT}/1GB &
+----
+
+
+=== Create cluster and SVM peering relationships 
+
+
+NOTE: Skip the cluster and SVM peering steps if already created during the SnapMirror section of this workshop.
+
+. *_Return_* to the SSH connection of the *FSx for ONTAP Workshop Linux instance* and SSH to the *primary* file system  management endpoint.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+. *_Run_* below command using ONTAP CLI, on your *primary* file system to get the Inter Cluster LIF IP addresses and Cluster name. Skip this step is your file systems are already peered.
++
+[source,bash]
+----
+network interface show -service-policy default-intercluster
+----
++
+. *_Repeat_* command using ONTAP CLI, on your *secondary* file system to get the Inter Cluster LIF IP addresses. Skip this step is your file systems are already peered.
++
+[source,bash]
+----
+network interface show -service-policy default-intercluster
+----
++
+. *_Initiate_*  Cluster Peering from your *secondary* file system. Replace the IP addresses with IP addresses of your *primary* file system Inter Cluster LIFs.Enter passphrase when prompted. Skip this step is your file systems are already peered.
++
+[source,bash]
+----
+cluster peer create -peer-addrs x.x.x.x,y.y.y.y
+----
++
+. *_Accept_* Cluster Peering from your source file system. Replace the IP addresses with IP addresses of your *secondary* file system Inter Cluster LIFs.Enter passphrase when prompted. Enter the passphrase your created earlier when prompted. Skip this step is your file systems are already peered.
++
+[source,bash]
+----
+cluster peer create -peer-addrs x.x.x.x,y.y.y.y
+----
++
+. *_Verify_* the Cluster Peer Relationship was created successfully. Skip this step is your file systems are already peered.
++
+[source,bash]
+----
+cluster peer show -instance
+----
++
+. *_Verify_* existing SVM Peer relationships from your *secondary* file system.
++
+[source,bash]
+----
+vserver peer show
+----
++
+. *_Initiate_* a SVM peer relationship from your *primary* file system. *Replace* the source SVM name on *primary*, destination SVM name on your *secondary* file system and the cluster Name (Ex: FsxId003d1df7268e711aa) below.
++
+[source,bash]
+----
+vserver peer permission create -peer-cluster <peer cluster name> -vserver svm08 -applications flexcache
+vserver peer create -vserver svm08 -peer-vserver svm01 -peer-cluster <peer cluster name> -applications flexcache
+----
++
+. *_Check_* the status of peer relationship on your *primary* file system. The status will show as *_Initiated_*.
++
+[source,bash]
+----
+vserver peer show-all
+----
++
+. *_Check_* SVM peer on *secondary* file system. The status will show as *_pending_*.
++
+[source,bash]
+----
+vserver peer show
+----
++
+. *Authorize* the pending peer relationship from your *secondary* file system.
++
+[source,bash]
+----
+vserver peer accept -vserver svm01 -peer-vserver svm08
+----
++
+. *_Verify_* the Cluster Peer Relationship was created successfully from your *secondary* file system.
++
+[source,bash]
+----
+cluster peer show
+----
++
+. *_Verify_* the SVM Peer Relationship was created successfully from your *secondary* file system.
++
+[source,bash]
+----
+vserver peer show
+----
+
+=== Create FlexCache 
+
+TIP: To learn more about FlexCache best practices refer link:https://www.netapp.com/pdf.html?item=/media/7336-tr4743pdf.pdf[FlexCache Best Practices]
+
+. *_Run_* below command to add FlexCache permission on the vserver from your *primary* file system. *Replace* the source SVM name with SVM on your *primary* file system and the peer vserver name with the SVM on your *secondary* file system.
++
+[source,bash]
+----
+vserver peer modify -vserver svm08 -peer-vserver svm01  -applications snapmirror,flexcache
+----
++
+. *_Verify_* existing FlexCache relationships from your *secondary* file system.
++
+[source,bash]
+----
+volume flexcache show
+----
++
+. *_Create_* a FlexCache volume by running the below command on your *secondary* file system. 
++
+[source,bash]
+----
+volume flexcache create -vserver svm01 -volume cachevol -aggr-list aggr1 -size 100G -origin-vserver svm08 -origin-volume vol1 -aggr-list-multiplier 2
+----
++
+. *_Verify_* the FlexCache relationship from your *secondary* file system.
++
+[source,bash]
+----
+volume flexcache show
+----
++
+. *_Verify_* the FlexCache relationships from your **primary** file system.
++
+[source,bash]
+----
+volume flexcache origin show-caches 
+----
++
+. *_Run_* below command to create a junction path for the FlexCache volume from your *secondary* file system.
++
+[source,bash]
+----
+volume mount -vserver svm01 -volume cachevol -junction-path /cachevol
+----
++
+. *_Run_* below command to exit the ONTAP CLI session and return to the *FSx for ONTAP Workshop Linux instance*
++
+[source,bash]
+----
+quit
+----
++
+. *_Run_* below script to compare the contents of your FlexCache volume and Origin(source) volume.
++
+[source,bash]
+----
+CACHEMOUNT="/cache"
+sudo mkdir ${CACHEMOUNT}
+sudo mount -t nfs ${DRNFSENDPOINT}:/cachevol ${CACHEMOUNT}
+df -h ${MOUNTPOINT} ${CACHEMOUNT}
+ls -lt ${MOUNTPOINT} ${CACHEMOUNT}
+----
++
+
+TIP: You will see the the FlexCache Volume shows exact same properties as the Origin Volume. You can create a FlexCache volume that is smaller than your origin volume and size it large enough to fit your working data set. Files will be imported into the FlexCache volume when they are accessed.
+
++
+. *_Return_* to the SSH connection of the *FSx for ONTAP Workshop Linux instance* and SSH to the *secondary* file system  management endpoint.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${DRMGMTENDPOINT}
+----
++
+. *_Run_* below ONTAP CLI command to check the *logical* and *physical* space used on the source volume from your *primary* file system.
++
+[source,bash]
+----
+vol show -volume vol1 -fields logical-used,physical-used
+----
++
+. *_Run_* below ONTAP CLI command to check the *logical* and *physical* space used on the source volume from your *secondary* file system.
++
+[source,bash]
+----
+vol show -volume cachevol -fields logical-used,physical-used
+----
++
+. Are they identical?
+
+. *_Run_* below ONTAP CLI command to check the pre-populate a file from your *secondary* file system. *_Enter_* *y* when prompted to continue in advanced privilege mode. Replace the file path *1GB/file_srcdir/ip-10-0-0-17.us-east-2.compute.internal/thrd_00/d_000/_ip-10-0-0-17.us-east-2.compute.internal_00_1_* with the path on your Linux instance. You will find this under *${MOUNTPOINT}* directory.
++
+[source,bash]
+----
+set -privilege advanced
+flexcache prepopulate start -cache-volume cachevol -path-list 1GB/file_srcdir/ip-10-0-0-17.us-east-2.compute.internal/thrd_00/d_000/_ip-10-0-0-17.us-east-2.compute.internal_00_1_
+set -privilege admin
+----
++
+. *_Return_* to the ONTAP CLI session on your *secondary* file system and check the *logical* and *physical* space used.
++
+[source,bash]
+----
+vol show -volume cachevol -fields logical-used,physical-used
+----
++
+. Did the utilization change?
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::elastic-tiering.png[link=../10-tiering/, align="left",width=420]
+
+
+
+

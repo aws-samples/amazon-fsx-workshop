@@ -1,0 +1,127 @@
+= Deploy On-Demand Workshop
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+Deploy a new AWS environment for use during this workshop. See the *Workshop Diagram* below. The launch template will only create  1 x Amazon FSx for NetApp ONTAP file system (File system A) along with other resources. You will create the second file system (File system B) during this workshop.
+
+It will take approximately 40 minutes for the workshop environment to be created.
+
+== Workshop Diagram
+
+image::workshop-environment.png[align="center"]
+
+=== Deploy the workshop using AWS CloudFormation
+
+IMPORTANT: Read through all steps below before *_clicking_* the *Deploy to AWS* button.
+
+//image::TBD.gif[align="left", width=600]
+
+. Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin.
+
+TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github tutorial and the AWS Console.
+
+|===
+|Region | Launch template with a new VPC
+| *N. Virginia* (us-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Ohio* (us-east-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Oregon* (us-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Hong Kong* (ap-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-east-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Tokyo* (ap-northeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Seoul* (ap-northeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Mumbai* (ap-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Singapore* (ap-southeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Sydney* (ap-southeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Canada* (ca-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Frankfurt* (eu-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Ireland* (eu-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *London* (eu-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Paris* (eu-west-3)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *Stockholm* (eu-north-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-north-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+
+| *São Paulo* (sa-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
+|===
+
+. Accept the defaults on the *Prerequisite - Prepare template* page and *_click_* *Next*.
++
+. Accept the default stack name and *_click_* *Next*. *_Enter_* values for all parameters.
++
+[cols="3,10"]
+|===
+| *VPC CIDR*
+a| Select a CIDR that will be used for the VPC.
+
+| *Availability Zones*
+a| Select two (2) availability zones for your VPC.
+
+| *Instance Type*
+a| Accept default unless you want to use a larger instance type.
+
+| *Key Pair*
+a| Select your keypair.
+
+| *fsxadmin user password*
+a| Enter a password which must be between 8 and 50 characters in length, must contain at least one letter and one number, and must not contain the word 'admin'.
+
+
+|===
++
+. After you have entered values for all parameters, *_click_* *Next*.
+. *_Accept_* the default values of the *Configure stack options* and *Advanced options* sections and *_click_* *Next*.
+. *_Review_* the CloudFormation stack settings.
+. *_Click_* both checkboxes in the blue *Capabilities* box at the bottom of the page.
++
+image::cloudformation-capabilities.png[align="left", width=420]
++
+. *_Click_* *Create stack*.
+
+The tutorial environment will be available in approximately 40 minutes.
+
+
+== Resources
+
+While the workshop environment gets created below are some recommended resources to get started with an overview and deep dive on Amazon FSx for NetApp ONTAP. *_Right-click_* on the below resources to open them in a new tab or window.
+
+* link:https://www.youtube.com/watch?v=JcKsOUYoJYA[Getting Started - Introduction to Amazon FSx for NetApp ONTAP and demo]
+* link:https://www.youtube.com/watch?v=V7iwoZHDNGs[Deep dive on Amazon FSx for NetApp ONTAP]
+* link:https://aws.amazon.com/fsx/[Amazon FSx product page]
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::connect-to-instances.png[link=../02-connect-to-instances/, align="right",width=420]
