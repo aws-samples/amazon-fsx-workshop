@@ -116,9 +116,11 @@ The tutorial environment will be available in approximately 40 minutes.
 
 While the workshop environment gets created below are some recommended resources to get started with an overview and deep dive on Amazon FSx for NetApp ONTAP. *_Right-click_* on the below resources to open them in a new tab or window.
 
+
 * link:https://www.youtube.com/watch?v=JcKsOUYoJYA[Getting Started - Introduction to Amazon FSx for NetApp ONTAP and demo]
 * link:https://www.youtube.com/watch?v=V7iwoZHDNGs[Deep dive on Amazon FSx for NetApp ONTAP]
 * link:https://aws.amazon.com/fsx/[Amazon FSx product page]
+
 
 == Next section
 
