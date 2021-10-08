@@ -1,0 +1,17 @@
+= STG340-Getting started with Amazon FSx for NetApp ONTAP
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+image:fsx-aws-logos.png[align="left",width=420]
+
+Amazon FSx offers fully managed, like-for-like features of popular commercial and open source file systems without requiring changes to code. 
+
+In this builders session, explore Amazon FSx for NetApp ONTAP, a new file system service that combines the data access and management capabilities of NetApp ONTAP with the scalability, agility, and security of a fully managed AWS service. Amazon FSx for ONTAP allows you to run high-performance and feature-rich file systems without requiring changes to code or how you manage your data. In this session, you will learn how to set up an FSx for ONTAP file system, access data simultaneously from Linux and Windows over NFS and SMB protocols, and learn more about NetApp’s widely-used data replication and cloning features. 
+
+This is a workshop designed for architects and engineers who would like to learn more about Amazon FSx for NetApp ONTAP - link:https://aws.amazon.com/fsx/[Amazon FSx].
+
+Click the link below to access the  **Amazon FSx for NetApp ONTAP** workshop environment.
+
+image::01-access-environment.png[link=01-access-workshop-environment/, align="left",width=420]
+

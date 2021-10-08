@@ -1,0 +1,273 @@
+= Managing your Amazon FSx for NetApp ONTAP File System
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will help you become familiar with using the Amazon FSx console and ONTAP CLI to manage your Amazon FSx for NetApp ONTAP file systems.
+
+You can use the Amazon FSx console, AWS CLI or FSx API to create a new file system. In addition to these AWS management tools you can also use NetApp management tools like NetApp Cloud Manager, ONTAP CLI and ONTAP REST API to manage the file system.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide (Amazon FSx Console)
+
+=== Examine Amazon FSx Console
+
+. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for NetApp ONTAP file system.
+
+
+. *_Examine_* the *Summary* section of the file system. *_Find_* the values of the following file system attributes:
+* File system ID
+* Lifecycle state
+* Deployment type
+* SSD Storage capacity
+* Throughput capacity
+* Provisioned IOPS
+* Availability Zones
+* Creation time
+
+. *_Examine_* the *Network & security* section of the file system. *_Click_* the *Network & security* tab. *_Find_* the values of the following file system attributes:
+* VPC
+* Endpoint IP address range
+* KMS key ID
+* Route tables
+* Management endpoint - DNS name and IP address
+* Inter-cluster endpoint - DNS name and IP address
+
+
+. *_Examine_* the subnet attributes of the file system. *_Find_* the values of preferred and standby subnets:
+* Subnets
+* Availability Zones
+* Network interfaces
+
+* How would you find the VPC security groups associated to the file system?
+* Hint: *_Click_* the Network interface link of the preferred subnet. From the *Details* tab of the preferred file server's ENI, *_click_* the *view inbound rules* link within the *Security groups* attribute. *_Close_* the browser tab of the *Network interface* console.
+
+. *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
+
+
+. *_Open_* a text editor and *_Note_* down the following values which will be used later in this workshop to create a new FSx for NetApp ONTAP file system.
+* VPC ID
+* Preferred subnet ID
+* Standby subnet ID
+* Route Table ID
+
+. *_Examine_* the *Administration* section of the file system. *_Click_* the *Administration* tab. *_Find_* the values of the following file system attributes:
+* Service account username
+* Management endpoint - DNS name and IP address
+* Inter-cluster endpoint - DNS name IP address
+* Weekly maintenance window
+
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and export the below values. Replace the IP with IP address of your file system management endpoint.
++
+[source,bash]
+----
+ADMINUSER="fsxadmin"
+MGMTENDPOINT="x.x.x.x"
+----
++
+
+. *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
+
+
+==== Create a Storage virtual machine (SVM) joined to Active Directory
+
+. *_Click_* on the *Storage virtual machines* tab of your file system. *_Click_* *Create storage virtual machine* and input the values shown here:
+
++
+[cols="2,13"]
+|===
+| *File system*
+a| Select the file system ID for your FSx for NetApp ONTAP file system
+
+| *Storage virtual machine name*
+a| Enter svm08
+
+| *SVM administrative password*
+a| Accept the default
+
+| *Active Directory*
+a| Select - Join an Active Directory
+
+| *Net BIOS name*
+a| Input a Net BIOS name which you will use to connect to SMB share. Ex: svm08
+
+| *Active Directory domain name*
+a| Input fsxontap.com
+
+| *DNS server IP addresses*
+a| Enter the Active Directory DNS server IP addresses. You can retrieve the DNS addresses using link:https://console.aws.amazon.com/directoryservice[Directory Service]. *_click_* Directory ID with Directory name *fsxontap.com*. Under *Networking & Security* tab you will find two DNS addresses
+
+| *Service account username*
+a| Enter the Active Directory username created by the workshop resource. You can retrieve the username using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* Secret name *Password-GUID* and *_Click_* on *Retrieve Secret value* to get the username
+
+| *Service account password*
+a| Enter the Active Directory user password created by the workshop resource. You can retrieve the password using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* Secret name *Password-GUID* and *_Click_* on *Retrieve Secret value* to get the password
+
+| *Confirm password*
+a| Re-Enter the Active Directory user password
+
+| *Organizational Unit (OU) within which you want to join your file system - optional*
+a| Input *OU=Computers,OU=fsxontap,DC=fsxontap,DC=com*
+
+| *Delegated file system administrators group - optional*
+a| Accept the default
+
+| *SVM root volume security style*
+a| Accept the default
+|===
++
+. After you have entered or accepted values for all parameters, *_click_* *Confirm*
+
+. It will take approximately *5 minutes* to create the new SVM. You can proceed to *Create a volume* step without waiting for the SVM to be fully available.
+
+
+==== Create a volume
+
+. *_Click_* on the *volumes* tab of your file system. *_Click_* *Create volume* and input the values shown here:
+
++
+[cols="2,7"]
+|===
+| *File system*
+a| Select the file system ID for your FSx for NetApp ONTAP file system
+
+| *Storage virtual machine name*
+a| Select the Storage virtual machine you created
+
+| *Volume name*
+a| Input vol1
+
+| *Junction path*
+a| Input /vol1
+
+| *Volume Size*
+a| Input 100000
+
+| *Storage efficiency*
+a| Select Enabled
+
+| *Capacity pool tiering policy*
+a| Select *None*
+|===
++
+. After you have entered or accepted values for all parameters, *_click_* *Confirm*
+
+. It will take approximately *2 minutes* to create the new volume. 
+
+
+=== Continue Examining the file system from Amazon FSx Console
+
+. *_Examine_* the *Storage virtual machines(SVMs)* section of the file system. *_Click_* the *Storage virtual machines* tab. *_Find_* the values of the following file system attributes:
+* SVM Name
+* SVM ID
+* Is the SVM joined to an Active Directory?
+
+
+. *_Examine_* the *Volumes* section of the file system. *_Click_* the *Volumes* tab. *_Find_* the values of the following file system attributes:
+* Volume Name 
+* Which SVM does the volume belong to?
+* What is the junction path for the volume? 
++
+TIP: Each SVM has a unique namespace with the SVM root volume being the entry point to the namespace. Do you see */* as Junction Path for the root?  You add volumes to this namespace by creating a junction path. The *vol1* volume uses */* as the entry point and has junction path */vol1*. You can create junction points directly below the parent volume or on a directory withn the volume. Ex: /vol1/vol2. You will use the junction path to mount your volume.
++
+* What is the size of your volume?
+* Does the volume have a Tiering Policy configured?
+
+
+. *_Examine_* the *Backups* section of the file system. *_Click_* the *Backups* tab.
+* Are daily automatic backups enabled?
+* *_Click_* *Update* to Change backup window and retention period. Accept default values and *_Click_* *Save*.
+
+. *_Examine_* the *Tags* section of the file system. *_Click_* the *Tags* tab.
+* What tags (key/value) pairs are assigned to the file system?
+* Add a new tag (key/value) pair. *_Click_* the *[Add]* button and enter a *key* / *value* of your choice (e.g. Tag Key=Name, Value=FSxOntap-workshop). *_Click_* the *Save* button.
+
+
+=== Step-by-step Guide (ONTAP CLI)
+
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the file system management endpoint.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+. *_Enter_* *yes*, if you get the authenticity warning to trust the host on the SSH connection. At the *_Password_* prompt, Enter the password for your file system. You can retrieve the password using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* Secret name *FSxPassword-<GUID>* and *_Click_* on *Retrieve Secret value* to get the fsxadmin user password. Upon successful login you will see the prompt as shown below:
++
+[source,bash]
+----
+FsxId08361928e949c6b55::>
+----
++
+. *_Type_* *?* to get a list of available ONTAP CLI commands.
+
++
+[source,bash]
+----
+FsxId08361928e949c6b55::> ?
+  cluster>                    Manage clusters
+  event>                      Manage system events
+  exit                        Quit the CLI session
+  history                     Show the history of commands for this CLI session
+  job>                        Manage jobs and job schedules
+  lun>                        Manage LUNs
+  man                         Display the on-line manual pages
+  network>                    Manage physical and virtual network connections
+  qos>                        QoS settings
+  redo                        Execute a previous command
+  rows                        Show/Set the rows for this CLI session
+  security>                   The security directory
+  set                         Display/Set CLI session settings
+  snaplock>                   Manages SnapLock attributes in the system
+  snapmirror>                 Manage SnapMirror
+  statistics>                 Display operational statistics
+  statistics-v1>              The statistics-v1 directory
+  storage>                    Manage physical storage, including disks, aggregates, and failover
+  system>                     The system directory
+  top                         Go to the top-level directory
+  up                          Go up one directory
+  volume>                     Manage virtual storage, including volumes, snapshots, and mirrors
+  vserver>                    Manage Vservers
+----
++
+. *_Run_* below command to get a list of available volumes. Does this match the volumes you reviewed in the Amazon FSx console?
++
+[source,bash]
+----
+vol show
+----
++
+. *_Run_* below command to list all the Logical Interfaces (LIFs). How many LIFs do you see and what are they used for?
++
+[source,bash]
+----
+network interface show
+----
++
+. Note the IP address of the NFS Endpoint LIF of your SVM (_nfs_smb_management_1_). Type quit to exit the ONTAP CLI session and return to *FSx for ONTAP Workshop Linux instance*.  Then export the IP address of the NFS Endpoint.
++
+[source,bash]
+----
+NFSENDPOINT="x.x.x.x"
+----
++
+
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::multiprotocol-access.png[link=../04-multiprotocol-access/, align="left",width=420]
+
+
+
+
