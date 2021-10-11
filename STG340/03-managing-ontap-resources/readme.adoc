@@ -110,7 +110,7 @@ a| Enter the Active Directory user password created by the workshop resource. Yo
 a| Re-Enter the Active Directory user password
 
 | *Organizational Unit (OU) within which you want to join your file system - optional*
-a| Input *OU=Computers,OU=fsxontap,DC=fsxontap,DC=com*
+a| Input *OU=Computers,OU=example,DC=example,DC=com*
 
 | *Delegated file system administrators group - optional*
 a| Accept the default
