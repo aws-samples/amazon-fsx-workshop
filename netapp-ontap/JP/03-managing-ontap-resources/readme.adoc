@@ -1,0 +1,352 @@
+= Amazon FSx for NetApp ONTAP ファイルシステムの管理
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+このセクションでは、Amazon FSxコンソールとONTAP CLIを使用してAmazon FSx for NetApp ONTAPファイルシステムの管理操作を学習出来ます。
+
+新しいファイルシステムを作成するには、Amazon FSxコンソール、AWS CLIまたはFSx APIを使用できます。これらのAWS管理ツールに加えて、NetApp Cloud Manager、ONTAP CLI、ONTAP REST APIなどのNetApp管理ツールを使用して、ファイルシステムを管理することもできます。
+
+
+== 所要時間
+
+NOTE: このセクションを完了するのに約 15 分かかります。
+
+
+== ステップ-バイ-ステップ ガイド (Amazon FSx Console)
+
+=== Amazon FSxコンソールの検証
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールを開き、 Amazon FSx for NetApp ONTAP file systemの *File system ID* をクリックします。. このワークショップでは、このファイルシステムを *primary* と呼びます。
+
+
+. ファイルシステムの *Summary* セクションを調べます。以下のファイルシステム関連情報を探してみて下さい。:
+* File system ID
+* Lifecycle state
+* Deployment type
+* SSD Storage capacity
+* Throughput capacity
+* Provisioned IOPS
+* Availability Zones
+* Creation time
+
+. ファイルシステムの *Network & security* セクションを調べます。*Network & security* タブをクリックして下さい。以下のファイルシステム関連情報を探してみて下さい。:
+* VPC
+* Endpoint IP address range
+* KMS key ID
+* Route tables
+* Management endpoint - DNS name and IP address
+* Inter-cluster endpoint - DNS name and IP address
+
+
+. ファイルシステムのサブネット関連情報を調べます。プリファードとスタンバイ、それぞれのサブネットの以下の情報を探してみて下さい。:
+* Subnets
+* Availability Zones
+* Network interfaces
+
+* ファイルシステムに関連付けられているVPCセキュリティグループはどのように見つけることができますか？
+* Hint: プリファードサブネットのネットワークインターフェースのリンクをクリックします。プリファードファイルサーバーのENIの *Details* タブから、*Security groups* を探して、*view inbound rules*リンクをクリックします。*Network interface*コンソールのブラウザタブを *_Close_* します。
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールに戻ります。
+
+
+. テキストエディタを開き、以下の内容をコピーしてください。この値は、この後のワークショップで、FSx for NetApp ONTAPファイルシステムを作成する際に使用します。
+* VPC ID
+* Preferred subnet ID
+* Standby subnet ID
+* Route Table ID
+
+. ファイルシステムの *Administration* セクションを調べます。 *Administration* タブをクリックします。 以下のファイルシステム関連情報を探してみて下さい。:
+* Service account username
+* Management endpoint - DNS name and IP address
+* Inter-cluster endpoint - DNS name IP address
+* Weekly maintenance window
+
+. *FSx for ONTAP Workshop Linux instance* のSSH接続へ戻り、以下のコマンドを入力します。IPアドレスの部分をファイルシステムの管理エンドポイントIPに入れ替えて下さい。
++
+[source,bash]
+----
+ADMINUSER="fsxadmin"
+MGMTENDPOINT="x.x.x.x"
+----
++
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールに戻ります。
+
+
+==== Active Directoryに接続されたStorage virtual machine（SVM）の作成
+
+. ファイルシステムファイルシステムの *Storage virtual machines* タブをクリックします。*Create storage virtual machine* をクリックし、以下の値を入力します。:
+
++
+[cols="2,13"]
+|===
+| *File system*
+a| *primary* ファイルシステムのファイルシステムIDを選択します。
+
+| *Storage virtual machine name*
+a| svm08 を入力します。
+
+| *SVM administrative password*
+a| default を受け入れます。
+
+| *Active Directory*
+a| Join an Active Directory を選択します。
+
+| *Net BIOS name*
+a| SMB share に接続するためのNet BIOS名を入力します. 例: svm08
+
+| *Active Directory domain name*
+a| fsxontap.com を入力します。
+
+| *DNS server IP addresses*
+a| Active Directory DNS server IP addresses を入力します。 DNS addresses は link:https://console.aws.amazon.com/directoryservice[Directory Service] から入手できます。*fsxontap.com* と言う名前の Directly の Directory ID をクリックして下さい。*Networking & Security* タブの中に2つの DNS addresses を見つける事が出来ます。
+
+| *Service account username*
+a| ワークショップリソースで作成したActive Directoryのユーザー名を入力します。ユーザー名は link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager] から入手できます。*Password-GUID* というSecret nameを選択し、*Retrieve Secret value* をクリックします。
+
+| *Service account password*
+a| ワークショップリソースで作成したActive Directoryユーザーのパスワードを入力します。パスワードは link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager] から入手できます。*Password-GUID* というSecret nameを選択し、*Retrieve Secret value* をクリックします。
+
+| *Confirm password*
+a| Active Directoryユーザーのパスワードを再度入力します。
+
+| *Organizational Unit (OU) within which you want to join your file system - optional*
+a| *OU=Computers,OU=fsxontap,DC=fsxontap,DC=com* を入力します。
+
+| *Delegated file system administrators group - optional*
+a| default を受け入れます。
+
+| *SVM root volume security style*
+a| default を受け入れます。
+|===
++
+. 全ての項目を入力したら *Confirm* をクリックします。
+
+. 新しいSVMの作成にはおよそ5分かかります。 作成完了を待たずに次のステップ *ボリュームの作成* に進む事が出来ます。
+
+
+==== ボリュームの作成
+
+. ファイルシステムの *volumes* タブをクリックします。*Create volume* をクリックし、以下の値を入力します。:
+
++
+[cols="2,7"]
+|===
+| *File system*
+a| *primary* ファイルシステムのファイルシステムIDを選択します。
+
+| *Storage virtual machine name*
+a| 作成した Storage virtual machine を選択します。
+
+| *Volume name*
+a| vol1 を入力します。
+
+| *Junction path*
+a| /vol1 を入力します。
+
+| *Volume Size*
+a| 100000 を入力します。
+
+| *Storage efficiency*
+a| Enabled を選択します。
+
+| *Capacity pool tiering policy*
+a| *None* を選択します。
+|===
++
+. 全ての項目を入力したら *Confirm* をクリックします。
+
+. 新しいボリュームの作成にはおよそ2分かかります。
+
+
+=== Amazon FSxコンソールの検証（続き）
+
+. ファイルシステムの *Storage virtual machines(SVMs)* セクションを調べます。*Storage virtual machines* タブをクリックします。以下のファイルシステム関連情報を探してみて下さい。:
+* SVM Name
+* SVM ID
+* SVM が Active Directory に参加していますか？
+
+
+. ファイルシステムの *Volumes* セクションを調べます。 *Volumes* タブをクリックします。以下のファイルシステム関連情報を探してみて下さい。:
+* Volume Name 
+* volume はどの SVM に属していますか？
+* volumeのjunction pathは何ですか？
++
+TIP: 各SVMには固有の名前空間があり、SVMのルートボリュームが名前空間へのエントリーポイントとなります。rootの Junction Path は */* になっていますか？ このネームスペースにボリュームを追加するには、ジャンクションパスを作成します。*vol1* ボリュームは */* をエントリーポイントとし、*/vol1* という Junction Path を持ちます。Junction Path は、親ボリュームの直下やボリューム内のディレクトリに作成することができます。 （例: /vol1/vol2） ボリュームのマウントにはこの Junction Path を使用します。
++
+* volume サイズはいくつになっていますか？
+* volume の Tiering Policy は設定されていますか？
+
+
+. ファイルシステムの *Backups* セクションを調べます。*Backups* タブをクリックします。
+* 日次の自動バックアップは有効になっていますか？
+* バックアップウィンドウと保持期間を設定するために *Update* をクリックします。default の値を受け入れ、*Save* をクリックします。
+
+. ファイルシステムの *Tags* セクションを調べます。*Tags* タブをクリックします。
+* どのようなタグペア (key/value) がファイルシステムに設定されていますか？
+* 新しいタグペア (key/value) を追加します。*[Add]* ボタンをクリックし、任意の *key* / *value* を入力します。 (例 Tag Key=Name, Value=FSxOntap-primary) *Save* ボタンをクリックします。
+
+
+
+=== セカンダリファイルシステムの作成
+TIP: このGitHubワークショップの *SnapMirror* と *FlexCache* のセクションを実施しない場合は、このセクションをスキップすることができます。
+
+ファイルシステムの概要セクションの上方の *FSx > File systems* をクリックします。*Create file system* をクリックし、*Amazon FSx for NetApp ONTAP* を選択して *_Next_* をクリックします。
+
+. *Quick create* または *Standard create* から選択出来ます。
+* *Quick create*オプションを使用すると、*_default_*推奨構成の新しいファイルシステムを簡単に作成することができます。*Quick create*オプションは、1つのSVMと1つのボリュームでファイルシステムを作成し、LinuxインスタンスからNFSプロトコルでデータに素早くアクセスできるようにします。
+* *Standard create* オプションでは、パフォーマンス、ネットワーク、セキュリティ、バックアップ、メンテナンスなど、すべての構成オプションを設定することができます. 
+
+. *Standard create* を選択し、以下の情報を入力します。:
+
++
+[cols="2,18"]
+|===
+| *File system name - optional*
+a| FSxOntap-DR を入力します。
+
+| *SSD storage capacity*
+a| 1024 を入力します。
+
+| *Provisioned SSD IOPS*
+a| default を受け入れます。
+
+| *Throughput capacity*
+a| default を受け入れます。
+
+| *Virtual Private Cloud (VPC)*
+a| このワークショップの *Amazon FSx Console の検証* セクションで先ほどメモした VPC を選択します。これは *primary* ファイルシステムと同じ VPC になります。
+
+| *VPC Security Groups*
+a| ワークショップで作成された *fsx-ontap-workshop-SecurityGroup-<ID>* という名前のセキュリティグループを選択します。
+
+| *Preferred subnet*
+a| このワークショップの *Amazon FSx Console の検証* セクションで先ほどメモした Preferred subnet を選択します。これは *primary* ファイルシステムと同じサブネットになります。
+
+| *Standby subnet*
+a| このワークショップの *Amazon FSx Console の検証* セクションで先ほどメモした Standby subnet を選択します。これは *primary* ファイルシステムと同じサブネットになります。
+
+| *VPC route tables*
+a| このワークショップの *Amazon FSx Console の検証* セクションで先ほどメモした route table を選択します。これは *primary* ファイルシステムと同じルートテーブルになります。
+
+| *Endpoint IP address range*
+a| default を受け入れます。
+
+| *Encryption key*
+a| default を受け入れます。
+
+| *File system administrative password*
+a| fsxadmin ユーザーのパスワードを指定します。新しいパスワードを指定できますが、*primary* ファイルシステムと同じパスワードを使用する事も出来ます。このパスワードは link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager] から入手出来ます。*FSxPassword-GUID* というSecret nameを選択し、*Retrieve Secret value* をクリックします。
+
+| *Storage virtual machine name*
+a| svm01 を入力します。
+
+| *SVM administrative password*
+a| default を受け入れます。
+
+| *Active Directory*
+a| default - Do not join an Active Directory を受け入れます。
+
+| *Default volume configuration*
+a| 全てのセクションを空欄のままにします。
+
+| *Backup and maintenance*
+a| default を受け入れます。
+
+| *Tags*
+a| default を受け入れます。
+
+
+|===
++
+. 全ての項目を入力したら *Next* をクリックし、次に *Create file system* をクリックします。
+
+. 新しいファイルシステムの作成にはおよそ30分かかります。 
+
+NOTE: このファイルシステムは、この後続くワークショップの中で、 *secondary* ファイルシステムと呼ばれます。
+
+
+=== ステップ-バイ-ステップ ガイド (ONTAP CLI)
+
+. *FSx for ONTAP Workshop Linux instance* のSSH接続へ戻ります。primary ファイルシステムの management endpoint へSSH接続します。
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+. SSH接続中に接続を信用するかどうか確認を求められた場合は、*yes* を選択します。*_Password_* プロンプトで、ファイルシステムのパスワードを入力します。このパスワードは link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager] から入手出来ます。*FSxPassword-GUID* というSecret nameを選択し、*Retrieve Secret value* をクリックします。 ログインが成功すると、以下のようなプロンプトが表示されます。:
++
+[source,bash]
+----
+FsxId08361928e949c6b55::>
+----
++
+. *?* を入力すると、使用可能な ONTAP CLI commands が確認出来ます。
+
++
+[source,bash]
+----
+FsxId08361928e949c6b55::> ?
+  cluster>                    Manage clusters
+  event>                      Manage system events
+  exit                        Quit the CLI session
+  history                     Show the history of commands for this CLI session
+  job>                        Manage jobs and job schedules
+  lun>                        Manage LUNs
+  man                         Display the on-line manual pages
+  network>                    Manage physical and virtual network connections
+  qos>                        QoS settings
+  redo                        Execute a previous command
+  rows                        Show/Set the rows for this CLI session
+  security>                   The security directory
+  set                         Display/Set CLI session settings
+  snaplock>                   Manages SnapLock attributes in the system
+  snapmirror>                 Manage SnapMirror
+  statistics>                 Display operational statistics
+  statistics-v1>              The statistics-v1 directory
+  storage>                    Manage physical storage, including disks, aggregates, and failover
+  system>                     The system directory
+  top                         Go to the top-level directory
+  up                          Go up one directory
+  volume>                     Manage virtual storage, including volumes, snapshots, and mirrors
+  vserver>                    Manage Vservers
+----
++
+. 以下のコマンドで volume のリストを確認します。Amazon FSx console で表示される内容と同じですか？
++
+[source,bash]
+----
+vol show
+----
++
+. 以下のコマンドで全てのLogical Interfaces (LIFs) のリストを確認します。LIFはどれくらいの数があり、何に使われているのでしょうか？
++
+[source,bash]
+----
+network interface show
+----
++
+. SVM (_nfs_smb_management_1_) のNFS Endpoint LIF のIPアドレスをメモします。quit を入力してONTAP CLI session を終了し、*FSx for ONTAP Workshop Linux instance* に戻ります。次にNFS EndpointのIPアドレスをエクスポートします。
++
+[source,bash]
+----
+NFSENDPOINT="x.x.x.x"
+----
++
+
+
+== 次のセクション
+
+下のボタンをクリックすると、次のセクションに進みます。
+
+image::multiprotocol-access.png[link=../04-multiprotocol-access/, align="left",width=420]
+
+
+
+

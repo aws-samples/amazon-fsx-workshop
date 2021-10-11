@@ -1,0 +1,238 @@
+= データプロテクション
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== 概要
+
+このセクションでは、*Amazon FSx for NetApp ONTAP* ファイルシステムで利用できるデータ保護技術について説明します。
+
+. *Snapshots*: ボリュームの読み取り専用のポイントインタイムコピーで、瞬間的なバックアップや短期的なリカバリーに使用できます。
+. *Amazon FSx Backups*: 同一リージョンのAmazon S3に保存される、費用対効果の高い、ボリュームのオフサイトバックアップです。
+. *SnapVault*: ディスクベースのバックアップ技術で、ボリュームスナップショットを同一地域または異なる地域の *secondary* ファイルシステムにオフサイトバックアップします。
+. *SnapMirror*: ディザスタリカバリやデータマイグレーションのためのネイティブなブロックレベルのレプリケーション技術。この機能については、本ワークショップのディザスタリカバリのセクションで紹介します。
+
+=== Snapshots 概要
+
+新しいスナップショットが作成されると、ボリューム上の既存のブロックへの新しいポインタが作成されます。データはコピーされないため、スナップショットは作成時にスペースを消費せず、瞬時に実行されます。ボリューム上のデータブロックが変更または削除されると、スナップショットによってロックされたブロックが保持され、スナップショットは時間の経過とともにスペースを消費し始めます。
+
+スナップショットは短期的なリカバリーに適しており、ポイントインタイムコピーを使用して単一のファイル、ディレクトリ、またはボリューム全体を復元する機能を提供します。スナップショットはボリュームと一緒に保存されるため、長期的なオフサイト・バックアップには適しておらず、ボリュームやファイルシステムの障害からは保護されません。スナップショットポリシーを使用して自動スナップショットをスケジュールしたり、手動でスナップショットを作成することができます。
+
+
+=== Amazon FSx バックアップ 概要
+
+Amazon FSx バックアップでは、耐久性の高いAmazon S3に保存されたボリュームの、耐久性の高い自動日次バックアップまたは手動バックアップを取ることができます。これらのバックアップは増分が保存され、自動デイリーバックアップは、0～90日の保持期間を持つデイリーバックアップウィンドウの間に実行されるようにスケジュールすることができます。
+
+Amazon FSx バックアップでは、追加のインフラストラクチャを用意する必要がないため、最大90日の保持期間で費用対効果の高いオフサイトバックアップを実現します。
+
+
+=== SnapVault 概要
+
+SnapVault は ONTAP のディスクベースのストレージ バックアップ機能で、ボリュームのスナッ プショット コピーを別のファイルシステム上の *Secondary* ボリュームにバックアップし、長期的に保持することができます。SnapVault の *secondary* ボリュームから、関連付けられたソースボリュームまたは別のボリュームにデータをリストアできます。ソースボリュームに割り当てられた Snapshot ポリシーにより、スナップショットを作成するタイミングが決定されます。SnapVault リレーションに割り当てられた SnapVault ポリシーにより、ソースボリューム上のどのスナップショットを *secondary* ボリュームにレプリケートするかが決定されます。有効になっている場合、ストレージの効率性(重複排除や圧縮等)は維持されます。
+
+SnapVault は、複数のソースファイルシステムのボリュームを中央の *secondary* システムにバックアップし、同じ地域または異なる地域のオフサイトバックアップに使用できます。
+
+SnapVault では SnapMirror エンジンを使用しているため、レプリケーションもまったく同じように動作します。
+
+Note: SnapVault はこのワークショップでは扱われません。
+
+== 所要時間
+
+NOTE: このセクションを完了するのに約 10 分かかります。
+
+== ステップ-バイ-ステップ ガイド (Snapshots)
+
+=== Snapshot の手順
+
+. *FSx for ONTAP Workshop Linux instance* のSSH接続に戻り、*primary* FSx for ONTAP ファイルシステムのファイルシステム管理エンドポイントにSSH接続します。
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+
+. 以下のコマンドで snapshot の一覧を表示します。
++
+[source,bash]
+----
+volume snapshot show
+----
++
+
+. 以下のコマンドで volume で有効になっている default snapshot policy を確認します。
++
+[source,bash]
+----
+snapshot policy show -policy default
+----
++
+
+NOTE: デフォルトのスケジュールでは、合計10個のスナップショット（毎時6個、毎日2個、毎週2個）が保存されていることがわかります。 
+
+. 以下のコマンドで、各種スケジュールのタイミングを確認します。:
++
+[source,bash]
+----
+job schedule cron show
+----
++
+NOTE: 1時間毎のスナップショットは5分前に、1日毎のスナップショットは午前0時10分前に、1週間毎のスナップショットは日曜日の午前0時15分前に行われるのがわかると思います。
+
+
+. 以下のコマンドを実行して、ボリュームの *手動* スナップショットを開始します。スナップショット名を *vol1_FSxOntapWorkshop* とし、以下のようなコメントを入力します。
++
+[source,bash]
+----
+volume snapshot create -vserver svm08 -volume vol1 -snapshot vol1_FSxOntapWorkshop -comment "Manual Snapshot created for FSx Workshop"
+----
++
+
+. 以下のコマンドで snapshot の一覧を表示します。
++
+[source,bash]
+----
+volume snapshot show vol1
+----
++
+
+. 以下のコマンドを実行して、ボリュームに割り当てられたスナップショットの snapreserve スペースを確認します。:
++
+[source,bash]
+----
+volume show vol1 -fields percent-snapshot-space,snapshot-space-used
+----
++
+
+. また、以下のコマンドを実行して、ボリューム上のスナップショット snapreserve のスペース使用量を確認することもできます。:
++
+[source,bash]
+----
+df -h vol1
+----
++
+
+NOTE: デフォルトでは、ボリュームスペースの5%が *_snapreserve_* に設定されます。この値は変更可能です。スナップショットの使用領域が5%の snapreserve を超えた場合、スナップショットがボリュームのデータ領域を消費し始めます。
+
+
+. 次に、ワークショップのマルチプロトコルアクセスのセクションで作成したテキストファイルに変更を加えてみましょう。*FSx for ONTAP Workshop Linux Instance* のSSH接続に戻ります。: 
++
+[source,bash]
+----
+cat ${MOUNTPOINT}/${DIRNAME}/multiprotocol-demo.txt
+echo "Appending text before single file restore" >> ${MOUNTPOINT}/${DIRNAME}/multiprotocol-demo.txt
+cat ${MOUNTPOINT}/${DIRNAME}/multiprotocol-demo.txt
+----
++
+. これから、以前のバージョンのファイルを復元します。このワークショップの初期に取得したスナップショットから、ファイルの前のバージョンを復元します。 元の場所にあるファイルを上書きすることも、新しい場所にファイルをコピーすることもできます。このファイルを復元するために、新しいディレクトリを作成しましょう。
++
+[source,bash]
+----
+mkdir ${MOUNTPOINT}/${DIRNAME}/restore
+----
++
+
+. *_.snapshot_* ディレクトリに移動し、リストア可能なスナップショットを一覧表示します。先に作成した手動スナップショットに対応する *vol1_FSxOntapWorkshop* ディレクトリに cd し、スナップショットからターゲットディレクトリにファイルをコピーします。
++
+[source,bash]
+----
+cd ${MOUNTPOINT}/${DIRNAME}/.snapshot
+ls
+cd vol1_FSxOntapWorkshop/
+ls
+cat multiprotocol-demo.txt
+cp -p multiprotocol-demo.txt ${MOUNTPOINT}/${DIRNAME}/restore
+cd
+----
++
+. リストアされたファイルを*_cat_*すると、その内容が表示されます。
++
+[source,bash]
+----
+cat ${MOUNTPOINT}/${DIRNAME}/restore/multiprotocol-demo.txt
+----
++
+. ファイルが以前の時点に正常に復元されましたか？
+
+
+TIP: スナップショットからボリューム全体のリストアを実行するには、ONTAP CLIセッションから *volume snapshot restore -vserver <SVM> -volume <Volume> -snapshot <snapshot name>* を実行します。
+
+. *FSx for ONTAP Workshop Windows Instance* のRDP接続に戻ります。
+
+. *ファイルエクスプローラー* を使用して、*multiprotocol-demo.txt* を右クリックして、*properties* を選択し、*Previous Versions* タブをクリックして、利用可能なスナップショットを参照します。*File versions:* の下に表示されているファイルのバージョンをダブルクリックすると、内容が表示されます。 *Restore* をクリックすると、以前の時点に復元することができます。
+
+. ファイルの復元はできましたか？
+
+. *FSx for ONTAP Workshop Linux instance* のSSH接続に戻り、*primary* FSx for ONTAPファイルシステムのファイルシステム管理エンドポイントにSSH接続します。
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+
+. 以下のコマンドで、ボリュームのセキュリティスタイルを確認します。
++
+[source,bash]
+----
+volume show -volume vol1 -fields security-style
+----
++
+
+NOTE: お使いのボリュームは、SVM から *Unix* セキュリティスタイルを継承し、Unix スタイルのパーミッションを実行します。ONTAPは、Windows ユーザと Unix ユーザの間で名前のマッピングを行い、アクセスを許可します。Windows ユーザが Unix セキュリティスタイルのボリュームにアクセスしようとすると、Unix セキュリティスタイルのボリュームは Windows ユーザ名を理解できないため、Windows ユーザ名は Unix UID にマッピングされます。Unixユーザーは、/etc/passwordファイル、NIS または LDAP によって検証されます。 管理者は、Windows ユーザーから Unix ユーザーへの明示的な手動マッピングを設定できます。例えば、Windowsユーザー「john」は、Unixユーザー「john」にマッピングされ、パーミッションを識別してアクセスを許可します。マッピングが見つからない場合は、UIDとGIDが65634の*pcuser*にマッピングされます。 Unixユーザーの*ec2-user*が所有するファイルを、Windowsの*admin*ユーザーとして上書きしようとしたため、アクセスが拒否されました。ユーザーマッピングやマルチプロトコルのベストプラクティスについては、link:https://www.netapp.com/pdf.html?item=/media/27436-tr-4887.pdf[Multiprotocol NAS in NetApp ONTAP] を参照してください。
+
+
+== ステップ-バイ-ステップ ガイド (Amazon FSx バックアップ)
+
+=== Amazon FSx バックアップの手順
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールに戻り、*primary* Amazon FSx for NetApp ONTAP ファイルシステムの *_File system ID_* をクリックします。
+
+. *volumes* タブをクリックします。*vol1* を選択し、 *Actions* -> *Create backup* をクリックします。バックアップの名前 (例: FSxONTAP-workshop-backup) を入力し、*Create backup* をクリックします。
+
+. *backups* タブをクリックすると、バックアップのステータスが *Creating* になっているのがわかります。バックアップが完了すると、ステータスが *Available* に変化します。
+
+. バックアップを新しいボリュームにリストアします。前のステップで作成したバックアップを選択し、*Actions* -> *Restore backup* をクリックします。 以下の値を入力します。:
+
++
+[cols="2,7"]
+|===
+| *File system*
+a| *primary* ファイルシステムの file system ID を選択します。
+
+| *Storage virtual machine name*
+a| 作成した Storage virtual machine を選択します。
+
+| *Volume name*
+a| restorevol を入力します。
+
+| *Junction path*
+a| /restorevol を入力します。
+
+| *Volume Size*
+a| 100000 を入力します。
+
+| *Storage efficiency*
+a| Enabled を選択します。
+
+| *Capacity pool tiering policy*
+a| Default を受け入れます。
+|===
++
+. 全ての項目を入力し、*Confirm* をクリックします。
+
+. *volume* タブをクリックして、リストアの進捗状況を確認します。 ステータスが*Created*に変わると、ボリュームをマウントしてデータにアクセスできるようになります。
+
+. リストア中にボリュームの構成パラメータを変更することができましたか？
+
+
+== 次のセクション
+
+下のボタンをクリックすると、次のセクションに進みます。
+
+image::flexclone.png[link=../06-flexclone/, align="left",width=420]
+
+
+
+
