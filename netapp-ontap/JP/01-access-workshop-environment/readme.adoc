@@ -23,7 +23,7 @@ IMPORTANT: *Deploy to AWS* ボタンをクリックする前に、以下の手�
 
 . *Deploy to AWS* ボタンをクリックし、CloudFormationのプロンプトに従って開始します。
 
- TIP: *Deploy to AWS* ボタンを右クリックし、リンクを新しいタブやウィンドウで開くと、このgithubチュートリアルとAWSコンソールの間を簡単に移動することができます。
+TIP: *Deploy to AWS* ボタンを右クリックし、リンクを新しいタブやウィンドウで開くと、このgithubチュートリアルとAWSコンソールの間を簡単に移動することができます。
 
 |===
 |リージョン | 新規VPCを使った起動テンプレート
@@ -76,9 +76,9 @@ a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/h
 a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=fsx-ontap-workshop&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/fsx-ontap-od-workshop.yaml]
 |===
 
-. *Prerequisite - Prepare template* ページのデフォルトを受け入れ、*Next*をクリックします。
+. *Prerequisite - Prepare template* ページのデフォルトを受け入れ、*Next* をクリックします。
 +
-. デフォルトのスタック名を受け入れ、*Next*をクリックします。すべてのパラメーターに値を入力します。
+. デフォルトのスタック名を受け入れ、*Next* をクリックします。すべてのパラメーターに値を入力します。
 +
 [cols="3,10"]
 |===
@@ -100,14 +100,14 @@ a| パスワードを入力してください。長さは8～50文字で、少�
 
 |===
 +
-. すべてのパラメータの値を入力したら*Next*をクリックします。
-. *Configure stack options* と *Advanced options*セクションのデフォルト値を受け入れ、*Next*をクリックします。
+. すべてのパラメータの値を入力したら *Next* をクリックします。
+. *Configure stack options* と *Advanced options* セクションのデフォルト値を受け入れ、*Next* をクリックします。
 . CloudFormationのスタック設定を確認します。
-. ページ下部の青い*Capabilities*ボックスにある両方のチェックボックスをクリックしてください。
+. ページ下部の青い *Capabilities* ボックスにある両方のチェックボックスをクリックしてください。
 +
 image::cloudformation-capabilities.png[align="left", width=420]
 +
-. *Create stack*をクリックします。
+. *Create stack* をクリックします。
 
 約40分でワークショップ環境が整います。
 

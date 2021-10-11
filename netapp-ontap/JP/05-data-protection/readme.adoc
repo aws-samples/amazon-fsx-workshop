@@ -146,7 +146,7 @@ cp -p multiprotocol-demo.txt ${MOUNTPOINT}/${DIRNAME}/restore
 cd
 ----
 +
-. リストアされたファイルを*_cat_*すると、その内容が表示されます。
+. リストアされたファイルを *_cat_* すると、その内容が表示されます。
 +
 [source,bash]
 ----
@@ -180,7 +180,7 @@ volume show -volume vol1 -fields security-style
 ----
 +
 
-NOTE: お使いのボリュームは、SVM から *Unix* セキュリティスタイルを継承し、Unix スタイルのパーミッションを実行します。ONTAPは、Windows ユーザと Unix ユーザの間で名前のマッピングを行い、アクセスを許可します。Windows ユーザが Unix セキュリティスタイルのボリュームにアクセスしようとすると、Unix セキュリティスタイルのボリュームは Windows ユーザ名を理解できないため、Windows ユーザ名は Unix UID にマッピングされます。Unixユーザーは、/etc/passwordファイル、NIS または LDAP によって検証されます。 管理者は、Windows ユーザーから Unix ユーザーへの明示的な手動マッピングを設定できます。例えば、Windowsユーザー「john」は、Unixユーザー「john」にマッピングされ、パーミッションを識別してアクセスを許可します。マッピングが見つからない場合は、UIDとGIDが65634の*pcuser*にマッピングされます。 Unixユーザーの*ec2-user*が所有するファイルを、Windowsの*admin*ユーザーとして上書きしようとしたため、アクセスが拒否されました。ユーザーマッピングやマルチプロトコルのベストプラクティスについては、link:https://www.netapp.com/pdf.html?item=/media/27436-tr-4887.pdf[Multiprotocol NAS in NetApp ONTAP] を参照してください。
+NOTE: お使いのボリュームは、SVM から *Unix* セキュリティスタイルを継承し、Unix スタイルのパーミッションを実行します。ONTAPは、Windows ユーザと Unix ユーザの間で名前のマッピングを行い、アクセスを許可します。Windows ユーザが Unix セキュリティスタイルのボリュームにアクセスしようとすると、Unix セキュリティスタイルのボリュームは Windows ユーザ名を理解できないため、Windows ユーザ名は Unix UID にマッピングされます。Unixユーザーは、/etc/passwordファイル、NIS または LDAP によって検証されます。 管理者は、Windows ユーザーから Unix ユーザーへの明示的な手動マッピングを設定できます。例えば、Windowsユーザー「john」は、Unixユーザー「john」にマッピングされ、パーミッションを識別してアクセスを許可します。マッピングが見つからない場合は、UIDとGIDが65634の *pcuser* にマッピングされます。 Unixユーザーの *ec2-user* が所有するファイルを、Windowsの *admin* ユーザーとして上書きしようとしたため、アクセスが拒否されました。ユーザーマッピングやマルチプロトコルのベストプラクティスについては、link:https://www.netapp.com/pdf.html?item=/media/27436-tr-4887.pdf[Multiprotocol NAS in NetApp ONTAP] を参照してください。
 
 
 == ステップ-バイ-ステップ ガイド (Amazon FSx バックアップ)
@@ -222,7 +222,7 @@ a| Default を受け入れます。
 +
 . 全ての項目を入力し、*Confirm* をクリックします。
 
-. *volume* タブをクリックして、リストアの進捗状況を確認します。 ステータスが*Created*に変わると、ボリュームをマウントしてデータにアクセスできるようになります。
+. *volume* タブをクリックして、リストアの進捗状況を確認します。 ステータスが *Created* に変わると、ボリュームをマウントしてデータにアクセスできるようになります。
 
 . リストア中にボリュームの構成パラメータを変更することができましたか？
 

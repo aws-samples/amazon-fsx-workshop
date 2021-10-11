@@ -49,7 +49,7 @@ NOTE: このセクションを完了するのに約 15 分かかります。
 * Network interfaces
 
 * ファイルシステムに関連付けられているVPCセキュリティグループはどのように見つけることができますか？
-* Hint: プリファードサブネットのネットワークインターフェースのリンクをクリックします。プリファードファイルサーバーのENIの *Details* タブから、*Security groups* を探して、*view inbound rules*リンクをクリックします。*Network interface*コンソールのブラウザタブを *_Close_* します。
+* Hint: プリファードサブネットのネットワークインターフェースのリンクをクリックします。プリファードファイルサーバーのENIの *Details* タブから、*Security groups* を探して、*view inbound rules* リンクをクリックします。*Network interface* コンソールのブラウザタブを *_Close_* します。
 
 . link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールに戻ります。
 
@@ -199,7 +199,7 @@ TIP: このGitHubワークショップの *SnapMirror* と *FlexCache* のセク
 ファイルシステムの概要セクションの上方の *FSx > File systems* をクリックします。*Create file system* をクリックし、*Amazon FSx for NetApp ONTAP* を選択して *_Next_* をクリックします。
 
 . *Quick create* または *Standard create* から選択出来ます。
-* *Quick create*オプションを使用すると、*_default_*推奨構成の新しいファイルシステムを簡単に作成することができます。*Quick create*オプションは、1つのSVMと1つのボリュームでファイルシステムを作成し、LinuxインスタンスからNFSプロトコルでデータに素早くアクセスできるようにします。
+* *Quick create* オプションを使用すると、*_default_* 推奨構成の新しいファイルシステムを簡単に作成することができます。*Quick create* オプションは、1つのSVMと1つのボリュームでファイルシステムを作成し、LinuxインスタンスからNFSプロトコルでデータに素早くアクセスできるようにします。
 * *Standard create* オプションでは、パフォーマンス、ネットワーク、セキュリティ、バックアップ、メンテナンスなど、すべての構成オプションを設定することができます. 
 
 . *Standard create* を選択し、以下の情報を入力します。:

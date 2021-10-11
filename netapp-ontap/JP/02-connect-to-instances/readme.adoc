@@ -28,7 +28,7 @@ IMPORTANT: 続ける前に全てのステップを読んでください。
 +
 TIP: 上記リンクを右クリックし、リンクを新しいタブやウィンドウで開くと、このgithubチュートリアルとAWSコンソールの間を簡単に移動することができます。
 +
-. ワークショップ環境と同じ*AWS Region*にいることを確認します。Amazon EC2コンソールの*AWS Region*を変更する必要がある場合は、ブラウザウィンドウの右上にある*Support*の隣のリージョン名をクリックし、ドロップダウンメニューから適切な*AWS Region*をクリックします。
+. ワークショップ環境と同じ *AWS Region* にいることを確認します。Amazon EC2コンソールの *AWS Region* を変更する必要がある場合は、ブラウザウィンドウの右上にある *Support* の隣のリージョン名をクリックし、ドロップダウンメニューから適切な *AWS Region* をクリックします。
 
 . *Instances (running)* をクリックします。
 
@@ -57,7 +57,7 @@ IMPORTANT: 続ける前に全てのステップを読んでください。
 //image::<connect-windows-instances>.gif[align="left", width=600]
 
 
-. Amazon EC2 console に戻り、*Instances (running) をクリックします。
+. Amazon EC2 console に戻り、*Instances (running)* をクリックします。
 
 . *FSx for ONTAP Workshop Linux Instance* インスタンスのラジオボタンをクリックします。
 
@@ -69,7 +69,7 @@ IMPORTANT: 続ける前に全てのステップを読んでください。
 
 . 新しい接続のホスト名として、上記でコピーしたDNS名を使用します。
 
-. 新しい接続先へのリモートデスクトップセッションを開始します（*ユーザー名*と*パスワード*は*AWS Secrets Manager*から取得します）。
+. 新しい接続先へのリモートデスクトップセッションを開始します（*ユーザー名* と *パスワード* は *AWS Secrets Manager* から取得します）。
 
 . link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] コンソールを開きます。
 +
@@ -79,7 +79,7 @@ TIP: 上記リンクを右クリックし、リンクを新しいタブやウィ
 
 . *Secret value* セクションまでスクロールし、*Retrieve secret value* ボタンをクリックします。
 
-. 認証情報として、*username*と*password*の*Secret key/value*のペアを使用します。
+. 認証情報として、*username* と *password* の *Secret key/value* のペアを使用します。
 
 == 次のセクション
 
