@@ -1,0 +1,150 @@
+= Phase 2 - Deploy the Amazon FSx File Gateway environment
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+Deploy the Region 2 - Amazon FSx File Gateway environment. See the *Phase 2 Diagram* below.
+It will take approximately 5 minutes for this phase of the workshop environment to be created.
+
+== Phase 2 Diagram
+
+image::fsx-gateway-workshop-architecture-phase-2.png[title="Amazon FSx File Gateway Workshop Architecture", align="center"]
+
+=== Deploy the Amazon FSx File Gateway environment using AWS CloudFormation
+
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::phase-2-deploy-fsxfgw.gif[title="Quick Step-by-step Video", align="left", width=600]
+
+. Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin. To simulate a real-world scenario of deploying the FSx File Gateway remote from the FSx for Windows File Server, select a region below that is different than the region you selected in Phase 1.
++
+TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github tutorial and the AWS Console.
++
+|===
+|Region | Launch template with a new VPC
+| *N. Virginia* (us-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-as-environment.yaml]
+
+|===
++
+. Accept the defaults on the *Prerequisite - Prepare template* page and *_click_* *Next*.
++
+. Accept the default stack name and *_click_* *Next*. *_Enter_* values for all parameters.
++
+[cols="3,10"]
+|===
+| *VPC CIDR*
+a| Select a CIDR that will be used for the VPC. This CIDR block must not overlap the CIDR block from Phase 1 - Amazon FSx for Windows File Server environment.
+
+| *Availability Zones*
+a| Select one availability zone for your VPC.
+
+| *Peer region*
+a| Select the region where Phase 1 was deployed - Amazon FSx for Windows File Server environment.
+
+| *Peer VPC Id*
+a| Copy in the VPC Id of the VPC created in Phase 1 - Amazon FSx for Windows File Server environment. From the CloudFormation stack window for Phase 1 in Region 1, *_select_* the Resources tab and scroll down until you see the Logical ID *Vpc*. Copy to clipboard the corresponding Physical ID (e.g. vpc-083db1b5659eab9b4) and paste it here in the CloudFormation stack wizard *Peer VPC Id* parameter input text field.
+
+| *Peer VPC CIDR*
+a| Select the VPC CIDR of the VPC created in Phase 1 - Amazon FSx for Windows File Server environment. From the CloudFormation stack window for Phase 1 in Region 1, *_select_* the Parameters tab. Copy to clipboard the corresponding Value of the key VpcCidr and paste it here in the Cloudformaton stack wizard *Peer VPC CIDR* parameter input test field.
+
+| *DNS Ip Addresses*
+a| Copy in the two DNS Ip addresses of the AWS-managed Active Directory created in Phase 1 - Amazon FSx for Windows File Server environment. This can be found from the link:https://console.aws.amazon.com/directoryservicev2/[AWS Directory Service] console for the directory created in Phase 1 - Amazon FSx for Windows File Server environment deployed in Region 1. Copy to clipboard the *DNS address* values as a single string (e.g. 10.0.0.21, 10.0.1.9) and paste it here in the CloudFormation stack wizard *DNS Ip Addresses* parameter input text field.
+
+| *Instance Type*
+a| Accept the default.
+
+|===
++
+. After you have entered or accepted values for all parameters, *_select_* *Next*.
+. *_Accept_* the default values of the *Configure stack options* and *Advanced options* sections and *_select_* *Next*.
+. *_Review_* the CloudFormation stack settings.
+. *_Select_* *Create stack*.
+
+The environment will be available in approximately 5 minutes.
+
+Do not move to the next section until CloudFormation stack has a status of CREATE_COMPLETE.
+
+=== Update Routing Tables with VPC Peering Connection routes in Region 1
+
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::phase-2-create-route.gif[title="Quick Step-by-step Video", align="left", width=600]
+
+IMPORTANT: This section must be completed in Region 1 where you deployed the Amazon FSx for Windows File Server environment.
+
+Update the Private Routing Table and add a route to the VPC CIDR in Region 2 using the VPC Peering Connection
+
+. From the link:https://console.aws.amazon.com/vpc/[Amazon VPC] console, select the AWS Region where you created the Region 1 - Amazon FSx for Windows File Server environment.
++
+. *_Select_* *Route Tables* in the Virtual Private Cloud section in the left window frame.
++
+. *_Select_* the *Private Route Table | fsx-gateway-workshop-fsxw-environment* route table.
++
+. *_Select_* the *Routes* tab.
++
+. *_Select_* *Edit routes*.
++
+. *_Select_* *Add route*.
++
+. *_Enter_* the VPC CIDR of the VPC created in Region 2 - Amazon FSx File Gateway environment. This can be found from the Output tab from the CloudFormation stack you deployed in Region 2. (e.g. 192.168.0.0/16).
++
+. *_Select_* *Peering Connection* from the *Target* dropdown menu, then select the VPC peering connection created from the Phase 2 - Deploy the Amazon FSx File Gateway envionment CloudFormation stack. This can be easily found from the Output tab of the CloudFormation stack you deployed in Region 2.
++
+. *_Select_* *Save routes* and *Close*.
+
+=== Deploy an Amazon Windows EC2 instance in Region 2 using AWS CloudFormation that automatically joins the AWS-managed Active Directory in Region 2
+
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::phase-2-deploy-instance.gif[title="Quick Step-by-step Video", align="left", width=600]
+
+. Click on the *Deploy to AWS* button and follow the CloudFormation prompts to begin. This should be the same region you selected above for Region 2.
++
+TIP: *_Context-click (right-click)_* the *Deploy to AWS* button and open the link in a new tab or window to make it easy to navigate between this github tutorial and the AWS Console.
++
+|===
+|Region | Launch template with a new VPC
+| *N. Virginia* (us-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-as-windows-instance.yaml]
+|===
++
+. Accept the defaults on the *Prerequisite - Prepare template* page and *_click_* *Next*.
++
+. Accept the default stack name and *_click_* *Next*. *_Enter_* values for all parameters.
++
+[cols="3,10"]
+|===
+| *Instance Type*
+a| Accept the default.
+
+| *Subnet*
+a| *_Select_* the *Public Subnet - fsx-gateway-workshop-fsxgw-environment* subnet.
+
+| *Security Group*
+a| Select the *fsx-gateway-workshop-fsxgw-environment-WindowsSecurityGroup-<GUID>* security group.
+
+| *Password*
+a| Copy in the Secret Value of the Secret Key 'Password' from Secrets Manager created in Phase 1 - Amazon FSx for Windows File Server environment. This can be found from the link:https://console.aws.amazon.com/secretsmanager/[Amazon Secrets Manager] created in Region 1.
+
+
+|===
++
+. After you have entered values for all parameters, *_select_* *Next*.
+. *_Accept_* the default values of the *Configure stack options* and *Advanced options* sections and *_select_* *Next*.
+. *_Review_* the CloudFormation stack settings.
+. *_Select_* *Create stack*.
+
+The environment will be available in approximately 5 minutes.
+
+Do not move to the next section until the CloudFormation stack has a status of CREATE_COMPLETE.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::create-fsx-gateway.png[link=../04-create-fsx-gateway/, align="right",width=420]

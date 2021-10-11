@@ -1,0 +1,44 @@
+= Tear down workshop
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+*Congratulation!* You have completed the Amazon FSx File Gateway Workshop.
+
+=== Delete the *Amazon FSx File Gateway* service components (Phase 3 - Region 1)
+
+IMPORTANT: Read through all steps below and watch the quick video before *_clicking_* the *Deploy to AWS* button.
+
+image::tear-down.gif[title="Quick Step-by-step Video", align="left", width=600]
+
+. Open the link:https://console.aws.amazon.com/storagegateway/[AWS Storage Gateway] console.
+. *_Change_* the *Region* to Region 1 where you created the Amazon FSx File Gateway service components (Phase 3 - Region 1).
+. *_Click_* the *check box* next to the *FSx File Gateway Workshop* gateway you created earlier.
+. *_Click_* *Actions >> Delete Gateway*.
+. *_Confirm_* this is the Storage Gateway you want to delete by *_entering_* *delete* in the text input field.
+
+=== Delete the *Amazon FSx File Gateway environment* (Phase 2 - Region 2)
+
+. Open the link:https://console.aws.amazon.com/cloudformation/[Amazon CloudFormation] console.
+. *_Change_* the *Region* to Region 2 where you created the Amazon FSx File Gateway environment (Phase 2 - Region 2).
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. *_Select_* the *radio button* next to the *fsx-gateway-workshop-windows-instance* stack.
+. *_Select_* the *Delete* button then *Delete stack*.
+. *_Select_* the *radio button* next to the *fsx-gateway-workshop-fsxgw-environment* stack.
+. *_Select_* the *Delete* button then *Delete stack*.
+
+=== Delete the *Amazon FSx for Windows File Server environment* (Phase 1 - Region 1)
+
+. Open the link:https://console.aws.amazon.com/cloudformation/[Amazon CloudFormation] console.
+. *_Change_* the *Region* to Region 1 where the Amazon FSx for Windows File Server environment was created (Phase 1 - Region 1).
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. *_Select_* the *radio button* next to the stack.
+. *_Select_* the *Delete* button then *Delete stack*.
+
+IMPORTANT: It may take approximately 15 minutes to delete all AWS resources created by the CloudFormation templates. Check the status periodically to verify all resources have been delete.
+
+

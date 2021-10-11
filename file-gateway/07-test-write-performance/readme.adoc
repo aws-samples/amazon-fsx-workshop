@@ -97,7 +97,7 @@ fsutil file createnew Z:\${env:computername}-fsxw.dat 1000000000
 . Run the DiskSpeed script below in the PowerShell session to test write performance of the remote FSx for Windows File Server mapped as the **Z:** drive.
 +
 ```sh
-C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Z:\${env:computername}-fsxw.dat
+C:\Tools\DiskSpd\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Z:\${env:computername}-fsxw.dat
 ```
 +
 While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> More details >> Performance (tab) >> Ethernet). The DiskSpd script will complete in 120 seconds. After the script has completed, the output will be displayed in the PowerShell window.
@@ -114,15 +114,15 @@ While the script is running, open *Task Manager* and monitor network performance
 |===
 h| EC2 Instance (us-west-1) | FSx for Windows File Server (us-east-1) | FSx File Gateway (us-west-1)
 s| DiskSpd Write (metric) h| Write h| Write
-| Write IO throughput (MiB/s)
+| Read IO throughput (MiB/s)
 |
 |
 
-| Write IO I/O per s
+| Read IO I/O per s
 |
 |
 
-| Write IO AvgLat (ms)
+| Read IO AvgLat (ms)
 |
 |
 
@@ -190,7 +190,7 @@ fsutil file createnew Y:\${env:computername}-fsxgw.dat 1000000000
 . Run the DiskSpeed script below in the PowerShell session to test write performance of the remote FSx File Gateway mapped as the *Y:* drive.
 +
 ```sh
-C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Y:\${env:computername}-fsxgw.dat
+C:\Tools\DiskSpd\amd64\DiskSpd.exe -d120 -w100 -r -t1 -o32 -b1M -Sr -L Y:\${env:computername}-fsxgw.dat
 ```
 +
 While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> More details >> Performance (tab) >> Ethernet). The DiskSpd script will complete in 120 seconds. After the script has completed, the output will be displayed in the PowerShell window.

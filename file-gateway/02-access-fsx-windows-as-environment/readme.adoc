@@ -1,0 +1,36 @@
+= Phase 1 - Access the Amazon FSx for Windows File Server environment
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+Access the Region 1 - Amazon FSx for Windows File Server environment. See the *Phase 1 Diagram* below.
+
+== Phase 1 Diagram
+
+image::fsx-gateway-workshop-architecture-phase-1.png[title="Amazon FSx for Windows File Server Workshop Architecture", align="center"]
+
+=== Access the pre-deployed Region 1 Amazon FSx for Windows File Server environment
+
+IMPORTANT: Within the AWS Management Console, make sure you select the AWS region where the Region 1 resources were deployed. This information will be provided to you by the workshop administrator.
+
+Review the AWS resources in the Region 1 environment.
+
+. Select the Stack name link of the mod-<GUID> stack from the link:https://console.aws.amazon.com/cloudformation/#stacks[AWS CloudFormation] console. Select the Outputs tab.
+
+. Select the VPC ID link of the VPC|mod-<GUID> VPC from the link:https://console.aws.amazon.com/vpc/#vpcs[Amazon VPC] console. This VPC will have a IPv4 CIDR of 10.0.0.0/16.
+
+. Select the Instance ID link of the pre-deployed FSx Workshop Windows Instance from the link:https://us-west-2.console.aws.amazon.com/ec2/v2/[Amazon EC2] console.
+
+. Select the Directory ID of the pre-deployed Microsoft AD from the link:https://console.aws.amazon.com/directoryservicev2/[Amazon Directory Service] console.
+
+. Select the Secret name link of the Secret from the link:https://console.aws.amazon.com/secretsmanager/#listSecrets[AWS Secrets Manager] console. Scroll and select *Retrieve secret value* button.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::deploy-fsx-gateway-environment.png[link=../03-deploy-fsx-gateway-as-environment/, align="right",width=420]

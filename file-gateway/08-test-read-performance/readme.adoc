@@ -79,7 +79,7 @@ IMPORTANT: This section assumes the remote FSx for Windows File Server is mapped
 . Run the DiskSpeed script below to test read performance of the remote FSx for Windows File Server mapped as the **Z:** drive.
 +
 ```sh
-C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b1M -Sr -L Z:\${env:computername}-fsxw.dat
+C:\Tools\DiskSpd\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b1M -Sr -L Z:\${env:computername}-fsxw.dat
 ```
 +
 While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> More details >> Performance (tab) >> Ethernet). The DiskSpd script will complete in 120 seconds. After the script has completed, the output will be displayed in the PowerShell window.
@@ -186,7 +186,7 @@ IMPORTANT: This section assumes the local FSx File Gateway is mapped as the *Y:/
 . Run the DiskSpeed script below to test read performance of the remote FSx File Gateway mapped as the **Y:** drive.
 +
 ```sh
-C:\Tools\DiskSpd-2.0.21a\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b1M -Sr -L Y:\${env:computername}-fsxw.dat
+C:\Tools\DiskSpd\amd64\DiskSpd.exe -d120 -w0 -r -t1 -o32 -b1M -Sr -L Y:\${env:computername}-fsxw.dat
 ```
 +
 While the script is running, open *Task Manager* and monitor network performance (e.g. Start >> Task Manager >> More details >> Performance (tab) >> Ethernet). The DiskSpd script will complete in 120 seconds. After the script has completed, the output will be displayed in the PowerShell window.
