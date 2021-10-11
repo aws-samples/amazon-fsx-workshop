@@ -1,0 +1,808 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates the Amazon FSx for NetApp ONTAP workshop environment.
+
+Metadata:
+  Authors:
+    Description: Shrinath Kurdekar (kurdekar@amazon.com)
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Amazon FSx for NetApp ONTAP Workshop Environment
+      Parameters:
+        - VpcCidr
+        - AvailabilityZones
+        - InstanceType
+        - KeyPair
+        - DomainName
+        - EnvType
+        - DeploymentType
+        - ThroughputCapacity
+        - StorageCapacity
+        - StorageType
+        - FsxAdminPassword
+        - LatestWindowsAmiId
+        - LatestLinuxAmiId
+    ParameterLabels:
+      AvailabilityZones:
+        default: Availability Zones
+      InstanceType:
+        default: Instance Type
+      KeyPair:
+        default: Key Pair
+      VpcCidr:
+        default: VPC CIDR
+      DeploymentType:
+        default: File System Deployment Type
+      ThroughputCapacity:
+        default: File System Throughput Capacity
+      StorageCapacity:
+        default: File System Storage Capacity
+      StorageType:
+        default: File System Storage Type
+      DomainName:
+        default: Microsoft AD Domain Name
+      LatestWindowsAmiId:
+        default: Latest Windows AMI ID
+      LatestLinuxAmiId:
+        default: Latest Linux AMI ID
+      EnvType:
+        default: Environment type.
+      FsxAdminPassword:
+        default: fsxadmin user password.
+
+
+
+Parameters:
+  AvailabilityZones:
+    Description: Select two (2) Availability Zones (AZ). One preferred subnet and one standby subnet will be created in each AZ.
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  InstanceType:
+    Description: Select the instance type. Choose instances(c5n.9xlarge/r5n.9xlarge or higher) with non variable network throughput if running performance benchmarks.
+    AllowedValues:
+    - m5.large
+    - c5n.xlarge
+    - c5n.2xlarge
+    - c5n.9xlarge
+    - c5n.18xlarge
+    - r5n.8xlarge
+    - r5n.16xlarge
+    - r5n.24xlarge
+    Default: m5.large
+    Type: String
+  KeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+  VpcCidr:
+    AllowedValues: 
+    - 10.0.0.0/16
+    - 173.31.0.0/16
+    - 192.168.0.0/16
+    Default: 10.0.0.0/16
+    Description: Select the private IPv4 CIDR for the VPC.
+    Type: String
+  DeploymentType:
+    AllowedValues:
+    - MULTI_AZ_1
+    Default: MULTI_AZ_1
+    Type: String
+  ThroughputCapacity:
+    Description: Select Storage Throughput from 512, 1024 or 2048 MB/s.
+    AllowedValues:
+    - 512
+    - 1024
+    - 2048
+    Default: 512
+    Type: Number
+  StorageCapacity:
+    Description: Specify a Storage Capacity between 1024 to 196608.
+    Default: 1024
+    Type: Number
+  StorageType:
+    Description: Leave default since only SSD supported currently.
+    AllowedValues:
+    - SSD
+    Default: SSD
+    Type: String
+  DomainName:
+    Description: Domain Name for Microsoft AD
+    AllowedValues:
+      - fsxontap.com
+    Default: fsxontap.com
+    Type: String
+  LatestWindowsAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+  LatestLinuxAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  EnvType:
+    Description: Environment type. Choose NFS to create a Linux only instance, CIFS to create Windows only instance or MIXED to create both Linux and Windows instances.
+    Default: MIXED
+    Type: String
+    AllowedValues: [NFS,CIFS,MIXED]
+    ConstraintDescription: must specify NFS, CIFS, or MIXED.
+  FsxAdminPassword:
+    NoEcho: true
+    Description: The password for fsxadmin user.Passwords must be between 8 and 50 characters in length, must contain at least one letter and one number, and must not contain the word 'admin'.
+    Type: String
+    MinLength: 8
+    AllowedPattern: "^[a-zA-Z0-9]*$"
+
+
+Conditions:
+  CreateNFSResources: !Equals [!Ref EnvType, NFS]
+  CreateCIFSResources: !Equals [!Ref EnvType, CIFS]
+  CreateAllResources: !Equals [!Ref EnvType, MIXED]
+  CreateResources: !Or
+    - !Condition CreateNFSResources
+    - !Condition CreateCIFSResources
+    - !Condition CreateAllResources
+
+Resources:
+  AttachInternetGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref Vpc
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'VPC IGW | ', !Ref 'AWS::StackName' ] ]     
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Public Route Table | ', !Ref 'AWS::StackName' ] ]
+        - Key: Network
+          Value: Public
+      VpcId: !Ref Vpc
+  PublicRouteTableAssociation0:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet0
+      RouteTableId: !Ref PublicRouteTable
+  PublicRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+  PublicSubnet0:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 0, !Ref AvailabilityZones ]
+      CidrBlock: !Select [ 0, !Cidr [ !GetAtt Vpc.CidrBlock, 2, 8 ] ]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Public Subnet 0 | ', !Ref 'AWS::StackName' ] ]
+        - Key: SubnetType
+          Value: Public
+      VpcId: !Ref Vpc
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 1, !Ref AvailabilityZones ]
+      CidrBlock: !Select [ 1, !Cidr [ !GetAtt Vpc.CidrBlock, 2, 8 ] ]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Public Subnet 1 | ', !Ref 'AWS::StackName' ] ]
+        - Key: SubnetType
+          Value: Public
+      VpcId: !Ref Vpc
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'VPC | ', !Ref 'AWS::StackName' ] ]
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Amazon FSx for NetApp ONTAP Workshop Environment
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3389
+          ToPort: 3389
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: "Amazon FSx for  NetApp ONTAP Workshop Environment security group" 
+      VpcId:
+        !Ref Vpc
+  SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      GroupId: !Ref SecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref SecurityGroup
+
+  MSDirectory: 
+    DependsOn: Password
+    Condition: CreateResources
+    Type: AWS::DirectoryService::MicrosoftAD
+    Properties: 
+      Edition: Standard
+      Name: !Ref DomainName
+      Password: !Join ['', ['{{resolve:secretsmanager:', !Ref Password, ':SecretString:password}}' ]]
+      VpcSettings: 
+        SubnetIds: 
+          - !Ref PublicSubnet0
+          - !Ref PublicSubnet1
+        VpcId: 
+          !Ref Vpc
+  Password:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      GenerateSecretString:
+        SecretStringTemplate: !Sub '{"username": "admin@${DomainName}"}'
+        GenerateStringKey: password
+        PasswordLength: 32
+        ExcludeCharacters: '"@/\!'
+  FSxPassword:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      #Name: "/fsx/ontap/${AWS::StackName}/fsxadmin"
+      SecretString: !Sub '{"username": "fsxadmin", "password" : "${FsxAdminPassword}"}'
+
+  DhcpOptions:
+    Condition: CreateResources
+    Type: AWS::EC2::DHCPOptions
+    Properties: 
+      DomainName: !Ref DomainName
+      DomainNameServers: !GetAtt MSDirectory.DnsIpAddresses
+  DhcpOptionsAssociation:
+    Condition: CreateResources
+    Type: AWS::EC2::VPCDHCPOptionsAssociation
+    Properties: 
+      DhcpOptionsId: !Ref DhcpOptions
+      VpcId: !Ref Vpc
+
+  Instance0:
+    Condition: CreateResources
+    DependsOn: MSDirectory
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !Ref LatestWindowsAmiId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPair
+      Monitoring: true
+      SecurityGroupIds: 
+        - !Ref SecurityGroup
+      SubnetId: !Ref PublicSubnet0
+      Tags:
+        - Key: Name
+          Value: FSx for ONTAP Workshop Windows Instance
+      UserData:
+        Fn::Base64:
+          !Sub |
+            <powershell>
+
+            # disable ie security (windows)
+            function Disable-ieESC {
+                $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+                $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+                Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
+                Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
+                Stop-Process -Name Explorer
+                Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -ForegroundColor Green
+            }
+            Disable-ieESC
+
+            # install DiskSpd (windows)
+            $path = "C:\Tools\DiskSpd-2.0.21a"
+            $url = "https://github.com/microsoft/diskspd/releases/download/v2.0.21a/DiskSpd.zip"
+            $destination = "C:\Tools\DiskSpd-2.0.21a.zip"
+            $download = New-Object -Typename System.Net.WebClient
+            New-Item -Type Directory -Path $path
+            $download.DownloadFile($url,$destination)
+            $extract = New-Object -ComObject Shell.Application
+            $files = $extract.Namespace($destination).Items()
+            $extract.NameSpace($path).CopyHere($files)
+
+            </powershell>
+  Instance1:
+    Condition: CreateResources
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !Ref LatestLinuxAmiId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPair
+      Monitoring: true
+      SecurityGroupIds: 
+        - !Ref SecurityGroup
+      SubnetId: !Ref PublicSubnet0
+      Tags:
+        - Key: Name
+          Value: FSx for ONTAP Workshop Linux Instance
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #cloud-config
+            repo_update: true
+            repo_upgrade: all
+
+            packages:
+            - cifs-utils
+            - jq
+
+            runcmd:
+            - pip3 install boto3
+            - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            - unzip awscliv2.zip
+            - sudo ./aws/install
+            - sudo export PATH=/usr/local/bin:$PATH
+
+            - amazon-linux-extras install -y epel
+            - yum groupinstall -y "Development Tools"
+            - yum install -y fio fpart parallel tree nload git libaio-devel openmpi openmpi-devel
+
+            - cd /home/ec2-user
+            - git clone https://github.com/bengland2/smallfile.git
+
+  FSxDomainJoinInstallDFS:
+    Condition: CreateResources
+    DependsOn: MSDirectory
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        schemaVersion: "2.2"
+        description: Join instances to an AWS Directory Service domain
+        parameters:
+          directoryId:
+            type: String
+            description: (Required) ID of the AWS Managed Microsoft AD (i.e. d-0123456789)
+          directoryName:
+            type: String
+            description: (Required) Directory name (i.e. fsxontap.com)
+          dnsIpAddresses:
+            type: StringList
+            default: []
+            description: "(Optional) AWS Managed Microsoft AD DNS IP addresses (i.e. 172.31.0.11, 172.31.0.12)
+              Required when DHCP is not configured. Learn more at http://docs.aws.amazon.com/directoryservice/latest/simple-ad/join_get_dns_addresses.html"
+        mainSteps:
+        - action: aws:domainJoin
+          name: joinDomain
+          inputs:
+            directoryId: "{{ directoryId }}"
+            directoryName: "{{ directoryName }}"
+            dnsIpAddresses: "{{ dnsIpAddresses }}"
+        - action: aws:runPowerShellScript
+          name: installDfsMgmt
+          inputs:
+            runCommand:
+              - Install-WindowsFeature -Name FS-FileServer, FS-DFS-namespace -IncludeManagementTools;
+              - Install-WindowsFeature -Name RSAT-DFS-Mgmt-Con
+              - New-Item -Type Directory -Path "C:\DFS"
+              - Install-WindowsFeature RSAT-ADDS
+              - Install-WindowsFeature -Name RSAT-ADDS-Tools,RSAT-DNS-Server
+  Association:
+    Condition: CreateResources
+    DependsOn: MSDirectory
+    Type: AWS::SSM::Association
+    Properties:
+      Name: !Ref FSxDomainJoinInstallDFS
+      Parameters:
+        directoryId: [!Ref MSDirectory]
+        directoryName: [!Ref DomainName]
+        dnsIpAddresses:
+        - !Select [ 0, !GetAtt MSDirectory.DnsIpAddresses ]
+        - !Select [ 1, !GetAtt MSDirectory.DnsIpAddresses ]        
+      Targets:
+      - Key: InstanceIds
+        Values: [ !Ref Instance0 ]
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: '/'
+      Roles:
+      - !Ref InstanceRole
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - arn:aws:iam::aws:policy/AmazonFSxFullAccess
+      - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+      - arn:aws:iam::aws:policy/IAMFullAccess
+      Path: "/"
+      Policies:
+      - PolicyName: secretsmanager
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - secretsmanager:GetSecretValue
+            Resource: arn:aws:secretsmanager:*:*:secret:*
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AWSLambdaExecute'
+        - 'arn:aws:iam::aws:policy/AWSDirectoryServiceReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess'
+      Path: "/"
+      Policies:
+      - PolicyName: root
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - ec2:*
+            Resource: "*"
+          - Effect: Allow
+            Action:
+            - iam:CreateServiceLinkedRole
+            Resource: "*"
+          - Effect: Allow
+            Action:
+            - fsx:*
+            Resource: "*"
+
+  LambdaCallStateMachine:
+    DependsOn: OntapStateMachine
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: index.lambda_handler
+      FunctionName: !Sub OntapStateMachine-${AWS::StackName}
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          from botocore.exceptions import ClientError
+          import boto3
+          import cfnresponse
+          import os
+          import json
+
+
+          def lambda_handler(event, context):
+              print('## ENVIRONMENT VARIABLES')
+              print(os.environ)
+              print('## EVENT')
+              print(event)
+              
+              statemachineARN = event['ResourceProperties']['statemachineARN']
+              print("ARN is:", statemachineARN )
+              sfn_client = boto3.client('stepfunctions')
+              try:
+                  response = sfn_client.start_execution(stateMachineArn=statemachineARN,input=(json.dumps(event)))
+                  sfn_arn = response.get('executionArn')
+                  print(sfn_arn)
+              except Exception as e:
+                  print("Could not run the Step Function:", e)
+                  responseData = {}
+                  responseData['Error'] = "CouldNotCallStateMachine"
+                  response=cfnresponse.send(event, context, "FAILED", responseData)
+                  return(response)
+              return(sfn_arn)
+      Runtime: "python3.8"
+      Timeout: 600
+
+  ProvisonOntap:
+    DependsOn: LambdaCallStateMachine
+    Type: Custom::ProvisonOntap
+    Properties:
+      ServiceToken: !GetAtt LambdaCallStateMachine.Arn
+      Region: !Ref 'AWS::Region'
+      PreferredSubnet: !Ref PublicSubnet0
+      StandbySubnet: !Ref PublicSubnet1
+      DeploymentType: !Ref DeploymentType
+      ThroughputCapacity: !Ref ThroughputCapacity
+      StorageCapacity: !Ref StorageCapacity
+      StorageType: !Ref StorageType
+      statemachineARN: !Ref OntapStateMachine
+      SecurityGroupIds: 
+        - !Ref SecurityGroup
+      OntapRouteTable: 
+        - !Ref PublicRouteTable
+      FsxAdminPassword: !Ref FsxAdminPassword
+
+  LambdaCreateFS:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: lambda_function.lambda_handler
+      FunctionName: !Sub CreateFS-${AWS::StackName}
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: 'fsx/ontap/createFSxO.zip'
+      Runtime: "python3.8"
+      Timeout: 600
+
+  LambdaDeleteFS:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: lambda_function.lambda_handler
+      FunctionName: !Sub DeleteFS-${AWS::StackName}
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: 'fsx/ontap/deleteFSxO.zip'
+      Runtime: "python3.8"
+      Timeout: 600
+
+  LambdaValidateFS:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: lambda_function.lambda_handler
+      FunctionName: !Sub ValidateFS-${AWS::StackName}
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !Sub solution-references-${AWS::Region}
+        S3Key: 'fsx/ontap/validateFSxO.zip'
+      Runtime: "python3.8"
+      Timeout: 600
+
+  LambdaSendResult:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: index.lambda_handler
+      FunctionName: !Sub SendResult-${AWS::StackName}
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          from botocore.exceptions import ClientError
+          import boto3
+          import os
+          import json
+          import cfnresponse
+
+
+          def lambda_handler(event, context):
+              print('## ENVIRONMENT VARIABLES')
+              print(os.environ)
+              print('## EVENT')
+              print(event)
+              
+              responseData = {}
+              if 'filesystemid' in event.keys():
+                  print("Found file system id:",event['filesystemid'])
+                  if 'FAILED' in event['fsstatus']:
+                      print("File system status is FAILED")
+                      responseData['filesystemid'] = event['filesystemid']
+                      responseData['fsstatus'] = event['fsstatus']
+                      status="SUCCESS"
+                      PhysicalResourceId=event['filesystemid']
+                  elif 'UNKNOWN' in event['fsstatus']:
+                      print("File system status is UNKNOWN")
+                      responseData['filesystemid'] = event['filesystemid']
+                      responseData['fsstatus'] = event['fsstatus']
+                      status="FAILED"
+                      PhysicalResourceId=event['filesystemid']
+                  else:
+                      responseData['filesystemid'] = event['filesystemid']
+                      responseData['fsstatus'] = event['fsstatus']
+                      PhysicalResourceId=event['filesystemid']
+                      status="SUCCESS"
+              elif 'error-info' in event.keys():
+                  responseData['filesystemid'] = event['error-info']['Error']
+                  PhysicalResourceId = None
+                  status="FAILED"
+              elif 'PhysicalResourceId' in event.keys():
+                  print("Found file system id as Physical resource id:",event['PhysicalResourceId'])
+                  if 'UNKNOWN' in event['fsstatus']:
+                      print("File system status is UNKNOWN")
+                      responseData['filesystemid'] = ""
+                      PhysicalResourceId=event['PhysicalResourceId']
+                      status="FAILED"
+                  elif 'DELETING' in event['fsstatus']:
+                      print("File system status is DELETING")
+                      responseData['filesystemid'] = event['PhysicalResourceId']
+                      PhysicalResourceId=event['PhysicalResourceId']
+                      status="SUCCESS"
+              else:
+                  responseData['message'] = "Error Resolved"
+                  PhysicalResourceId="ErrorResolved"
+                  status="SUCCESS"
+              response=cfnresponse.send(event, context, status, responseData, PhysicalResourceId)
+              print(response)
+      Runtime: "python3.8"
+      Timeout: 600
+
+  StateMachineRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: !Sub states.${AWS::Region}.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: StatesExecutionPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: "*"
+
+  OntapStateMachine:
+    DependsOn: [LambdaSendResult, LambdaCreateFS, LambdaDeleteFS, LambdaValidateFS, Password]
+    Type: 'AWS::StepFunctions::StateMachine'
+    Properties:
+      DefinitionString: !Sub
+        |-
+          {
+            "Comment": "FSx for NetApp ONTAP file system creation workflow",
+            "StartAt": "Choice Action",
+            "States": {
+              "Choice Action": {
+                "Type": "Choice",
+                  "Choices": [
+                    {
+                      "Variable": "$.RequestType",
+                      "StringEquals": "Delete",
+                      "Next": "DeleteFS"
+                    },
+                    {
+                      "Variable": "$.RequestType",
+                      "StringEquals": "Create",
+                      "Next": "CreateFS"
+                    },
+                    {
+                      "Variable": "$.RequestType",
+                      "StringEquals": "Update",
+                      "Next": "SendResultSuccess"
+                    }
+                  ]
+              },
+              "CreateFS": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:CreateFS-${AWS::StackName}",
+                "Next": "WaitforFSCreate",
+                "ResultPath": "$.filesystemid",
+                "Catch": [
+                  {
+                    "ErrorEquals": [
+                      "States.Runtime"
+                    ],
+                    "ResultPath": "$.error-info",
+                    "Next": "SendResultFails"
+                  }
+                ]
+              },
+              "DeleteFS": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:DeleteFS-${AWS::StackName}",
+                "Next": "ValidateFs",
+                "Parameters": {
+                      "PhysicalResourceId.$": "$.PhysicalResourceId"
+                    },
+                "ResultPath": "$.fsstatus",
+                "Catch": [
+                  {
+                    "ErrorEquals": [
+                      "States.ALL"
+                    ],
+                    "ResultPath": "$.error-info",
+                    "Next": "SendResultFails"
+                  }
+                ]
+              },
+              "GetFSLifecycle": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:ValidateFS-${AWS::StackName}",
+                "Next": "ValidateFs", 
+                "ResultPath": "$.fsstatus",
+                "Catch": [
+                  {
+                    "ErrorEquals": [
+                      "States.ALL"
+                    ],
+                    "ResultPath": "$.error-info",
+                    "Next": "ValidateFs"
+                  }
+                ]
+              },
+              "WaitforFSCreate": {
+                "Type": "Wait",
+                "Seconds": 300,
+                "Next": "GetFSLifecycle"
+                },
+              "ValidateFs": {
+                "Type": "Choice",
+                  "Choices": [
+                    {
+                      "Variable": "$.fsstatus",
+                      "StringEquals": "AVAILABLE",
+                      "Next": "SendResultSuccess"
+                    },
+                    {
+                      "Variable": "$.fsstatus",
+                      "StringEquals": "FAILED",
+                      "Next": "SendResultFails"
+                    },
+                    {
+                      "Variable": "$.fsstatus",
+                      "StringEquals": "DELETING",
+                      "Next": "SendResultSuccess"
+                    },
+                    {
+                      "Variable": "$.fsstatus",
+                      "StringEquals": "UNKNOWN",
+                      "Next": "SendResultFails"
+                    }
+                  ],
+                  "Default": "WaitforFSCreate"
+                },
+                "SendResultSuccess": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:SendResult-${AWS::StackName}",
+                  "End": true,
+                  "ResultPath": "$.SendResult"
+                },
+                "SendResultFails": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:SendResult-${AWS::StackName}",
+                  "End": true,
+                  "ResultPath": "$.SendResult"
+                }
+            }
+          }
+      RoleArn: !GetAtt StateMachineRole.Arn
+  
+
+Outputs:
+  DirectoryID:
+    Condition: CreateResources
+    Description: ID of the Microsoft Active Directory
+    Value: !Ref MSDirectory
+  FileSystemID:
+    Description: Amazon FSx for NetApp ONTAP File System ID
+    Value: !GetAtt ProvisonOntap.filesystemid
+  LambdaCallStateMachine:
+    Value: !GetAtt  OntapStateMachine.Arn
+    Description: Step functions statemachine

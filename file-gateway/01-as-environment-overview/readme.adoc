@@ -1,0 +1,43 @@
+= Amazon FSx File Gateway AWS Sponsored Workshop Overview
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+There are three phases or steps to create the Amazon FSx File Gateway Workshop environment. Below is the workshop diagram that shows the entire environment once all three setup phases have been completed.
+
+In the *Workshop Diagram*, Region 1 represents the AWS environment where the Amazon FSx for Windows File Server is running. The AWS environment in Region 1 is pre-deployed, except for the FSx File Gateway resource, and instructions to access this environment will be given later in this section. Region 2 is a different AWS Region than Region 1 and simulates a remote environment where the FSx File Gateway is running. This region (Region 2) represents an on-premises site, remote office, branch office, or some facility remote from the AWS region running the Amazon FSx for Windows File Server. For AWS Sponsored workshops, the AWS environment in Region 2 will always be in the N. Virginia (us-east-1) region.
+
+- Phase 1 - Access the Region 1 pre-deployed environment hosting the Amazon FSx for Windows File Server
+- Phase 2 - Deploy the Region 2 environment hosting the remote Amazon FSx File Gateway EC2 instance using AWS CloudFormation in the N. Virginia (us-east-1) region
+- Phase 3 - Create the Amazon FSx File Gateway service components using the AWS Management Console in Region 1
+
+It will take approximately 2 hours to complete the entire workshop, including 10 minutes to deploy and create Phase 2 and Phase 3 environments and resources respectively.
+
+== Workshop Diagram
+
+image::fsx-gateway-workshop-architecture-complete.png[align="center"]
+
+== Step-by-step Guide
+
+IMPORTANT: Follow the instructions given by the workshop administrators on how to log in to the AWS account provided for this workshop. Do NOT use your personal or business account to run this workshop, as the required pre-built resources will not be available.
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::access-as-workshop.gif[align="left", width=600]
+
+. Go to the link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run] or access the direct link provided by the workshop administrators.
+* The AWS Event Engine was created to help AWS field teams run Workshops, GameDays, Bootcamps, Immersion Days, and other events that require hands-on access to AWS accounts.
+. *_Read_* the *Terms & Conditions*.
+. *_Enter_* the team hash you were given from the workshop administrators and *_click_* *[Accept terms and login]*.
+. From the *Team Dashboard* page, *_click_* *[AWS Console]*.
+. From the *AWS Console Login* page, *_click_* the *[Open AWS Console]* link in the *Login Link* section to open the AWS Console using the AWS sponsored account.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::access-fsx-windows-environment.png[link=../02-access-fsx-windows-as-environment/, align="right",width=420]

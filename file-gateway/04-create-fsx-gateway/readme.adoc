@@ -21,7 +21,7 @@ IMPORTANT: Read through all steps below and watch the quick video before *_click
 
 image::phase-3-create-gateway.gif[title="Quick Step-by-step Video", align="left", width=600]
 
-. From the link:https://console.aws.amazon.com/storagegateway/[AWS Storage Gateway] console, *_select_* the AWS Region where you created the Amazon FSx for Windows File Server environment (Phase 1 and Region 1).
+. From the link:https://console.aws.amazon.com/storagegateway/[AWS Storage Gateway] console, *_select_* the AWS Region where the Amazon FSx for Windows File Server environment (Phase 1 and Region 1) was created.
 . *_Select_* *Create gateway*.
 . *_Select_* *Amazon FSx File Gateway*, then *_select_* *Next*.
 . *_Select_* *Amazon EC2* as the *host platform*, then *_select_* *Next*.
@@ -34,7 +34,7 @@ image::phase-3-create-gateway.gif[title="Quick Step-by-step Video", align="left"
 It may take 30+ seconds for the service to prepare the local disks on the FSx File Gateway instance.
 +
 . *_Select_* *Save and continue* to allocate the 150 GiB volume as the Cache of the FSx File Gateway instance.
-. *_Accept_* the default *Gateway health log group* option to *Create a new log group* and *_select_* *Save and continue*.
+. *_Accept_* the default *Gateway health log group* option to *No Log Group* and *_select_* *Save and continue*.
 . *_Review_* the *Review and finish* page and *_select_* *Finish*.
 +
 After a few seconds the *Status* of the FSx File Gateway should show *Running*.

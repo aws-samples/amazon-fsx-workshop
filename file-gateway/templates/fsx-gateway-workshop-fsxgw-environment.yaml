@@ -59,7 +59,7 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
   LatestSgwAmiId:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/storagegateway/ami/FILE_FSX_SMB/latest'
+    Default: '/aws/service/storagegateway/ami/FILE_S3/latest'
   PeerRegion:
     AllowedValues:
     - us-east-1
@@ -227,8 +227,9 @@ Resources:
         - DeviceName: /dev/sdb
           Ebs:
             DeleteOnTermination: true
+            Iops: 4000
             VolumeSize: 150
-            VolumeType: gp3
+            VolumeType: io1
       IamInstanceProfile: !Ref GatewayInstanceProfile
       ImageId: !Ref LatestSgwAmiId
       InstanceType: !Ref GatewayInstanceType
