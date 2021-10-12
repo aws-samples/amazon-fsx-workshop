@@ -54,12 +54,6 @@ NOTE: It will take approximately 15 minutes to complete this section.
 . *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
 
 
-. *_Open_* a text editor and *_Note_* down the following values which will be used later in this workshop to create a new FSx for NetApp ONTAP file system.
-* VPC ID
-* Preferred subnet ID
-* Standby subnet ID
-* Route Table ID
-
 . *_Examine_* the *Administration* section of the file system. *_Click_* the *Administration* tab. *_Find_* the values of the following file system attributes:
 * Service account username
 * Management endpoint - DNS name and IP address
@@ -101,10 +95,10 @@ a| Select - Join an Active Directory
 a| Input a Net BIOS name which you will use to connect to SMB share. Ex: svm08
 
 | *Active Directory domain name*
-a| Input fsxontap.com
+a| Input example.com
 
 | *DNS server IP addresses*
-a| Enter the Active Directory DNS server IP addresses. You can retrieve the DNS addresses using link:https://console.aws.amazon.com/directoryservice[Directory Service]. *_click_* Directory ID with Directory name *fsxontap.com*. Under *Networking & Security* tab you will find two DNS addresses
+a| Enter the Active Directory DNS server IP addresses. You can retrieve the DNS addresses using link:https://console.aws.amazon.com/directoryservice[Directory Service]. *_click_* Directory ID with Directory name *example.com*. Under *Networking & Security* tab you will find two DNS addresses
 
 | *Service account username*
 a| Enter the Active Directory username created by the workshop resource. You can retrieve the username using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* Secret name *Password-GUID* and *_Click_* on *Retrieve Secret value* to get the username
@@ -116,7 +110,7 @@ a| Enter the Active Directory user password created by the workshop resource. Yo
 a| Re-Enter the Active Directory user password
 
 | *Organizational Unit (OU) within which you want to join your file system - optional*
-a| Input *OU=Computers,OU=fsxontap,DC=fsxontap,DC=com*
+a| Input *OU=Computers,OU=example,DC=example,DC=com*
 
 | *Delegated file system administrators group - optional*
 a| Accept the default
