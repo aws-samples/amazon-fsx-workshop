@@ -42,7 +42,7 @@ NOTE: このセクションを完了するのに約 5 分かかります。
 
 === 階層化の手順
 
-. *Amazon FSx for ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、*プライマリー* Amzon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_*、*プライマリー* Amzon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
 +
 [source,bash]
 ----
@@ -74,7 +74,7 @@ volume modify -volume vol1 -vserver svm08 -tiering-policy ALL
 +
 NOTE: 階層化ポリシーを *ALL* に設定すると、アクティブなファイルシステムとスナップショット内のすべてのユーザー データブロックがキャパシティー プール層に移動します。ブロックをパフォーマンス層に戻すことできません。
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、以下のスクリプトを *_実行_* して、ボリューム上にテストデータを作成します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_*、以下のスクリプトを *_実行_* して、ボリューム上にテストデータを作成します。
 +
 [source,bash]
 ----
@@ -87,7 +87,7 @@ sudo python3 /home/ec2-user/smallfile/smallfile_cli.py --operation create --thre
 ----
 +
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_*、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
 +
 [source,bash]
 ----

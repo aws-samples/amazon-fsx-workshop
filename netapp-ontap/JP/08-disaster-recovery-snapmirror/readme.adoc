@@ -43,7 +43,7 @@ IMPORTANT: 続ける前に全てのステップを読んでください。
 . コンソールの *管理* セクションを調べます。*管理* タブを *_クリック_* します。次のファイルシステム属性の値を *_探します_* 。
 * 管理エンドポイント - IP アドレス
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_* 、*セカンダリー* ファイルシステムのためのファイルシステム管理エンドポイント IP アドレスをエクスポートします。以下に示した IP アドレスを、その *ファイルシステムの管理エンドポイント - IP アドレス* に置き換えます。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_* 、*セカンダリー* ファイルシステムのためのファイルシステム管理エンドポイント IP アドレスをエクスポートします。以下に示した IP アドレスを、その *ファイルシステムの管理エンドポイント - IP アドレス* に置き換えます。
 +
 TIP: *プライマリ* ファイルシステムと *セカンダリ* ファイルシステムを切り替えるため、ターミナルウィンドウまたはブラウザ セッションの新しいタブで SSH セッションを開始します。
 +
@@ -67,7 +67,7 @@ ssh ${ADMINUSER}@${DRMGMTENDPOINT}
 +
 NOTE: SSH 接続できない場合は、*セカンダリ* ファイルシステムの ENI に構成されている _セキュリティグループ_ を確認してください。*プライマリー* ファイルシステムの _セキュリティグループ_ *fsx-ontap-workshop-Security-group-<ID>* と一致することを確認してください。link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールに移動して、*FSxOntap-DR* という名前の Amazon FSx for NetApp ONTAPファイルシステムの *ファイルシステムID* を *_クリック_* します。*ネットワークとセキュリティ* タブを *_クリック_* し、優先サブネットのネットワーク インターフェース (eni-xxxxxxxxxxx) を *_クリック_* します。ブラウザでネットワークインターフェイス用に開いた新しいタブに *_移動_* し、ENI を *_選択_* します。*アクション* メニューから *セキュリティグループの変更* を *_クリック_* します。次に、*セキュリティグループを選択* して、ワークショップ環境で作成した *fsx-ontap-workshop-Security-group-<ID>* で始まるセキュリティグループを選んで *_クリック_* します。そして *セキュリティグループの追加* を *_クリック_* し、*保存* を *_クリック_* します。link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールに移動し、*FSxOntap-DR* という名前の Amazon FSx for NetApp ONTAP ファイルシステムの *ファイルシステム ID* を *_クリック_* します。*ネットワークとセキュリティ* タブを *_クリック_* し、スタンバイサブネットのネットワーク インターフェイス (eni-xxxxxxxxxxx) を *_クリック_* します。この手順を繰り返して、スタンバイサブネット内の ENI のセキュリティグループを更新します。 
 +
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、*プライマリー* ファイルシステム管理エンドポイントに SSH 接続します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_*、*プライマリー* ファイルシステム管理エンドポイントに SSH 接続します。
 +
 [source,bash]
 ----
@@ -220,7 +220,7 @@ network interface show
 volume mount -vserver svm01 -volume vol2 -junction-path /vol2
 ----
 +
-. 以下のコマンドを *_実行_* して、ONTAP CLI セッションを終了し、*Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* に戻ります。
+. 以下のコマンドを *_実行_* して、ONTAP CLI セッションを終了し、*FSx for ONTAP Workshop Linux Instance* に戻ります。
 +
 [source,bash]
 ----
@@ -234,7 +234,7 @@ quit
 DRNFSENDPOINT="x.x.x.x"
 ----
 +
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、Linux EC2 インスタンスにボリュームを *マウント* します。以下に示す IP アドレスを SVM の NFS エンドポイントの IP アドレスに置き換えます。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_*、Linux EC2 インスタンスにボリュームを *マウント* します。以下に示す IP アドレスを SVM の NFS エンドポイントの IP アドレスに置き換えます。
 +
 [source,bash]
 ----
@@ -257,7 +257,7 @@ sudo chown ssm-user:ssm-user ${SMMOUNT}
 +
 . 権限の変更は機能しましたか？ボリュームはSnapMirror関係によってデータ保護されているため、読み取り専用でのみマウントできます。
 +
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *戻り*、*セカンダリー* ファイルシステム管理エンドポイントに SSH で接続します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *戻り*、*セカンダリー* ファイルシステム管理エンドポイントに SSH で接続します。
 +
 [source,bash]
 ----
@@ -280,7 +280,7 @@ snapmirror break -destination-path svm01:vol2
 snapmirror show
 ----
 +
-. 以下のコマンドを *_実行_* して ONTAP CLI セッションを終了し、*Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* に戻ります。
+. 以下のコマンドを *_実行_* して ONTAP CLI セッションを終了し、*FSx for ONTAP Workshop Linux Instance* に戻ります。
 +
 [source,bash]
 ----

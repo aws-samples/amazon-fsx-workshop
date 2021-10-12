@@ -33,7 +33,7 @@ NOTE: このセクションを完了するのに約 5 分かかります。
 
 === ストレージの効率化機能
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_* 、*_プライマリー_* Amazon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_* 、*_プライマリー_* Amazon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
 +
 [source,bash]
 ----
@@ -85,7 +85,7 @@ volume efficiency stat -vserver svm08 -volume vol1
 ----
 +
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻ります_* 。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻ります_* 。
 +
 [source,bash]
 ----

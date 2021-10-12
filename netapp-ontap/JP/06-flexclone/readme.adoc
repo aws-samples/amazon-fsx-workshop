@@ -23,7 +23,7 @@ NOTE: このセクションを完了するのに約 5 分かかります。
 
 === FlexClone ステップ
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_* 、以下のスクリプトを *_実行_* してソースボリュームに (10 x 128 MB ファイル) のデータを生成します。 
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_* 、以下のスクリプトを *_実行_* してソースボリュームに (10 x 128 MB ファイル) のデータを生成します。 
 +
 [source,bash]
 ----
@@ -38,7 +38,7 @@ seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/zero of=${MO
 ----
 +
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_* 、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムのファイルシステム管理エンドポイントに SSH 接続します。
+. *FSx for ONTAP Workshop Linux Instace* の SSH 接続に *_戻り_* 、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムのファイルシステム管理エンドポイントに SSH 接続します。
 +
 [source,bash]
 ----
@@ -54,7 +54,7 @@ vol snapshot show -volume vol1
 ----
 +
 
-. 以下のコマンドを *_実行_* して、新しい FlexClose を作成します。
+. 以下のコマンドを *_実行_* して、新しい FlexClone を作成します。
 +
 [source,bash]
 ----
@@ -104,7 +104,7 @@ quit
 ----
 +
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続から、以下のスクリプトを *_実行_* します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続から、以下のスクリプトを *_実行_* します。
 +
 [source,bash]
 ----
@@ -167,7 +167,7 @@ df -h ${MOUNTPOINT} ${CLONEDIR}
 +
 . 返される内容と使用されるスペースはまだ同じですか？
 +
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *__戻り_* 、*_プライマリー_* Amazon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *__戻り_* 、*_プライマリー_* Amazon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
 +
 [source,bash]
 ----

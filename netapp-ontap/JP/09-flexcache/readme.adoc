@@ -34,14 +34,14 @@ IMPORTANT: 続ける前に全てのステップを読んでください。
 
 === クラスター ピアリング 関係の確認
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、*プライマリー* ファイルシステム管理エンドポイントに SSH 接続します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_*、*プライマリー* ファイルシステム管理エンドポイントに SSH 接続します。
 +
 [source,bash]
 ----
 ssh ${ADMINUSER}@${MGMTENDPOINT}
 ----
 +
-. 新しいターミナルウィンドウで、*Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* への新しい SSH 接続を *_作成_* し、*セカンダリー* ファイルシステム管理エンドポイントへ SSH 接続します。 
+. 新しいターミナルウィンドウで、*FSx for ONTAP Workshop Linux Instance* への新しい SSH 接続を *_作成_* し、*セカンダリー* ファイルシステム管理エンドポイントへ SSH 接続します。 
 +
 [source,bash]
 ----
@@ -55,7 +55,7 @@ ssh ${ADMINUSER}@${DRMGMTENDPOINT}
 cluster peer show
 ----
 +
-. ファイルシステムがすでにピアリングされている場合は、以下のコマンドを *_実行_* して *プライマリー* ファイルシステムの ONTAP CLI セッションを終了し、*Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* に戻ります。
+. ファイルシステムがすでにピアリングされている場合は、以下のコマンドを *_実行_* して *プライマリー* ファイルシステムの ONTAP CLI セッションを終了し、*FSx for ONTAP Workshop Linux Instance* に戻ります。
 +
 [source,bash]
 ----
@@ -64,7 +64,7 @@ quit
 
 === テストデータの生成
 
-. *Amazon FSx for ONTAP ワークショップの Linux インスタンス* の SSH セッションに *_戻り_*、以下のスクリプトを実行して 1 GB のファイルを作成します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH セッションに *_戻り_*、以下のスクリプトを実行して 1 GB のファイルを作成します。
 +
 [source,bash]
 ----
@@ -81,7 +81,7 @@ sudo python3 /home/ec2-user/smallfile/smallfile_cli.py --operation create --thre
 
 NOTE: このワークショップの SnapMirror セクションですでに作成されている場合は、クラスターと SVM ピアリングの手順をスキップします。
 
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、*プライマリー* ファイルシステム管理エンドポイントに SSH 接続します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_*、*プライマリー* ファイルシステム管理エンドポイントに SSH 接続します。
 +
 [source,bash]
 ----
@@ -177,7 +177,7 @@ vserver peer show
 
 TIP: FlexCache のベストプラクティスの詳細については、link:https://www.netapp.com/pdf.html?item=/media/7336-tr4743pdf.pdf[FlexCache Best Practices] を参照してください。
 
-. *プライマリー* ファイルシステムから以下のコマンドを *_実行_* して、vserver に FlexCache 権限を追加します。ソース SVM 名を *プライマリー* ファイルシステムの SVM に *置き換え*、ピア vserver 名を *セカンダリー* ファイルシステムの SVM に置き換えます。
+. *プライマリー* ファイルシステムから以下のコマンドを *_実行_* して、vserver に FlexCache 権限を追加します。ソース SVM 名(vserver)を *プライマリー* ファイルシステムの SVM に *置き換え*、peer-vserver 名を *セカンダリー* ファイルシステムの SVM に置き換えます。
 +
 [source,bash]
 ----
@@ -219,7 +219,7 @@ volume flexcache origin show-caches
 volume mount -vserver svm01 -volume cachevol -junction-path /cachevol
 ----
 +
-. 以下のコマンドを *_実行_* して、ONTAP CLI セッションを終了し、*Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* に戻ります。
+. 以下のコマンドを *_実行_* して、ONTAP CLI セッションを終了し、*FSx for ONTAP Workshop Linux Instance* に戻ります。
 +
 [source,bash]
 ----
@@ -241,7 +241,7 @@ ls -lt ${MOUNTPOINT} ${CACHEMOUNT}
 TIP: FlexCache ボリュームがオリジン ボリュームとまったく同じプロパティを示していることがわかります。オリジン ボリュームよりも小さい FlexCache ボリュームを作成し、ワーキング データセットに適合するのに十分なサイズにすることができます。ファイルにアクセスすると、ファイルは FlexCache ボリュームにインポートされます。
 
 +
-. *Amazon FSx for NetApp ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、*セカンダリー* ファイルシステム管理エンドポイントに SSH 接続します。
+. *FSx for ONTAP Workshop Linux Instance* の SSH 接続に *_戻り_*、*セカンダリー* ファイルシステム管理エンドポイントに SSH 接続します。
 +
 [source,bash]
 ----
