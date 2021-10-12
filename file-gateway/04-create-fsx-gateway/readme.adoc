@@ -65,6 +65,7 @@ It is a best practice to create a service account with minimum privileges to con
 +
 . _Select_ *Next*.
 . On the *Attach FSx file system* page, *_select_* the *SAZ2* file system created in Phase 1 - Deploy an Amazon FSx for Windows File Server environment in Region 1.
+. Leave the *Local Endpoint IP address* field blank.
 . _Enter_ the values in the *Service account settings* section from the following table.
 +
 [cols="3,10"]
