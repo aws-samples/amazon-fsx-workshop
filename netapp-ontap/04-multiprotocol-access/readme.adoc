@@ -59,16 +59,11 @@ sudo mkdir ${MOUNTPOINT}
 sudo mount -t nfs ${NFSENDPOINT}:/vol1 ${MOUNTPOINT}
 ----
 +
-. *_Run_* below command to set the *user:group* for the mount point. *_Copy_* the command with *ssm-user:ssm-user* if you are using a SSH session from *Session Manager*.  *_Copy_* the command with *ec2-user:ec2-user* if you are using a SSH session from your *Terminal*.
+. *_Run_* below command to set the *user:group* for the mount point.
 +
 [source,bash]
 ----
 sudo chown ec2-user:ec2-user ${MOUNTPOINT}
-
-or 
-
-sudo chown ssm-user:ssm-user ${MOUNTPOINT}
-
 ----
 +
 . *_Return_* to the SSH connection of the *FSx for ONTAP Workshop Linux Instance*.
@@ -172,7 +167,7 @@ TIP: If you created a SVM with NTFS or MIXED security style then you can create 
 a| Z:
 
 | *Folder*
-a| This is the UNC path of *multiprotocol* share. Return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *primary* file system and *_select_* the *Storage virtual machines* tab. *_Click_* *SVM Name* and then *_click_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the *SMB DNS name* to *_copy_* the *SMB DNS Name* to the clipboard and paste it as the first part of the UNC path. *_Add_* *\multiprotocol* to the end of the *SMB DNS Name* to complete the UNC path to the multiprotocol share. (e.g. \\svm08.fsxontap.com\multiprotocol).
+a| This is the UNC path of *multiprotocol* share. Return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *primary* file system and *_select_* the *Storage virtual machines* tab. *_Click_* *SVM Name* and then *_click_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the *SMB DNS name* to *_copy_* the *SMB DNS Name* to the clipboard and paste it as the first part of the UNC path. *_Add_* *\multiprotocol* to the end of the *SMB DNS Name* to complete the UNC path to the multiprotocol share. (e.g. \\svm08.example.com\multiprotocol).
 
 | *Reconnect at sign-in*
 a| Leave checked

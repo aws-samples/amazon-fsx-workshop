@@ -242,16 +242,11 @@ sudo mkdir ${SMMOUNT}
 sudo mount -t nfs ${DRNFSENDPOINT}:/vol2 ${SMMOUNT}
 ----
 +
-. *_Run_* below command to set the *user:group* for the mount point. *_Copy_* the command with *ssm-user:ssm-user* if you are using a SSH session from *Session Manager*.  *_Copy_* the command with *ec2-user:ec2-user* if you are using a SSH session from your *Terminal*.
+. *_Run_* below command to set the *user:group* for the mount point.
 +
 [source,bash]
 ----
 sudo chown ec2-user:ec2-user ${SMMOUNT}
-
-or 
-
-sudo chown ssm-user:ssm-user ${SMMOUNT}
-
 ----
 +
 . Did the permission change work? Since the volume is data protected by the SnapMirror relationship, you can only mount it read-only.
