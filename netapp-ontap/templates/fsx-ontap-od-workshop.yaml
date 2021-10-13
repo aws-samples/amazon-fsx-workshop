@@ -107,8 +107,9 @@ Parameters:
   DomainName:
     Description: Domain Name for Microsoft AD
     AllowedValues:
+      - example.com
       - fsxontap.com
-    Default: fsxontap.com
+    Default: example.com
     Type: String
   LatestWindowsAmiId:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
@@ -375,7 +376,7 @@ Resources:
             description: (Required) ID of the AWS Managed Microsoft AD (i.e. d-0123456789)
           directoryName:
             type: String
-            description: (Required) Directory name (i.e. fsxontap.com)
+            description: (Required) Directory name (i.e. example.com)
           dnsIpAddresses:
             type: StringList
             default: []

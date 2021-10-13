@@ -13,6 +13,6 @@ Click the link below to access the type of AWS sponsored workshop you want to ru
 |===
 a|image::fsx-lustre-as-workshop.png[link=../lustre/01-access-as-environment/]
 a|image::fsx-windows-as-workshop.png[link=../windows-file-server/01-access-as-environment/]
-a|image::fsx-ontap-as-workshop.png[link=../netapp-ontap/01-access-workshop-environment/]
+a|image::fsx-ontap-as-workshop.png[link=../netapp-ontap/01-access-workshop-as-environment/]
 a|image::fsx-file-gateway-as-workshop.png[link=../file-gateway/01-as-environment-overview/]
 |===
