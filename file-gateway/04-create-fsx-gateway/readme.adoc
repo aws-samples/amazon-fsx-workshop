@@ -34,7 +34,7 @@ image::phase-3-create-gateway.gif[title="Quick Step-by-step Video", align="left"
 It may take 30+ seconds for the service to prepare the local disks on the FSx File Gateway instance.
 +
 . *_Select_* *Save and continue* to allocate the 150 GiB volume as the Cache of the FSx File Gateway instance.
-. *_Accept_* the default *Gateway health log group* option to *No Log Group* and *_select_* *Save and continue*.
+. *_Select_* the  *Gateway health log group* option of *No Log Group* and *_select_* *Save and continue*.
 . *_Review_* the *Review and finish* page and *_select_* *Finish*.
 +
 After a few seconds the *Status* of the FSx File Gateway should show *Running*.
@@ -65,6 +65,7 @@ It is a best practice to create a service account with minimum privileges to con
 +
 . _Select_ *Next*.
 . On the *Attach FSx file system* page, *_select_* the *SAZ2* file system created in Phase 1 - Deploy an Amazon FSx for Windows File Server environment in Region 1.
+. Leave the *Local Endpoint IP address* field blank.
 . _Enter_ the values in the *Service account settings* section from the following table.
 +
 [cols="3,10"]
@@ -76,7 +77,7 @@ a| *admin*
 a| Copy in the Secret Value of the Secret Key 'Password-<GUID>' from Secrets Manager created in Phase 1 - Amazon FSx for Windows File Server environment. This can be found from the link:https://console.aws.amazon.com/secretsmanager/[Amazon Secrets Manager] created in Region 1.
 |===
 +
-. *_Accept_* the default values for *Audit logs* to *Disable logging*.
+. *_Select_* the option to *Disable logging*.
 . *_Select_* the *Set refresh interval* to *5 minutes*.
 . *_Select_* the *Next*.
 . *_Review_* the *Review and attach* page and *_select_* *Attach*.
