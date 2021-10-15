@@ -1,0 +1,277 @@
+= フェーズ 2 - Amazon FSx File Gateway環境のデプロイ
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+Region 2環境のデプロイ - Amazon FSx File Gateway環境。以下の"フェーズ 2 構成図" を参照して下さい。
+このフェーズでのワークショップ環境の構築には、約5分かかります。
+
+== フェーズ 2 構成図
+
+image::fsx-gateway-workshop-architecture-phase-2.png[title="Amazon FSx File Gateway Workshop Architecture", align="center"]
+
+=== AWS CloudFormationを使ってAmazon FSx File Gateway環境をデプロイする
+
+重要: AWSにデプロイボタンをクリックする前に、以下の手順をお読みいただき、クイックビデオをご覧ください。
+
+image::phase-2-deploy-fsxfgw.gif[title="ステップバイステップのクイックビデオ", align="left", width=600]
+
+. "Deploy to AWS"ボタンをクリックし、CloudFormationのプロンプトに従って進めます。FSx for Windows File ServerからFSx File Gatewayをリモートで展開する実運用のシナリオをシミュレートするために、フェーズ1で選択したリージョンとは異なるリージョンを以下で選択します。
++
+TIP: *Deploy to AWS* ボタンを右クリックして、リンクを新しいタブまたはウィンドウで開くと、このgithubチュートリアルとAWSコンソールの間を簡単に移動できます。
++
+|===
+|Region | 新規VPCを使った起動テンプレート
+| *N. Virginia* (us-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Ohio* (us-east-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *N. California* (us-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Oregon* (us-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Africa (Cape Town)* (af-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=af-south-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Hong Kong* (ap-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-east-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Mumbai* (ap-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Seoul* (ap-northeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Singapore* (ap-southeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Sydney* (ap-southeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Tokyo* (ap-northeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Canada* (ca-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Frankfurt* (eu-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Ireland* (eu-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *London* (eu-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Milan* (eu-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-south-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Paris* (eu-west-3)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Stockholm* (eu-north-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-north-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *Middle East (Bahrain)* (me-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=me-south-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+
+| *São Paulo* (sa-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=fsx-gateway-workshop-fsxgw-environment&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-fsxgw-environment.yaml]
+|===
++
+. *Prerequisite - Prepare template* ページのデフォルトを受け入れ、"Next"をクリックします。
++
+. デフォルトスタック名を受け入れ、"Next"をクリックします。 以下を参考にして全てのパラメーターを入力して下さい。
++
+[cols="3,10"]
+|===
+| *VPC CIDR*
+a| VPCに使用されるCIDRを選択します。このCIDRブロックは、フェーズ1-Amazon FSx for Windows File Server環境のCIDRブロックと重複してはいけません。
+
+| *Availability Zones*
+a| VPCのアベイラビリティーゾーンを1つ選択します。
+
+| *Peer region*
+a| フェーズ 1（Amazon FSx for Windows File Server環境）でデプロイしたリージョンを選択して下さい。
+
+| *Peer VPC Id*
+a| フェーズ 1（Amazon FSx for Windows File Server環境）で作成したVPCのVPC Idをコピーして下さい。フェーズ1で設定したリージョン1のCloudFormationスタックウィンドウから、「リソース」タブを選択し、Logical ID *Vpc*が表示されるまでスクロールダウンします。対応する物理ID（例：vpc-083db1b5659eab9b4）をクリップボードにコピーして、CloudFormationスタックウィザードの*Peer VPC Id*パラメータに貼り付けます。
+
+| *Peer VPC CIDR*
+a| フェーズ 1（Amazon FSx for Windows File Server環境）で作成したVPCのVPC CIDRを選択して下さい。フェーズ1で設定したリージョン1のCloudFormationスタックウィンドウから、「パラメータ」タブを選択します。VpcCidrの値をクリップボードにコピーして、Cloudformatonスタックウィザードの*Peer VPC CIDR*パラメータに貼り付けます。
+
+| *DNS Ip Addresses*
+a| フェーズ1（Amazon FSx for Windows File Server環境）で作成したAWSマネージドActive Directoryの2つのDNSのIPアドレスをコピーします。これは、フェーズ1（リージョン1に展開されたAmazon FSx for Windows File Server環境）で作成したディレクトリのlink:https://console.aws.amazon.com/directoryservicev2/[AWS Directory Service] コンソールから確認出来ます。*DNS Address*の値を文字列としてクリップボードにコピーし（例：10.0.0.21、10.0.1.9）、CloudFormationスタックウィザードの*DNS Ip Addresses*パラメータに貼り付けます。
+
+| *Instance Type*
+a| デフォルトを受け入れます。
+
+| *Key Pair*
+a| 既存のキーペアを選択します。
+
+|===
++
+. すべてのパラメータの値を入力した後に、"Next"をクリックして下さい。
+. *Configure stack options* と *Advanced options* セクションのデフォルト値を受け入れ、"Next" をクリックします。
+. CloudFormationのスタック設定を確認します。
+. ページ下部の青い *Capabilities* ボックスのチェックボックスをチェックしてください。
++
+image::cloudformation-capabilities.png[align="left", width=420]
++
+. "Create stack"をクリックして下さい。
+
+約5分後にデプロイが完了します。
+
+CloudFormationスタックのステータスがCREATE_COMPLETEになるまで次のセクションに移らないで下さい。
+
+=== リージョン1のVPC Peering Connectionのルートでルーティングテーブルを更新する
+
+重要: AWSにデプロイボタンをクリックする前に、以下の手順をお読みいただき、クイックビデオをご覧ください。
+
+image::phase-2-create-route.gif[title="Quick Step-by-step Video", align="left", width=600]
+
+重要: このセクションは、Amazon FSx for Windows File Server環境をデプロイしたリージョン1で完了する必要があります。
+
+VPC Peering Connectionを使用してプライベートルーティングテーブルを更新し、リージョン2のVPC CIDRへのルートを追加する。
+
+. link:https://console.aws.amazon.com/vpc/[Amazon VPC] コンソールから、リージョン1（Amazon FSx for Windows File Server環境）を作成したAWSリージョンを選択します。
++
+. 左のウィンドウフレームの Virtual Private Cloud セクションで *Route Tables* をクリックします。
++
+. *Private Route Table | fsx-gateway-workshop-fsxw-environment* ルートテーブルを選択します。
++
+. *Routes* タブを選択します。
++
+. *Edit routes*　をクリックします。
++
+. *Add route*　をクリックします。
++
+. リージョン2（Amazon FSx File Gateway環境）で作成したVPCのCIDRを入力します。これは、リージョン2でデプロイしたCloudFormationスタックの「Output」タブから確認できます。(例：172.31.0.0/16)。
++
+. "Target"ドロップダウンメニューから"Peering Connection" を選択し、フェーズ２（Amazon FSx File Gateway環境CloudFormationスタックのデプロイ）で作成したVPC peering connectionを選択します。これは、リージョン2でデプロイしたCloudFormationスタックの「Output」タブから簡単に確認できます。
++
+. *Save routes* をクリックして*Close*をクリックします。
+
+=== 
+AWS CloudFormationを使ってリージョン2にAmazon Windows EC2インスタンスをデプロイし、リージョン2のAWSマネージドActive Directoryに自動的にドメイン参加させる。
+
+重要: AWSにデプロイボタンをクリックする前に、以下の手順をお読みいただき、クイックビデオをご覧ください。
+
+image::phase-2-deploy-instance.gif[title="Quick Step-by-step Video", align="left", width=600]
+
+. "Deploy to AWS"ボタンをクリックし、CloudFormationのプロンプトに従って開始します。これは、上記のリージョン2で選択したものと同じリージョンである必要があります。
++
+TIP: *Deploy to AWS* ボタンを右クリックして、リンクを新しいタブまたはウィンドウで開くと、このgithubチュートリアルとAWSコンソールの間を簡単に移動できます。
++
+|===
+|Region | 新規VPCを使った起動テンプレート
+| *N. Virginia* (us-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Ohio* (us-east-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *N. California* (us-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Oregon* (us-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Africa (Cape Town)* (af-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=af-south-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Hong Kong* (ap-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-east-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Mumbai* (ap-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Seoul* (ap-northeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Singapore* (ap-southeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Sydney* (ap-southeast-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Tokyo* (ap-northeast-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Canada* (ca-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Frankfurt* (eu-central-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Ireland* (eu-west-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *London* (eu-west-2)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Milan* (eu-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-south-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Paris* (eu-west-3)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Stockholm* (eu-north-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=eu-north-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *Middle East (Bahrain)* (me-south-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=me-south-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+
+| *São Paulo* (sa-east-1)
+a| image::deploy-to-aws.png[link=https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=fsx-gateway-workshop-windows-instance&templateURL=https://s3.amazonaws.com/amazon-fsx/workshop/fsx-file-gateway/templates/fsx-gateway-workshop-windows-instance.yaml]
+|===
++
+. *Prerequisite - Prepare template* ページのデフォルトを受け入れ、"Next"をクリックします。
++
+. デフォルトスタック名を受け入れ、"Next"をクリックします。 以下を参考にして全てのパラメーターを入力して下さい。
++
+[cols="3,10"]
+|===
+| *Instance Type*
+a| デフォルトを受け入れます。
+
+| *Subnet*
+a| *Public Subnet - fsx-gateway-workshop-fsxgw-environment*　サブネットを選択します。
+
+| *Security Group*
+a| *fsx-gateway-workshop-fsxgw-environment-WindowsSecurityGroup-<GUID>* セキュリティグループを選択します。
+
+| *Password*
+a| フェーズ1（Amazon FSx for Windows File Server環境）で作成したSecrets ManagerからSecret Key 'Password'のSecret Valueをコピーします。これはリージョン１のlink:https://console.aws.amazon.com/secretsmanager/[Amazon Secrets Manager] で見つける事が出来ます。
+
+| *Key Pair*
+a| 既存のキーペアを選択します。
+
+|===
++
+. すべてのパラメータの値を入力した後に、"Next"をクリックして下さい。
+. *Configure stack options* と *Advanced options* セクションのデフォルト値を受け入れ、"Next" をクリックします。
+. CloudFormationのスタック設定を確認します。
+. ページ下部の青い *Capabilities* ボックスのチェックボックスをチェックしてください。
++
+image::cloudformation-capabilities.png[align="left", width=420]
++
+. "Create stack"をクリックして下さい。
+
+約5分後にデプロイが完了します。
+
+CloudFormationスタックのステータスがCREATE_COMPLETEになるまで次のセクションに移らないで下さい。
+
+== 次のセクション
+
+下のボタンをクリックすると、次のセクションに進みます。
+
+image::create-fsx-gateway.png[link=../04-create-fsx-gateway/, align="right",width=420]

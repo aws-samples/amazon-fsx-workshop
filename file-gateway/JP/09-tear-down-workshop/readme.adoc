@@ -1,0 +1,44 @@
+= ワークショップ環境の削除
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+"おめでとう御座います!" あなたはAmazon FSx File Gateway Workshop を修了しました。
+
+=== "Amazon FSx File Gateway サービスコンポーネント" (フェーズ3 - リージョン1)の削除
+
+重要: 以下の手順をお読みいただき、クイックビデオをご覧ください。
+
+image::tear-down.gif[title="ステップバイステップのクイックビデオ", align="left", width=600]
+
+. link:https://console.aws.amazon.com/storagegateway/[AWS Storage Gateway] コンソールを開きます。
+. "Region"をフェーズ３でAmazon FSx File Gatewayサービスコンポーネントを作成したリージョン1に切り替えます。
+. 本ワークショップで作成した"FSx File Gateway Workshop"ゲートウェイの横にあるチェックボックスをクリックします。
+. "Actions >> Delete Gateway"　の順にクリックします。
+. 削除対象のストレージゲートウェイである事を確認し、"delete" と入力してゲートウェイを削除します。
+
+=== "Amazon FSx File Gateway環境" (フェーズ2 - リージョン2)の削除
+
+. link:https://console.aws.amazon.com/cloudformation/[Amazon CloudFormation] コンソールを開きます。
+. "Region"をフェーズ2でAmazon FSx File Gateway環境を作成したリージョン2に変更します。
++
+TIP: 上のリンクを右クリックし、新しいタブやウィンドウでリンクを開くと、このgithubワークショップとAWSコンソールの間を簡単に移動することができます。
++
+. "fsx-gateway-workshop-windows-instance" スタックの横のラジオボタンを選択して下さい。
+. "Delete" ボタンをクリックし、次に"Delete stack"をクリックします。
+. "fsx-gateway-workshop-fsxgw-environment" スタックの横のラジオボタンを選択して下さい。
+. "Delete" ボタンをクリックし、次に"Delete stack"をクリックします。
+
+=== "Amazon FSx for Windows File Server環境" (フェーズ1 - リージョン1)の削除
+
+. link:https://console.aws.amazon.com/cloudformation/[Amazon CloudFormation] コンソールを開いて下さい。
+. "Region" をAmazon FSx for Windows File Server環境を作成したリージョン1へ変更して下さい。
++
+TIP: 上のリンクを右クリックし、新しいタブやウィンドウでリンクを開くと、このgithubワークショップとAWSコンソールの間を簡単に移動することができます。
++
+. "fsx-gateway-workshop-fsxw-environment" スタックの横のラジオボタンを選択して下さい。
+. "Delete" ボタンをクリックし、次に"Delete stack"をクリックします。
+
+重要: CloudFormationテンプレートで作成したすべてのAWSリソースの削除には、約15分かかる場合があります。定期的にステータスを確認し、すべてのリソースが削除されたことを確認してください。
+
+
