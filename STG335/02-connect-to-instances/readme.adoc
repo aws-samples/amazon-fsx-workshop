@@ -36,7 +36,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 
 . *_Click_* the Connect button.
 
-* Connect using EC2 Instance Connect - *_Select_* *EC2 Instance Connect* tab and *_click_* the Connect button to open a session in your browser. (*recommended*)
+* Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser. (*recommended*)
 
 * SSH using Terminal client - *_Select_* *SSH client* tab and *_Copy_* the Example SSH command shown and *_click_* Close.
 
@@ -47,7 +47,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 TIP: For a smooth experience to toggle between multiple sessions connecting to: +
 1) FSx for ONTAP Workshop Linux Instance + 
 2) ONTAP CLI session to your FSx for NetApp ONTAP file system and + 
-we recommend you create 2 x SSH terminal or EC2 Instance Connect sessions (tabs) to the Linux Instance.
+we recommend you create 2 x SSH terminal or Session Manager sessions (tabs) to the Linux Instance.
 
 === Connect to the Windows instance
 

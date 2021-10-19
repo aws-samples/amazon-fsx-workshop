@@ -59,11 +59,16 @@ sudo mkdir ${MOUNTPOINT}
 sudo mount -t nfs ${NFSENDPOINT}:/vol1 ${MOUNTPOINT}
 ----
 +
-. *_Run_* below command to set the *user:group* for the mount point.
+. *_Run_* below command to set the *user:group* for the mount point. *_Copy_* the command with *ssm-user:ssm-user* if you are using a SSH session from *Session Manager*.  *_Copy_* the command with *ec2-user:ec2-user* if you are using a SSH session from your *Terminal*.
 +
 [source,bash]
 ----
 sudo chown ec2-user:ec2-user ${MOUNTPOINT}
+
+or 
+
+sudo chown ssm-user:ssm-user ${MOUNTPOINT}
+
 ----
 +
 . *_Return_* to the SSH connection of the *FSx for ONTAP Workshop Linux Instance*.

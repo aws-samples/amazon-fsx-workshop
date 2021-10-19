@@ -118,11 +118,16 @@ sudo mount -t nfs ${NFSENDPOINT}:/vol1_clone1 ${CLONEDIR}
 mount | grep ${CLONEDIR}
 ----
 +
-. *_Run_* below command to set the *user:group* for the mount point.
+. *_Run_* below command to set the *user:group* for the mount point. *_Copy_* the command with *ssm-user:ssm-user* if you are using a SSH session from *Session Manager*.  *_Copy_* the command with *ec2-user:ec2-user* if you are using a SSH session from your *Terminal*.
 +
 [source,bash]
 ----
 sudo chown ec2-user:ec2-user ${CLONEDIR}
+
+or 
+
+sudo chown ssm-user:ssm-user ${CLONEDIR}
+
 ----
 +
 . *_Run_* below commands to compare the contents and space used by the source and FlexClone volume. 
