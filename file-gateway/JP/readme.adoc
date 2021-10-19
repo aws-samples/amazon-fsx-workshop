@@ -1,0 +1,20 @@
+= Amazon FSx File Gateway ワークショップ
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+image:fsx-windows-aws-logos.png[alt="fsx for windows and aws logos", align="left",width=420]
+
+本ワークショップは、Amazon Web Services（AWS）ネイティブのWindowsファイルストレージについて詳しく知りたいアーキテクトやエンジニアを対象としたワークショップです。
+
+=== 必要時間
+
+注：本ワークショップの完了には約90分かかり、AWSアカウントを使って実行します。
+
+=== Pricing
+
+注：本ワークショップには使用するAWSサービスに応じたコストが発生します。
+
+以下のボタンをクリックして、*Amazon FSx File Gateway*ワークショップを開始してください。
+
+image::01-environment-overview.png[link=01-environment-overview/, align="left",width=420]

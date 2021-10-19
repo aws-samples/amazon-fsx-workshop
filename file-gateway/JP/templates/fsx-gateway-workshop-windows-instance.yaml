@@ -1,0 +1,338 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Deploy an Amazon Windows EC2 instance and join it to Active Directory
+
+Metadata:
+  Authors:
+    Description: Darryl Osborne (darrylo@amazon.com)
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Windows Instance
+      Parameters:
+        - InstanceType
+        - Subnet
+        - SecurityGroup
+        - Password
+        - KeyPair
+        - LatestWS2019AmiId
+    ParameterLabels:
+      InstanceType:
+        default: Instance type
+      KeyPair:
+        default: Key pair
+      LatestWS2019AmiId:
+        default: Latest Microsoft Server 2019 Base AMI (do not change)
+      Password:
+        default: Password for admin@example.com
+      SecurityGroup:
+        default: Security group Id
+      Subnet:
+        default: Subnet Id
+
+Parameters:
+  InstanceType:
+    AllowedValues:
+      - t3.nano
+      - t3.micro
+      - t3.small
+      - t3.medium
+      - t3.large
+      - t3.xlarge
+      - t3.2xlarge
+      - m5.large
+      - m5.xlarge
+      - m5.2xlarge
+    Default: m5.large
+    Description: Amazon EC2 instance type
+    Type: String
+  KeyPair:
+    Description: Key pair
+    Type: AWS::EC2::KeyPair::KeyName
+  Password:
+    AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
+    Description: Password for the domain admin user. Must be at least 8 characters,
+      containing letters, numbers, and symbols.
+    MaxLength: '32'
+    MinLength: '8'
+    NoEcho: 'true'
+    Type: String
+  Subnet:
+    Description: Select the (Public Subnet 1 | fsx-gateway-workshop-fsxgw-environment) subnet
+    Type: AWS::EC2::Subnet::Id
+  SecurityGroup:
+    Description: Select the fsx-gateway-workshop-fsxgw-environment-WindowsSecurityGroup-<GUID> (e.g., sg-7f16e91a87390).
+    Type: AWS::EC2::SecurityGroup::Id
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: "/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base"
+
+Resources:
+  DSCBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteAfter30Days
+            ExpirationInDays: 30
+            Status: Enabled
+            Prefix: 'logs/'
+  DomainJoinSecrets:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub 'DomainJoinSecrets-${AWS::StackName}'
+      Description: Secrets to join AD domain
+      SecretString: !Sub '{"username":"admin@example.com","password":"${Password}"}'
+  LambdaSSMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Policies:
+        - PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:DeleteObject
+                - s3:ListBucket
+              Resource:
+                - !Sub "arn:aws:s3:::${DSCBucket}"
+                - !Sub "arn:aws:s3:::${DSCBucket}/*"
+          PolicyName: write-mof-s3
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  WriteMOFFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+          import json
+          import logging
+          import threading
+          import boto3
+          import cfnresponse
+          def create_object(bucket, body, key):
+              s3 = boto3.client('s3')
+              s3.put_object(Body=body,Bucket=bucket, Key=key)
+          def delete_objects(bucket):
+              s3 = boto3.client('s3')
+              objects = s3.list_objects_v2(
+                Bucket=bucket)
+              for key in objects['Contents']:
+                 s3.delete_object(
+                    Bucket=bucket,
+                    Key=key['Key'])
+          def timeout(event, context):
+              logging.error('Execution is about to time out, sending failure response to CloudFormation')
+              cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)
+          def handler(event, context):
+              # make sure we send a failure to CloudFormation if the function is going to timeout
+              timer = threading.Timer((context.get_remaining_time_in_millis() / 1000.00) - 0.5, timeout, args=[event, context])
+              timer.start()
+              print('Received event: %s' % json.dumps(event))
+              status = cfnresponse.SUCCESS
+              try:
+                  bucket = event['ResourceProperties']['Bucket']
+                  body = event['ResourceProperties']['Body']
+                  key = event['ResourceProperties']['Key']
+                  if event['RequestType'] == 'Delete':
+                      delete_objects(bucket)
+                  else:
+                      create_object(bucket, body, key)
+              except Exception as e:
+                  logging.error('Exception: %s' % e, exc_info=True)
+                  status = cfnresponse.FAILED
+              finally:
+                  timer.cancel()
+                  cfnresponse.send(event, context, status, {}, None)
+      Handler: index.handler
+      Role: !GetAtt LambdaSSMRole.Arn
+      Runtime: python3.7
+      Timeout: 240
+  WriteDomainJoinMOF:
+    Type: Custom::WriteMOFFile
+    Properties:
+      ServiceToken: !GetAtt WriteMOFFunction.Arn
+      Bucket: !Ref DSCBucket
+      Key: !Sub "DomainJoin-${AWS::StackName}.mof"
+      Body: !Sub |
+        /*
+        @TargetNode='localhost'
+        */
+        instance of MSFT_Credential as $MSFT_Credential1ref
+        {
+        Password = "managementgovernancesample";
+         UserName = "${DomainJoinSecrets}";
+        
+        };
+        instance of DSC_Computer as $DSC_Computer1ref
+        {
+        ResourceID = "[Computer]JoinDomain";
+         Credential = $MSFT_Credential1ref;
+         DomainName = "{tag:DomainToJoin}";
+         Name = "{tag:Name}";
+         ModuleName = "ComputerManagementDsc";
+         ModuleVersion = "8.0.0";
+         ConfigurationName = "DomainJoin";
+        };
+        instance of OMI_ConfigurationDocument
+                            {
+         Version="2.0.0";
+                                MinimumCompatibleVersion = "1.0.0";
+                                CompatibleVersionAdditionalProperties= {"Omi_BaseResource:ConfigurationName"};
+                                Name="DomainJoin";
+                            };      
+  SSMInstanceRole: 
+    Type : AWS::IAM::Role
+    Properties:
+      Policies:
+        - PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - s3:GetObject
+                Resource: 
+                  - !Sub 'arn:aws:s3:::aws-ssm-${AWS::Region}/*'
+                  - !Sub 'arn:aws:s3:::aws-windows-downloads-${AWS::Region}/*'
+                  - !Sub 'arn:aws:s3:::amazon-ssm-${AWS::Region}/*'
+                  - !Sub 'arn:aws:s3:::amazon-ssm-packages-${AWS::Region}/*'
+                  - !Sub 'arn:aws:s3:::${AWS::Region}-birdwatcher-prod/*'
+                  - !Sub 'arn:aws:s3:::patch-baseline-snapshot-${AWS::Region}/*'
+                Effect: Allow
+          PolicyName: ssm-custom-s3-policy
+        - PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                  - secretsmanager:DescribeSecret
+                Resource: 
+                  - !Ref 'DomainJoinSecrets'
+          PolicyName: ssm-secrets-policy
+        - PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:ListBucket
+                Resource: 
+                  - !Sub 'arn:${AWS::Partition}:s3:::${DSCBucket}/*'
+                  - !Sub 'arn:${AWS::Partition}:s3:::${DSCBucket}'
+                Effect: Allow
+          PolicyName: s3-instance-bucket-policy
+      Path: /
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore'
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonEC2ReadOnlyAccess'
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Principal:
+            Service:
+            - "ec2.amazonaws.com"
+            - "ssm.amazonaws.com"
+          Action: "sts:AssumeRole"
+  SSMInstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Roles:
+      - !Ref SSMInstanceRole
+  WindowsInstance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: !Ref LatestAmiId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPair
+      IamInstanceProfile: !Ref SSMInstanceProfile
+      NetworkInterfaces:
+        - DeleteOnTermination: true
+          DeviceIndex: '0'
+          SubnetId: !Ref Subnet
+          GroupSet:
+            - !Ref SecurityGroup
+      Tags:
+      - Key: "Name"
+        Value: "WindowsInstance"
+      - Key: "DomainToJoin"
+        Value: example.com
+      UserData:
+        Fn::Base64:
+          !Sub |
+            <powershell>
+
+            # disable ie security (windows)
+            function Disable-ieESC {
+                $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+                $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+                Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
+                Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
+                Stop-Process -Name Explorer
+                Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -ForegroundColor Green
+            }
+            Disable-ieESC
+
+            # install DiskSpd (windows)
+            $path = "C:\Tools\DiskSpd-2.0.21a"
+            $url = "https://github.com/microsoft/diskspd/releases/download/v2.0.21a/DiskSpd.zip"
+            $destination = "C:\Tools\DiskSpd-2.0.21a.zip"
+            $download = New-Object -Typename System.Net.WebClient
+            New-Item -Type Directory -Path $path
+            $download.DownloadFile($url,$destination)
+            $extract = New-Object -ComObject Shell.Application
+            $files = $extract.Namespace($destination).Items()
+            $extract.NameSpace($path).CopyHere($files)
+
+            </powershell>
+  JoinDomainAssociation:
+    DependsOn: 
+      - WindowsInstance
+      - WriteDomainJoinMOF
+    Type: AWS::SSM::Association
+    Properties:
+      WaitForSuccessTimeoutSeconds: 300
+      Name: AWS-ApplyDSCMofs
+      Targets:
+        - Key: "tag:DomainToJoin"
+          Values:
+           - example.com
+      OutputLocation:
+        S3Location: 
+          OutputS3BucketName: !Ref DSCBucket
+          OutputS3KeyPrefix: 'logs/'
+      ScheduleExpression: "cron(30 23 * * ? *)"
+      MaxErrors: 1
+      MaxConcurrency: 1
+      Parameters:
+        MofsToApply:
+          - !Sub "s3:${DSCBucket}:DomainJoin-${AWS::StackName}.mof"
+        ServicePath:
+          - default
+        MofOperationMode:
+          - Apply
+        ComplianceType:
+          - Custom:DomainJoinSample
+        ModuleSourceBucketName:
+          - "NONE"
+        AllowPSGalleryModuleSource:
+          - "True"
+        RebootBehavior:
+          - "AfterMof"
+        UseComputerNameForReporting:
+          - "False"
+        EnableVerboseLogging:
+          - "False"
+        EnableDebugLogging:
+          - "False"

@@ -1,0 +1,88 @@
+= ファイル共有のネットワークマウント
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== 概要
+
+このセクションでは、リージョン1のAmazon FSx for Windows File Serverのデフォルトのファイル共有とリージョン2のAmazon FSx File Gatewayのデフォルトのファイル共有をネットワークドライブとしてマウントします。
+
+
+== このセクションに必要な時間
+
+注：このセクションの完了には約5分かかります。
+
+
+== ステップバイステップガイド
+
+=== リージョン1のAmazon FSx for Windows File Serverのデフォルトシェアをネットワークドライブとしてマウントする。
+
+重要: 次の手順に進む前に以下の手順をお読みいただき、クイックビデオをご覧ください。
+
+image::map-drives.gif[title="ステップバイステップのクイックビデオ", align="left", width=600]
+
+. "WindowsInstance"に接続したリモートデスクトップセッションに移動します。
+
+. "File Explorer"を起動します。
+
+. "This PC"を右クリックし、"Map network drive..."を選択します。
+
+. 以下の情報をもとに、ファイル共有をマウントします。:
++
+[cols="3,10"]
+|===
+| *Drive*
+a| Z:
+
+| *Folder*
+a| これは、ファイルシステムのデフォルトのファイル共有のUNCパスです。link:https://console.aws.amazon.com/fsx/[Amazon FSx]コンソールに戻り、AWSリージョンをフェーズ１でAmazon FSx for Windows File Server環境をデプロイしたリージョン1に変更します。"SAZ2" ファイルシステムへのリンクをクリックし、"Network & security" タブを選択します。"DNS Name"の横にあるimage:copy-to-clipboard.png[align="left",width=20]のショートカットをクリックすると、"DNS Name"がクリップボードにコピーされ、UNCパスの前半部分としてペースト出来ます。"DNS Name" の最後に *\share*を追加すると、ファイルシステムのデフォルトのファイル共有へのUNCパスが完成します。（例：\\amznfsx0123abcde.example.com\share）
+
+| *Reconnect at sign-in*
+a| チェックしたままにします
+
+| *Connect using different credentials*
+a| チェックを外したままにします
+|===
++
+. "Z:"ドライブの"File Explorer"ウィンドウには、ファイルシステムにプリロードされたサンプルデータが表示されます。
+
+=== リージョン２のAmazon FSx File Gatewayのデフォルトシェアをネットワークドライブとしてマウントする。
+
+重要: 以下の手順をすべてお読みになってからお進みください。
+
+. "WindowsInstance"に接続したリモートデスクトップセッションに移動します。
+
+. 新規の"File Explorer"を起動します。
+
+. "This PC"を右クリックし、"Map network drive..."を選択します。
+
+. 以下の情報をもとに、ファイル共有をマウントします。:
++
+[cols="3,10"]
+|===
+| *Drive*
+a| Y:
+
+| *Folder*
+a| これは、ファイルゲートウェイのデフォルトのファイル共有のUNCパスです。link:https://console.aws.amazon.com/storagegateway/[AWS Storage Gateway]コンソールに戻り、AWSリージョンをフェーズ３でAmazon FSx File Gatewayサービスコンポーネントをデプロイしたリージョン1に変更します。"Storage Gateway"コンソールの左のウィンドウフレームから"FSx file systems"を選択します。フェーズ3でFSxファイルゲートウェイのサービスコンポーネントを作成する際にアタッチしたファイルシステムの"File system ID"を選択します。"Gateway"名は"FSx File Gateway Workshop"です。"Details"タブの"Examples Commands"セクションに表示される、FSx File Gatewayの内部IPアドレスのUNCパスをコピーしてください（例 \\172.31.0.25\）。UNCパスの前半部分としてペーストします。"IP address" の最後に "share"を追加すると、ファイルゲートウェイのデフォルトのファイル共有へのUNCパスが完成します。（例：\\172.31.0.25\share）
+
+| *Reconnect at sign-in*
+a| チェックしたままにします
+
+| *Connect using different credentials*
+a| チェックを外したままにします
+|===
++
+. "Y:"ドライブの"File Explorer"ウィンドウには、ファイルシステムにプリロードされたサンプルデータが表示されます。 このサンプルデータは、リージョン1のFSx for Windowsファイルサーバーを指す*Z:*ドライブにマウントされたファイルエクスプローラーのウィンドウに表示されるサンプルデータと同じでなければなりません。
+
+== 次のセクション
+
+下のボタンをクリックすると、次のセクションに進みます。
+
+image::test-write-performance.png[link=../07-test-write-performance/, align="left",width=420]
+
+
+
+
