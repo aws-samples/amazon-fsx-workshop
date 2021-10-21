@@ -3,7 +3,7 @@
 :linkattrs:
 :imagesdir: ./resources/images
 
-image:fsx-aws-logos.png[align="left",width=420]
+image:fsxn-aws-logos.png[align="left",width=420]
 
 Amazon FSx offers fully managed, like-for-like features of popular third-party file systems without requiring changes to code. In this workshop, explore Amazon FSx for NetApp ONTAP, which provides the familiarity of popular ONTAP data access and management capabilities, with the scalability, agility, and security of AWS. FSx for ONTAP allows you to run high-performance file storage without changing how you manage your data. Walk through the setup and management of the service, key features like multi-protocol access and replication, and best practices to help simplify and accelerate your network-attached-storage migration journey to the cloud. 
 
