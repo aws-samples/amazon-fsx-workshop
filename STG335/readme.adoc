@@ -1,7 +1,7 @@
 = STG335 - Launch and run Amazon FSx for NetApp ONTAP file systems in minutes
 :icons:
 :linkattrs:
-:imagesdir: ../resources/images
+:imagesdir: ./resources/images
 
 image:fsx-aws-logos.png[align="left",width=420]
 
