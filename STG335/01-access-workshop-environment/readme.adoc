@@ -1,4 +1,4 @@
-= Access AWS sponsored Workshop
+= Access Workshop Environment
 :toc:
 :icons:
 :linkattrs:
