@@ -1,9 +1,8 @@
 = STG310 - Optimize price and performance with Amazon FSx for Lustre
-== Lustre the AWSome Way!
 :icons:
 :linkattrs:
 :imagesdir: ./resources/images
-
+= Lustre the AWSome Way!
 image:fsx-lustre-aws-logos.png[alt="fsx for lustre and aws logos", align="left",width=420]
 
 Come explore the capabilities of Amazon FSx for Lustre, a fully managed, high-performance file storage service for compute-intensive workloads including high performance computing (HPC), machine learning (ML), and analytics workloads. In this workshop, you learn best practices, discover key features like compression and storage scaling, and explore how the seamless integration with Amazon S3 can help you optimize performance while reducing cost.
