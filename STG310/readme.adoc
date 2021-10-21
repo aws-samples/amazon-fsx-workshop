@@ -1,5 +1,5 @@
-= Lustre the AWSome Way!
 = STG310 - Optimize price and performance with Amazon FSx for Lustre
+== Lustre the AWSome Way!
 :icons:
 :linkattrs:
 :imagesdir: ./resources/images
