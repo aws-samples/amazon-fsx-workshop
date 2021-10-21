@@ -1,0 +1,178 @@
+= Test Performance
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+== Summary
+
+This section will test the performance of Amazon FSx for Lustre.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below before continuing.
+
+=== Smallfile Read tests
+
+. Open two (2) SSH terminal session windows connected to *Linux Instance 0*.
++
+Start `*nload*` in one of the SSH terminal session windows.
++
+[source,bash]
+----
+nload -u M
+
+----
++
+*_Copy_* the scripts below and *_execute_* them in the other SSH terminal session window.
+. Install smallfile. link:https://github.com/distributed-system-analysis/smallfile[smallfile] is a distributed metadata-intensive workload generator for POSIX-like filesystems. It is licensed under Apache License, Version 2.0.
++
+[source,bash]
+----
+cd
+git clone https://github.com/bengland2/smallfile.git
+----
++
+Write, read, stat, append, rename, and delete a large number of smallfiles. *_Run_* these commands in order and review the results.
++
+Write (create) 316200 files
++
+[source,bash]
+----
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+prefix=$(echo $(uuidgen)| grep -o ".\{6\}$")
+path=/mnt/fsx/${job_name}
+sudo mkdir -p ${path}
+
+threads=32
+file_size=64
+file_count=10000
+operation=create
+same_dir=N
+
+sudo python ~/smallfile/smallfile_cli.py \
+--operation ${operation} \
+--threads ${threads} \
+--file-size ${file_size} \
+--files ${file_count} \
+--same-dir ${same_dir} \
+--hash-into-dirs Y \
+--prefix ${prefix} \
+--dirs-per-dir ${file_count} \
+--files-per-dir ${file_count} \
+--top ${path} &
+
+----
++
+. Read ~316200 files
++
+[source,bash]
+----
+operation=read
+
+sudo python ~/smallfile/smallfile_cli.py \
+--operation ${operation} \
+--threads ${threads} \
+--file-size ${file_size} \
+--files ${file_count} \
+--same-dir ${same_dir} \
+--hash-into-dirs Y \
+--prefix ${prefix} \
+--dirs-per-dir ${file_count} \
+--files-per-dir ${file_count} \
+--top ${path} &
+
+----
++
+. Stat ~316200 files
++
+[source,bash]
+----
+operation=stat
+
+sudo python ~/smallfile/smallfile_cli.py \
+--operation ${operation} \
+--threads ${threads} \
+--file-size ${file_size} \
+--files ${file_count} \
+--same-dir ${same_dir} \
+--hash-into-dirs Y \
+--prefix ${prefix} \
+--dirs-per-dir ${file_count} \
+--files-per-dir ${file_count} \
+--top ${path} &
+
+----
+
+
+=== dd tests
+
+. Use dd to generate data
++
+[source,bash]
+----
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+bs=1024K
+count=4096
+sync=oflag=sync
+threads=1
+
+sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
+
+time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+----
++
+[source,bash]
+----
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+bs=1024K
+count=4096
+sync=oflag=sync
+threads=2
+
+sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
+
+time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+----
++
+[source,bash]
+----
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+bs=1024K
+count=4096
+sync=oflag=sync
+threads=3
+
+sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
+
+time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+----
+
+=== ior tests
+
+. Use ior to generate data
++
+[source,bash]
+----
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+
+cd /mnt/fsx
+time seq 1 2 | parallel --will-cite -j2 'ior -b 32g -t 8m -w -r -F --posix.odirect -o /mnt/fsx/${job_name}{}.txt' &
+----
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::05-monitor-performance.png[link=../05-monitor-performance/, align="left",width=420]
+
+
+
+

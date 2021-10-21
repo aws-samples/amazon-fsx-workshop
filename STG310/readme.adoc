@@ -1,0 +1,38 @@
+= Lustre the AWSome Way!
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+image:fsx-lustre-aws-logos.png[alt="fsx for lustre and aws logos", align="left",width=420]
+
+This is a workshop designed for architects and engineers who would like to learn more about Amazon Web Services (AWS) fully-managed Lustre file system.
+
+=== Duration
+
+NOTE: It will take approximately 2 hours to complete this workshop and you will be charged approximately *$4.168* to run this environment for 2 hours (based on US East - N. Virginia pricing). After completing the workshop, follow the steps in the link:../06-delete-workshop-environment/[*Delete Workshop Environment*] section so you don't continue to incur charges.
+
+=== Pricing
+
+NOTE: You will incur charges as you go through this workshop *_if_* you exceed the link:http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-limits.html[limits of AWS free tier].
+
+|===
+
+| *Service* | *2-hour pricing*
+| Amazon FSx for Lustre
+a| $2.800
+
+| Amazon EC2
+a| $1.360
+
+| Amazon CloudWatch
+a| $0.008
+
+|===
+
+Click the button below to start the *Amazon FSx for Lustre* workshop.
+
+image::01-create-environment.png[link=01-create-workshop-environment/, align="left",width=420]
+
+=== Participation
+
+We encourage participation; if you find anything, please submit an issue. However, if you want to help raise the bar, **submit a PR**!
