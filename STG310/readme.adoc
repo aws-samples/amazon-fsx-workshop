@@ -1,38 +1,23 @@
 = Lustre the AWSome Way!
+= STG310 - Optimize price and performance with Amazon FSx for Lustre
 :icons:
 :linkattrs:
-:imagesdir: ../resources/images
+:imagesdir: ./resources/images
 
 image:fsx-lustre-aws-logos.png[alt="fsx for lustre and aws logos", align="left",width=420]
+
+Come explore the capabilities of Amazon FSx for Lustre, a fully managed, high-performance file storage service for compute-intensive workloads including high performance computing (HPC), machine learning (ML), and analytics workloads. In this workshop, you learn best practices, discover key features like compression and storage scaling, and explore how the seamless integration with Amazon S3 can help you optimize performance while reducing cost.
 
 This is a workshop designed for architects and engineers who would like to learn more about Amazon Web Services (AWS) fully-managed Lustre file system.
 
 === Duration
 
-NOTE: It will take approximately 2 hours to complete this workshop and you will be charged approximately *$4.168* to run this environment for 2 hours (based on US East - N. Virginia pricing). After completing the workshop, follow the steps in the link:../06-delete-workshop-environment/[*Delete Workshop Environment*] section so you don't continue to incur charges.
+NOTE: It will take approximately 2 hours to complete this workshop.
 
 === Pricing
 
-NOTE: You will incur charges as you go through this workshop *_if_* you exceed the link:http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-limits.html[limits of AWS free tier].
-
-|===
-
-| *Service* | *2-hour pricing*
-| Amazon FSx for Lustre
-a| $2.800
-
-| Amazon EC2
-a| $1.360
-
-| Amazon CloudWatch
-a| $0.008
-
-|===
+NOTE: You will not incur charges as you go through this workshop as you will be using an AWS provided account.
 
 Click the button below to start the *Amazon FSx for Lustre* workshop.
 
-image::01-create-environment.png[link=01-create-workshop-environment/, align="left",width=420]
-
-=== Participation
-
-We encourage participation; if you find anything, please submit an issue. However, if you want to help raise the bar, **submit a PR**!
+image::access-fsx-lustre-environment.jpg[link=01-access-workshop-environment/, align="left",width=420]
