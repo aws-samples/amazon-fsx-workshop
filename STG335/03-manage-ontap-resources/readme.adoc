@@ -7,6 +7,7 @@
 
 == Summary
 
+
 This section will help you become familiar with using the Amazon FSx console and ONTAP CLI to manage your Amazon FSx for NetApp ONTAP file systems.
 
 You can use the Amazon FSx console, AWS CLI or FSx API to create a new file system. In addition to these AWS management tools you can also use NetApp management tools like NetApp Cloud Manager, ONTAP CLI and ONTAP REST API to manage the file system.
@@ -14,15 +15,17 @@ You can use the Amazon FSx console, AWS CLI or FSx API to create a new file syst
 
 == Duration
 
+
 NOTE: It will take approximately 15 minutes to complete this section.
 
 
 == Manage FSx for ONTAP resources from the Amazon FSx console
 
+
 === Examine the file system
 
-. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for NetApp ONTAP file system.
 
+. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for NetApp ONTAP file system.
 
 . *_Examine_* the *Summary* section of the file system. *_Find_* the values of the following file system attributes:
 * File system ID
@@ -42,7 +45,6 @@ NOTE: It will take approximately 15 minutes to complete this section.
 * Management endpoint - DNS name and IP address
 * Inter-cluster endpoint - DNS name and IP address
 
-
 . *_Examine_* the subnet attributes of the file system. *_Find_* the values of preferred and standby subnets:
 * Subnets
 * Availability Zones
@@ -53,16 +55,15 @@ NOTE: It will take approximately 15 minutes to complete this section.
 
 . *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
 
-
 . *_Examine_* the *Administration* section of the file system. *_Click_* the *Administration* tab. *_Find_* the values of the following file system attributes:
 * Service account username
 * Management endpoint - DNS name and IP address
 * Inter-cluster endpoint - DNS name IP address
 * Weekly maintenance window
 
-=== Connect to the Linux Instance
 
-IMPORTANT: Read through all steps below before continuing.
+==== Connect to the Linux Instance
+
 
 //image::<connect-linux-instances>.gif[align="left", width=600]
 
@@ -103,7 +104,8 @@ MGMTENDPOINT="x.x.x.x"
 . *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
 
 
-=== Create a Storage virtual machine (SVM) joined to Active Directory
+=== Create a storage virtual machine (SVM) joined to Active Directory
+
 
 . *_Click_* on the *Storage virtual machines* tab of your file system. *_Click_* *Create storage virtual machine* and input the values shown here:
 
@@ -157,6 +159,7 @@ a| Accept the default
 
 === Create a volume
 
+
 . *_Click_* on the *volumes* tab of your file system. *_Click_* *Create volume* and input the values shown here:
 
 +
@@ -191,6 +194,7 @@ a| Select *None*
 
 === Examine new resources from the Amazon FSx Console
 
+
 . *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
 . *_Examine_* the *Storage virtual machines(SVMs)* section of the file system. *_Click_* the *Storage virtual machines* tab. *_Find_* the values of the following file system attributes:
 * SVM Name
@@ -219,6 +223,7 @@ TIP: Each SVM has a unique namespace with the SVM root volume being the entry po
 
 == Manage FSx for ONTAP resources from the ONTAP CLI
 
+
 . *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the file system management endpoint.
 +
 [source,bash]
@@ -233,6 +238,11 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 FsxId08361928e949c6b55::>
 ----
 +
+
+
+=== Examine the available ONTAP CLI commands
+
+
 . *_Type_* *?* to get a list of available ONTAP CLI commands.
 
 +
@@ -264,14 +274,19 @@ FsxId08361928e949c6b55::> ?
   vserver>                    Manage Vservers
 ----
 +
-. *_Run_* below command to get a list of available volumes. Does this match the volumes you reviewed in the Amazon FSx console?
+
+
+=== Examine the file system
+
+
+. *_Run_* the following command to get a list of available volumes. Does this match the volumes you reviewed in the Amazon FSx console?
 +
 [source,bash]
 ----
 vol show
 ----
 +
-. *_Run_* below command to list all the Logical Interfaces (LIFs). How many LIFs do you see and what are they used for?
+. *_Run_* the following command to list all the Logical Interfaces (LIFs). How many LIFs do you see and what are they used for?
 +
 [source,bash]
 ----
@@ -288,6 +303,7 @@ NFSENDPOINT="x.x.x.x"
 
 
 == Next section
+
 
 Click the link below to go to the next section.
 
