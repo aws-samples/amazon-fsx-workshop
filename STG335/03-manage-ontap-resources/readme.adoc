@@ -86,12 +86,12 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 ** *_Open_* your terminal application and *_paste_* the SSH command in a terminal window.
 
 ** *_Follow_* the prompts to SSH into the instance.
-
++
 TIP: For a smooth experience to toggle between multiple sessions connecting to: +
 1) FSx for ONTAP Workshop Linux Instance + 
 2) ONTAP CLI session to your FSx for NetApp ONTAP file system and + 
 we recommend you create 2 x SSH terminal or Session Manager sessions (tabs) to the Linux Instance.
-
++
 . From the SSH connection of your *FSx for ONTAP Workshop Linux instance* and export the below values. Replace the IP with IP address of your file system management endpoint.
 +
 [source,bash]
