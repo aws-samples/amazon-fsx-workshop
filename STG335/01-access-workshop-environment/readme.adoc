@@ -2,7 +2,7 @@
 :toc:
 :icons:
 :linkattrs:
-:imagesdir: ./resources/images
+:imagesdir: ../resources/images
 
 
 == Summary
