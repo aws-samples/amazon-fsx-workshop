@@ -8,14 +8,11 @@
 
 This section will cover Storage Efficiency features that can be enabled on your *Amazon FSx for NetApp ONTAP* file system.
 
-
-==== Storage Efficiency features overview
-
+Storage Efficiency features overview
 
 . *Compression*: Compresses data blocks to eliminate the amount of physical storage required.
 . *Deduplication*: Eliminates duplicate data blocks to achieve storage efficiency and optimize cost. You can enable Inline and post-process deduplication for your volume. 
 . *Compaction*: Aggregates multiple small file IO operations and IO operations that are padded with zeros into a single 4KB block on disk. For example, if you have small file IO (<4KB) instead of allocating one 4KB block to each IO, Compaction will aggregate multiple smaller IO operations into a single 4KB block.
-
 
 You can enable or disable these *Storage Efficiency* features for your *Amazon FSx for NetApp ONTAP* at the volume level. You can use deduplication, data compression, and data compaction together or independently to achieve optimal space savings on a volume. With all three features enabled, new data written to the volume will:
 
