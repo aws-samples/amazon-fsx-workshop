@@ -11,7 +11,7 @@ A new AWS environment will be pre-built and available to you for use during this
 
 == Workshop Diagram
 
-image::workshop-environment.png[align="center"]
+image::workshop-environment.jpg[align="center"]
 
 == Step-by-step Guide
 
@@ -20,10 +20,9 @@ IMPORTANT: Follow the instructions given by the workshop administrators on how t
 IMPORTANT: Read through all steps below before continuing.
 
 
-. Go to the link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run] or access the direct link provided by the workshop administrators.
-* The AWS Event Engine was created to help AWS field teams run Workshops, GameDays, Bootcamps, Immersion Days, and other events that require hands-on access to AWS accounts.
-. *_Read_* the *Terms & Conditions*.
-. *_Enter_* the team hash you were given from the workshop administrators and *_click_* *[Accept terms and login]*.
+. Go to the link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run].
+. *_Enter_* the event hash you were given from the workshop administrators and *_click_* *[Accept terms and login]*.
+. From the *Sign in with* page, *_pick_* and *_click_* the sign-in method you prefer. Follow the prompts to sign in to the AWS account provided by AWS Event Engine.
 . From the *Team Dashboard* page, *_click_* *[AWS Console]*.
 . From the *AWS Console Login* page, *_click_* the *[Open AWS Console]* link in the *Login Link* section to open the AWS Console using the AWS sponsored account.
 
