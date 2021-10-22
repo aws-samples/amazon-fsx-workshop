@@ -122,7 +122,7 @@ a| svm01
 a| Accept the default
 
 | *Active Directory*
-a| [*] Join an Active Directory
+a| Select - Join an Active Directory
 
 | *Net BIOS name*
 a| svm01
