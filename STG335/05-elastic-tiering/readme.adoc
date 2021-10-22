@@ -112,7 +112,7 @@ Note: Run the volume
 
 Click the button below to go to the next section.
 
-image::tear-down-workshop.png[link=../09-tear-down-workshop/, align="left",width=420]
+image::storage-efficiency.jpg[link=../06-storage-efficiency/, align="left",width=420]
 
 
 
