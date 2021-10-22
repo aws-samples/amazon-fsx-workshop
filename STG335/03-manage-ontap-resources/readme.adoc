@@ -113,7 +113,7 @@ MGMTENDPOINT="x.x.x.x"
 [cols="2,13"]
 |===
 | *File system*
-a| ##Select the file system ID for your FSx for NetApp ONTAP file system##
+a| Select the file system ID for your FSx for NetApp ONTAP file system
 
 | *Storage virtual machine name*
 a| svm01
