@@ -22,23 +22,23 @@ IMPORTANT: Read through all steps below before continuing.
 
 . Go to the link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run].
 +
-image::event-hash-entry.jpg[align="center"]
+image::event-hash-entry.jpg[align="left",width=420]
 +
 . *_Enter_* the event hash you were given from the workshop administrators and *_click_* *[Accept terms and login]*.
 +
-image::event-hash-accept-terms.jpg[align="center"]
+image::event-hash-accept-terms.jpg[, align="left",width=420]
 +
 . From the *Sign in with* page, *_pick_* and *_click_* the sign-in method you prefer. Follow the prompts to sign in to the AWS account provided by AWS Event Engine.
 . From the *Team Dashboard* page, *_click_* *[AWS Console]*.
 +
-image::team-dashboard.jpg[align="center"]
+image::team-dashboard.jpg[align="left",width=420]
 +
 . From the *AWS Console Login* page, *_click_* the *[Open AWS Console]* link in the *Login Link* section to open the AWS Console using the AWS sponsored account.
 +
-image:open-console-login.jpg[align="center"]
+image:open-console-login.jpg[align="left",width=420]
 
 == Next section
 
 Click the button below to go to the next section.
 
-image::connect-to-instances.png[link=../02-connect-to-instances/, align="right",width=420]
+image::managing-ontap-resources.png[link=../03-managing-ontap-resources/, align="left",width=420]
