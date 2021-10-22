@@ -196,7 +196,7 @@ volume show -vserver svm08 -volume vol1_clone1 -fields size,used,available,perce
 
 Click the button below to go to the next section.
 
-image::data-protection.png[link=../08-data-protection/, align="left",width=420]
+image::data-protection.jpg[link=../08-data-protection/, align="left",width=420]
 
 
 
