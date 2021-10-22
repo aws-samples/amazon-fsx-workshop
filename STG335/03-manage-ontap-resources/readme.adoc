@@ -224,7 +224,7 @@ TIP: Each SVM has a unique namespace with the SVM root volume being the entry po
 == Manage FSx for ONTAP resources from the ONTAP CLI
 
 
-==== Connect to the ONTAP CLI session
+=== Connect to the ONTAP CLI session
 
 
 . *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the file system management endpoint.
