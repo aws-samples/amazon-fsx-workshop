@@ -9,7 +9,7 @@
 This section will cover Storage Efficiency features that can be enabled on your *Amazon FSx for NetApp ONTAP* file system.
 
 
-=== Storage Efficiency features Overview
+==== Storage Efficiency features overview
 
 
 . *Compression*: Compresses data blocks to eliminate the amount of physical storage required.
@@ -17,20 +17,21 @@ This section will cover Storage Efficiency features that can be enabled on your 
 . *Compaction*: Aggregates multiple small file IO operations and IO operations that are padded with zeros into a single 4KB block on disk. For example, if you have small file IO (<4KB) instead of allocating one 4KB block to each IO, Compaction will aggregate multiple smaller IO operations into a single 4KB block.
 
 
-You can enable or disable these *Storage Efficiency* features for your *Amazon FSx for NetApp ONTAP* volumes. You can run deduplication, data compression, and data compaction together or independently to achieve optimal space savings on a volume. With all three features enabled, when new data is written to your volume:
+You can enable or disable these *Storage Efficiency* features for your *Amazon FSx for NetApp ONTAP* at the volume level. You can use deduplication, data compression, and data compaction together or independently to achieve optimal space savings on a volume. With all three features enabled, new data written to the volume will:
 
-* First, Inline data compression will compress incoming data blocks.
-* Next, Inline deduplication will remove duplicate blocks.
-* Next, Inline data compaction will compact smaller IO's (<4KB) that may or may not be already compressed and deduplicated into 4KB block before writing to your file system.
+* First, will compress incoming data blocks using Inline data compression.
+* Second, will remove duplicate blocks using Inline deduplication.
+* Third, will compact smaller IO's (<4KB) that may or may not be already compressed and deduplicated into 4KB block before writing to your file system using Inline data compaction.
 
 
 == Duration
 
-NOTE: It will take approximately 05 minutes to complete this section.
 
-== Step-by-step Guide (Storage Efficiency)
+NOTE: It will take approximately 5 minutes to complete this section.
 
-=== Storage Efficiency Features
+
+== Examine storage efficiency settings
+
 
 . *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the cluster management endpoint of your FSx for ONTAP file system.
 +
@@ -39,7 +40,7 @@ NOTE: It will take approximately 05 minutes to complete this section.
 ssh ${ADMINUSER}@${MGMTENDPOINT}
 ----
 +
-. *_Run_* below command to check if Storage Efficiency is enabled on your volume.
+. *_Run_* below command to check if storage efficiency is enabled on your volume.
 +
 [source,bash]
 ----
@@ -50,7 +51,7 @@ volume efficiency show
 +
 NOTE: All volumes are assigned the *auto* efficiency policy. The auto policy performs continuous deduplication in the background and runs when 20% of the data is changed on your volume. If required, you can assign a custom policy and a schedule for your post-process deduplication jobs.
 +
-. *_Run_* below command to check which Storage Efficiency features are enabled or disabled on your volume. 
+. *_Run_* below command to check which storage efficiency features are enabled or disabled on your volume. 
 +
 [source,bash]
 ----
@@ -64,7 +65,7 @@ volume efficiency show -vserver svm01 -volume vol1
 * Inline Dedupe
 * Data Compaction
 
-. *_Run_* the below command to check the Storage Efficiency savings for your volume.
+. *_Run_* the below command to check the storage efficiency savings for your volume.
 +
 [source,bash]
 ----
@@ -92,6 +93,7 @@ quit
 
 
 == Next section
+
 
 Click the button below to go to the next section.
 

@@ -110,9 +110,6 @@ volume show-footprint -volume vol1
 
 . Did the data foot-print change? 
 
-Note: Run the volume 
-
-
 
 == Next section
 
