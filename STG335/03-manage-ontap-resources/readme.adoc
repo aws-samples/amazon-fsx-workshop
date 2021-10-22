@@ -155,7 +155,7 @@ a| Accept the default
 . It will take approximately *5 minutes* to create the new SVM. You can proceed to *Create a volume* step without waiting for the SVM to be fully available.
 
 
-==== Create a volume
+=== Create a volume
 
 . *_Click_* on the *volumes* tab of your file system. *_Click_* *Create volume* and input the values shown here:
 
@@ -189,13 +189,13 @@ a| Select *None*
 . It will take approximately *2 minutes* to create the new volume. 
 
 
-=== Continue Examining the file system from Amazon FSx Console
+=== Examine new resources from the Amazon FSx Console
 
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
 . *_Examine_* the *Storage virtual machines(SVMs)* section of the file system. *_Click_* the *Storage virtual machines* tab. *_Find_* the values of the following file system attributes:
 * SVM Name
 * SVM ID
 * Is the SVM joined to an Active Directory?
-
 
 . *_Examine_* the *Volumes* section of the file system. *_Click_* the *Volumes* tab. *_Find_* the values of the following file system attributes:
 * Volume Name 
