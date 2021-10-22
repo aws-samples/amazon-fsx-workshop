@@ -27,7 +27,7 @@ NOTE: It will take approximately 05 minutes to complete this section.
 
 == Access the file system
 
-==+ Mount volume on a Linux instance
+=== Mount volume on a Linux instance
 
 IMPORTANT: Read through all steps below before continuing.
 
