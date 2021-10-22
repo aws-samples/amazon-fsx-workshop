@@ -54,7 +54,7 @@ NOTE: All volumes are assigned the *auto* efficiency policy. The auto policy per
 +
 [source,bash]
 ----
-volume efficiency show -vserver svm08 -volume vol1
+volume efficiency show -vserver svm01 -volume vol1
 ----
 +
 
@@ -68,7 +68,7 @@ volume efficiency show -vserver svm08 -volume vol1
 +
 [source,bash]
 ----
-volume show -vserver svm08 -volume vol1 -fields compression-space-saved,compression-space-saved-percent,dedupe-space-saved,dedupe-space-saved-percent
+volume show -vserver svm01 -volume vol1 -fields compression-space-saved,compression-space-saved-percent,dedupe-space-saved,dedupe-space-saved-percent
 ----
 +
 
@@ -79,7 +79,7 @@ volume show -vserver svm08 -volume vol1 -fields compression-space-saved,compress
 +
 [source,bash]
 ----
-volume efficiency stat -vserver svm08 -volume vol1
+volume efficiency stat -vserver svm01 -volume vol1
 ----
 +
 

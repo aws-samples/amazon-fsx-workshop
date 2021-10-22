@@ -61,7 +61,7 @@ vol snapshot show -volume vol1
 +
 [source,bash]
 ----
-volume clone create -vserver svm08 -flexclone vol1_clone1 -parent-volume vol1
+volume clone create -vserver svm01 -flexclone vol1_clone1 -parent-volume vol1
 ----
 +
 
@@ -85,7 +85,7 @@ vol snapshot show -volume vol1
 +
 [source,bash]
 ----
-volume mount -vserver svm08 -volume vol1_clone1 -junction-path /vol1_clone1
+volume mount -vserver svm01 -volume vol1_clone1 -junction-path /vol1_clone1
 ----
 +
 
@@ -93,8 +93,8 @@ volume mount -vserver svm08 -volume vol1_clone1 -junction-path /vol1_clone1
 +
 [source,bash]
 ----
-volume show -vserver svm08 -volume vol1 -fields size,used,available,percent-used,physical-used,physical-used-percent
-volume show -vserver svm08 -volume vol1_clone1 -fields size,used,available,percent-used,physical-used,physical-used-percent
+volume show -vserver svm01 -volume vol1 -fields size,used,available,percent-used,physical-used,physical-used-percent
+volume show -vserver svm01 -volume vol1_clone1 -fields size,used,available,percent-used,physical-used,physical-used-percent
 ----
 +
 
@@ -183,8 +183,8 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 +
 [source,bash]
 ----
-volume show -vserver svm08 -volume vol1 -fields size,used,available,percent-used,physical-used,physical-used-percent
-volume show -vserver svm08 -volume vol1_clone1 -fields size,used,available,percent-used,physical-used,physical-used-percent
+volume show -vserver svm01 -volume vol1 -fields size,used,available,percent-used,physical-used,physical-used-percent
+volume show -vserver svm01 -volume vol1_clone1 -fields size,used,available,percent-used,physical-used,physical-used-percent
 ----
 +
 

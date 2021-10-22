@@ -52,8 +52,8 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 +
 [source,bash]
 ----
-volume offline -volume vol1_clone1 -vserver svm08
-volume delete -volume vol1_clone1 -vserver svm08
+volume offline -volume vol1_clone1 -vserver svm01
+volume delete -volume vol1_clone1 -vserver svm01
 vol show
 ----
 +
@@ -64,7 +64,7 @@ vol show
 
 .  *_Select_* volume *restorevol* -> *Actions* -> *Delete Volume*. *_Select_* *No* for create final backup, *_accept_* acknowledgment and *_Type_* *delete* in the Confirm delete section. *_Click_* *Delete volumes(s)* to delete the volume.
 
-.  *_Examine_* the *Storage virtual machines* section on your file system. *_Click_* the *Storage virtual machines* tab. *_Select_* SVM *svm08* -> *Actions* -> *Delete storage virtual machine*. *_Click_* *Delete storage virtual machines* to delete the SVM.
+.  *_Examine_* the *Storage virtual machines* section on your file system. *_Click_* the *Storage virtual machines* tab. *_Select_* SVM *svm01* -> *Actions* -> *Delete storage virtual machine*. *_Click_* *Delete storage virtual machines* to delete the SVM.
 
 . *_Verify_* the *volumes* and *Storage virtual machines* tabs to ensure there are no pending resources on your file system.
 

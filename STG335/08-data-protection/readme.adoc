@@ -85,7 +85,7 @@ NOTE: As you can see the hourly snapshots happen 5 mins past the hour, the daily
 +
 [source,bash]
 ----
-volume snapshot create -vserver svm08 -volume vol1 -snapshot vol1_FSxOntapWorkshop -comment "Manual Snapshot created for FSx Workshop"
+volume snapshot create -vserver svm01 -volume vol1 -snapshot vol1_FSxOntapWorkshop -comment "Manual Snapshot created for FSx Workshop"
 ----
 +
 

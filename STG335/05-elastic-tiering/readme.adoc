@@ -60,7 +60,7 @@ volume show-footprint -volume vol1
 +
 [source,bash]
 ----
-volume modify -volume vol1 -vserver svm08 -tiering-policy ALL
+volume modify -volume vol1 -vserver svm01 -tiering-policy ALL
 ----
 +
 NOTE: Setting the tiering policy to *ALL* moves all user data blocks in active file sytem and snapshots to Capacity tier. Moving blocks back to the performance tier is not allowed.

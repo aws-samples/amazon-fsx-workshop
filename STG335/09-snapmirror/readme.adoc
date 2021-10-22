@@ -119,7 +119,7 @@ cluster peer show -instance
 +
 [source,bash]
 ----
-vserver peer create -vserver svm08 -peer-vserver svm01 -applications snapmirror -peer-cluster <peer cluster name> 
+vserver peer create -vserver svm01 -peer-vserver svm01 -applications snapmirror -peer-cluster <peer cluster name> 
 ----
 +
 TIP: If you are have the same SVM name on both your primary and secondary file system then use _-local-name_ option with the above command.
@@ -142,7 +142,7 @@ vserver peer show
 +
 [source,bash]
 ----
-vserver peer accept -vserver svm01 -peer-vserver svm08
+vserver peer accept -vserver svm01 -peer-vserver svm01
 ----
 +
 . *_Verify_* the Cluster Peer Relationship was created successfully on *secondary* file system.
@@ -170,7 +170,7 @@ snapmirror show
 +
 [source,bash]
 ----
-snapmirror create -source-path svm08:vol1 -destination-path svm01:vol2 -policy MirrorAllSnapshots -type XDP -schedule 5min
+snapmirror create -source-path svm01:vol1 -destination-path svm01:vol2 -policy MirrorAllSnapshots -type XDP -schedule 5min
 ----
 +
 . *_Verify_*  SnapMirror relationship status on *secondary* file system.
