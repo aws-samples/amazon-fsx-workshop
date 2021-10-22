@@ -27,7 +27,9 @@ NOTE: It will take approximately 05 minutes to complete this section.
 
 == Access the file system
 
-=== Mount volume on a Linux instance
+
+=== Mount a volume on a Linux instance
+
 
 IMPORTANT: Read through all steps below before continuing.
 
@@ -127,6 +129,7 @@ cat ${MOUNTPOINT}/${DIRNAME}/multiprotocol-demo.txt
 
 === Create a CIFS share
 
+
 IMPORTANT: Read through all steps below and watch the quick video if available before continuing.
 
 . *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux Instance* and SSH to the file system management endpoint of your file system to create a *ONTAP CLI* session.
@@ -155,7 +158,7 @@ vserver cifs share show -vserver svm01
 TIP: If you created a SVM with NTFS or MIXED security style then you can create CIFS share from an Windows EC2 Instance ( *_Run_* *fsmgmt.msc* -> *_Right-click_* *Connect to another computer* and Enter the SMB DNS name for your SVM. *_Right-click_*  on *shares* -> *new share* and follow the steps to create a new share.
 
 
-=== Map share to Windows Instance
+=== Map a share to the Windows instance
 
 
 ==== Connect to the Windows instance
