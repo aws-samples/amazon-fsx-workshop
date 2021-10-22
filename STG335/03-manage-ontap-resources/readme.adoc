@@ -291,7 +291,7 @@ NFSENDPOINT="x.x.x.x"
 
 Click the link below to go to the next section.
 
-image::multiprotocol-access.png[link=../04-multiprotocol-access/, align="left",width=420]
+image::multiprotocol-access.jpg[link=../04-multiprotocol-access/, align="left",width=420]
 
 
 
