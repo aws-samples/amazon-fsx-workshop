@@ -95,7 +95,7 @@ quit
 
 Click the button below to go to the next section.
 
-image::elastic-tiering.png[link=../08-tiering/, align="left",width=420]
+image::flexclone.jpg[link=../07-flexclone/, align="left",width=420]
 
 
 
