@@ -189,7 +189,7 @@ a| Leave unchecked
 
 Click the link below to go to the next section.
 
-image::data-protection.png[link=../05-data-protection/, align="left",width=420]
+image::elastic-tiering.jpg[link=../05-elastic-tiering/, align="left",width=420]
 
 
 
