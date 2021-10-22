@@ -36,7 +36,6 @@ image::team-dashboard.jpg[align="center"]
 . From the *AWS Console Login* page, *_click_* the *[Open AWS Console]* link in the *Login Link* section to open the AWS Console using the AWS sponsored account.
 +
 image:open-console-login.jpg[align="center"]
-+
 
 == Next section
 
