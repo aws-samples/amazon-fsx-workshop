@@ -233,7 +233,6 @@ Click the button below to go to the next section. If you have time and want to t
 
 [cols="2,1"]
 |===
-a|Bonus - SnapMirror a| Cleanup resources]
 a|image::snapmirror.jpg[link=../09-snapmirror/, align="left",width=420] a| image::cleanup-resources.jpg[link=../10-cleanup-resources/, align="left",width=420]
 |===
 
