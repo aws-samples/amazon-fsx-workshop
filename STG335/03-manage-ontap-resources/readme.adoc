@@ -17,9 +17,9 @@ You can use the Amazon FSx console, AWS CLI or FSx API to create a new file syst
 NOTE: It will take approximately 15 minutes to complete this section.
 
 
-== Step-by-step Guide (Amazon FSx Console)
+== Manage FSx for ONTAP resources from the Amazon FSx console
 
-=== Examine Amazon FSx Console
+=== Examine the file system
 
 . Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for NetApp ONTAP file system.
 
@@ -103,7 +103,7 @@ MGMTENDPOINT="x.x.x.x"
 . *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
 
 
-==== Create a Storage virtual machine (SVM) joined to Active Directory
+=== Create a Storage virtual machine (SVM) joined to Active Directory
 
 . *_Click_* on the *Storage virtual machines* tab of your file system. *_Click_* *Create storage virtual machine* and input the values shown here:
 
@@ -217,7 +217,7 @@ TIP: Each SVM has a unique namespace with the SVM root volume being the entry po
 * Add a new tag (key/value) pair. *_Click_* the *[Add]* button and enter a *key* / *value* of your choice (e.g. Tag Key=Name, Value=FSxOntap-workshop). *_Click_* the *Save* button.
 
 
-=== Step-by-step Guide (ONTAP CLI)
+== Manage FSx for ONTAP resources from the ONTAP CLI
 
 . *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the file system management endpoint.
 +
