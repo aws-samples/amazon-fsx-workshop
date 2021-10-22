@@ -125,7 +125,7 @@ cat ${MOUNTPOINT}/${DIRNAME}/multiprotocol-demo.txt
 +
 
 
-==+ Create a CIFS share
+=== Create a CIFS share
 
 IMPORTANT: Read through all steps below and watch the quick video if available before continuing.
 
