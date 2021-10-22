@@ -113,22 +113,22 @@ MGMTENDPOINT="x.x.x.x"
 [cols="2,13"]
 |===
 | *File system*
-a| Select the file system ID for your FSx for NetApp ONTAP file system
+a| [Select the file system ID for your FSx for NetApp ONTAP file system]
 
 | *Storage virtual machine name*
-a| Enter svm08
+a| svm01
 
 | *SVM administrative password*
-a| Accept the default
+a| [Accept the default]
 
 | *Active Directory*
-a| Select - Join an Active Directory
+a| [Select - Join an Active Directory]
 
 | *Net BIOS name*
-a| Input a Net BIOS name which you will use to connect to SMB share. Ex: svm08
+a| svm01
 
 | *Active Directory domain name*
-a| Input example.com
+a| example.com
 
 | *DNS server IP addresses*
 a| Enter the Active Directory DNS server IP addresses. You can retrieve the DNS addresses using link:https://console.aws.amazon.com/directoryservice[Directory Service]. *_click_* Directory ID with Directory name *fsxontap.com*. Under *Networking & Security* tab you will find two DNS addresses
