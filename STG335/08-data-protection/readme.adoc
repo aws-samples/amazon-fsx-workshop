@@ -229,10 +229,14 @@ a| Accept Default
 
 == Next section
 
-Click the button below to go to the next section.
+Click the button below to go to the next section. If you have time and want to try our *Bonus* section, go to the SnapMirror section. If you are done with the workshop, go to the *Cleanup resources* section.
 
 image::flexclone.png[link=../06-flexclone/, align="left",width=420]
 
-
+[cols="1,1"]
+|===
+a|Bonus - SnapMirror a| Cleanup resources]
+a|image::snapmirror.png[link=../09-snapmirror/, align="left",width=420] a| image::cleanup-resources.png[link=../10-cleanup-resources/, align="left",width=420]
+|===
 
 
