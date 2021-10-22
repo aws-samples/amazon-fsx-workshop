@@ -1,4 +1,4 @@
-= Managing your Amazon FSx for NetApp ONTAP File System
+= Manage Amazon FSx for NetApp ONTAP resources
 :toc:
 :icons:
 :linkattrs:

@@ -2,7 +2,7 @@
 :toc:
 :icons:
 :linkattrs:
-:imagesdir: ../resources/images
+:imagesdir: ./resources/images
 
 
 == Summary
@@ -41,4 +41,4 @@ image:open-console-login.jpg[align="left",width=420]
 
 Click the button below to go to the next section.
 
-image::managing-ontap-resources.png[link=../03-managing-ontap-resources/, align="left",width=420]
+image::manage-ontap-resources.jpg[link=../03-manage-ontap-resources/, align="left",width=420]
