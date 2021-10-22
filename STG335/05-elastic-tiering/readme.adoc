@@ -27,11 +27,15 @@ Changing the tiering policy from auto to snapshot-only or none does not cause ac
 
 == Duration
 
-NOTE: It will take approximately 05 minutes to complete this section.
 
-== Step-by-step Guide (Tiering)
+NOTE: It will take approximately 5 minutes to complete this section.
 
-=== Tiering steps
+
+== Enable tiering
+
+
+=== Set tiering policy
+
 
 . *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the cluster management endpoint of your FSx for ONTAP file system.
 +
@@ -40,7 +44,6 @@ NOTE: It will take approximately 05 minutes to complete this section.
 ssh ${ADMINUSER}@${MGMTENDPOINT}
 ----
 +
-
 . *_Run_* command below to check tiering policy set on your volume.
 +
 [source,bash]
@@ -48,7 +51,6 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 vol show -volume vol1 -fields tiering-policy
 ----
 +
-
 . *_Run_* command below to check current data footprint between your performance and capacity pool tiers.
 +
 [source,bash]
@@ -85,6 +87,10 @@ sudo python3 /home/ec2-user/smallfile/smallfile_cli.py --operation create --thre
 ssh ${ADMINUSER}@${MGMTENDPOINT}
 ----
 +
+
+
+=== Verify tiering policy
+
 
 . *_Run_* command below to check if the tiering policy was updated
 +
