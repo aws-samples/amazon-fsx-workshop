@@ -1,4 +1,4 @@
-= SnapMirror
+= SnapMirror - *Bonus section*
 :toc:
 :icons:
 :linkattrs:
@@ -26,16 +26,99 @@ A peer relationship must be created between the Inter Cluster LIFs on the source
 
 == Duration
 
-NOTE: It will take approximately 20 minutes to complete this section.
 
-
-== Step-by-step Guide (SnapMirror volume replication)
+NOTE: It will take approximately 30 minutes to complete this section.
 
 IMPORTANT: Read through all steps before continuing.
 
 //image::xxx.gif[align="left", width=600]
 
+
+== SnapMirror volume replication
+
+
+=== Create a secondary file system 
+TIP: You can skip this section if you do not want to setup *SnapMirror* and *FlexCache* portions of this GitHub workshop.
+
+*_Click_* on *FSx > File systems* above the summary section of the file system and *_click_* *Create file system* then *_Select_* *Amazon FSx for NetApp ONTAP* and click *_Next_*.
+
+. You can choose between *Quick create* or *Standard create* methods.
+* The *Quick create* option allows you to easily create a new file system with a *_default_* recommended configuration. The *Quick create* option creates a file system with a single SVM and one volume, allowing for quick access to data from Linux instances over the NFS protocol. 
+* The *Standard create* option allows you to set all the configuration options like performance, networking , security, backups, maintenance etc. 
+
+. *_Select_* *Standard create* and input the values as shown here:
+
++
+[cols="2,18"]
+|===
+| *File system name - optional*
+a| Provide a file system name - FSxOntap-DR
+
+| *SSD storage capacity*
+a| Input 1024
+
+| *Provisioned SSD IOPS*
+a| Accept the default
+
+| *Throughput capacity*
+a| Accept the default
+
+| *Virtual Private Cloud (VPC)*
+a| Select the VPC you noted down earlier during *Examine Amazon FSx Console* section of this workshop. This will be the same VPC as your *primary* file system
+
+| *VPC Security Groups*
+a| Select the security group with name *fsx-ontap-workshop-SecurityGroup-<ID>* created by the workshop
+
+| *Preferred subnet*
+a| Select the Preferred subnet you noted down earlier during *Examine Amazon FSx Console* section of this workshop. This will be the same subnet as your *primary* file system
+
+| *Standby subnet*
+a| Select the Standby subnet you noted down earlier during *Examine Amazon FSx Console* section of this workshop. This will be the same subnet as your *primary* file system
+
+| *VPC route tables*
+a| Select the route table ID you noted down earlier during *Examine Amazon FSx Console* section of this workshop. This will be the same route table as your *primary* file system
+
+| *Endpoint IP address range*
+a| Accept the default
+
+| *Encryption key*
+a| Accept the default
+
+| *File system administrative password*
+a| Specify a password for the fsxadmin user. You can set a new password or use the same password as your *primary* file system. You can retrieve this password using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* Secret name *FSxPassword-<GUID>* and *_Click_* on *Retrieve Secret value* to get the fsxadmin user password
+
+| *Storage virtual machine name*
+a| Enter - svm01
+
+| *SVM administrative password*
+a| Accept the default
+
+| *Active Directory*
+a| Accept the default. Do not join an Active Directory
+
+| *Default volume configuration*
+a| Leave Blank for all sections
+
+| *Backup and maintenance*
+a| Accept the default
+
+| *Tags*
+a| Accept the default
+
+
+|===
++
+. After you have entered or accepted values for all parameters, *_click_* *Next* and then *_click_* *Create file system*
+
+. It will take approximately *30 minutes* to create the new file system. 
+
+NOTE: This will be referenced as *secondary* file system for the rest of this workshop.
+
+
+== Step-by-step Guide (SnapMirror volume replication)
+
 === Prepare your DR/*secondary* file system for SnapMirror
+
 
 . Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for NetApp ONTAP file system with name *FSxOntap-DR* which you created from the FSx Console earlier during this workshop. 
 
