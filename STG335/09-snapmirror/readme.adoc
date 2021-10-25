@@ -114,12 +114,12 @@ a| Accept the default
 NOTE: This will be referenced as *secondary* file system for the rest of this workshop.
 
 
-== Step-by-step Guide (SnapMirror volume replication)
+== Setup SnapMirror volume replication
 
 === Prepare your DR/*secondary* file system for SnapMirror
 
 
-. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for NetApp ONTAP file system with name *FSxOntap-DR* which you created from the FSx Console earlier during this workshop. 
+. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for NetApp ONTAP file system with name *FSxOntap-DR* which you created from the FSx Console earlier during this section. 
 
 . *_Examine_* the *Administration* section of the console. *_Click_* the *Administration* tab. *_Find_* the values of the following file system attributes:
 * Management endpoint - IP address
