@@ -20,7 +20,7 @@ You can create multiple clones for the same parent volume. You can split the par
 
 == Duration
 
-NOTE: It will take approximately 05 minutes to complete this section.
+NOTE: It will take approximately 5 minutes to complete this section.
 
 == Step-by-step Guide (FlexClone)
 

@@ -8,7 +8,7 @@
 
 == Duration
 
-NOTE: It will take approximately 10 minutes to complete this section.
+NOTE: It will take approximately 25 minutes to complete this section.
 
 === Delete *Amazon FSx for ONTAP resources* 
 

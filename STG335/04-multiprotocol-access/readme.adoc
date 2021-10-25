@@ -22,7 +22,7 @@ Even when a volume uses UNIX security style, SMB clients can still access data d
 
 == Duration
 
-NOTE: It will take approximately 05 minutes to complete this section.
+NOTE: It will take approximately 10 minutes to complete this section.
 
 
 == Access the file system

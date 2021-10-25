@@ -39,7 +39,7 @@ Note: SnapVault will not be covered in this workshop.
 
 == Duration
 
-NOTE: It will take approximately 10 minutes to complete this section.
+NOTE: It will take approximately 15 minutes to complete this section.
 
 == Step-by-step Guide (Snapshots)
 

@@ -16,7 +16,7 @@ You can use the Amazon FSx console, AWS CLI or FSx API to create a new file syst
 == Duration
 
 
-NOTE: It will take approximately 15 minutes to complete this section.
+NOTE: It will take approximately 20 minutes to complete this section.
 
 
 == Manage FSx for ONTAP resources from the Amazon FSx console
@@ -131,7 +131,7 @@ a| svm01
 a| example.com
 
 | *DNS server IP addresses*
-a| Enter the Active Directory DNS server IP addresses. You can retrieve the DNS addresses using link:https://console.aws.amazon.com/directoryservice[Directory Service]. *_click_* Directory ID with Directory name *fsxontap.com*. Under *Networking & Security* tab you will find two DNS addresses
+a| Enter the Active Directory DNS server IP addresses. You can retrieve the DNS addresses using link:https://console.aws.amazon.com/directoryservice[Directory Service]. *_click_* Directory ID with Directory name *example.com*. Under *Networking & Security* tab you will find two DNS addresses
 
 | *Service account username*
 a| Enter the Active Directory username created by the workshop resource. You can retrieve the username using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* Secret name *Password-GUID* and *_Click_* on *Retrieve Secret value* to get the username
