@@ -38,7 +38,6 @@ IMPORTANT: Read through all steps before continuing.
 
 
 === Create a secondary file system 
-TIP: You can skip this section if you do not want to setup *SnapMirror* and *FlexCache* portions of this GitHub workshop.
 
 *_Click_* on *FSx > File systems* above the summary section of the file system and *_click_* *Create file system* then *_Select_* *Amazon FSx for NetApp ONTAP* and click *_Next_*.
 
