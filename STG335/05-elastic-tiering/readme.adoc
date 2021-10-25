@@ -86,12 +86,12 @@ sudo python3 /home/ec2-user/smallfile/smallfile_cli.py --operation create --thre
 ----
 ssh ${ADMINUSER}@${MGMTENDPOINT}
 ----
-
++
 
 
 === Verify tiering policy
 
-
++
 . *_Run_* command below to check if the tiering policy was updated
 +
 [source,bash]
