@@ -34,7 +34,7 @@ image::sign-in-with.jpg[, align="left",width=840]
 +
 [cols="1,1"]
 |===
-|image::one-time-email-passcode.jpg | image::one-time-email-passcode.jpg
+a|image::one-time-email-passcode.jpg[align="left",width=840] a| image::one-time-email-passcode.jpg[align="left",width=840]
 |===
 
 
