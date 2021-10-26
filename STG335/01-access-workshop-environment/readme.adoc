@@ -28,7 +28,19 @@ image::event-hash-entry.jpg[align="left",width=840]
 +
 image::event-hash-accept-terms.jpg[, align="left",width=840]
 +
-. From the *Sign in with* page, *_pick_* and *_click_* the sign-in method you prefer. Follow the prompts to sign in to the AWS account provided by AWS Event Engine.
+. From the *Sign in with* page, *_pick_* and *_click_* the sign-in method you prefer, either *One-time email passcode* or *Login with Amazon*. Follow the prompts to sign in to the AWS account provided by AWS Event Engine.
++
+image::sign-in-with.jpg[, align="left",width=840]
++
+[cols="1,1"]
+|===
+|image::one-time-email-passcode | image::one-time-email-passcode
+|===
+
+
+
+
++
 . From the *Team Dashboard* page, *_click_* *[AWS Console]*.
 +
 image::team-dashboard.jpg[align="left",width=840]
