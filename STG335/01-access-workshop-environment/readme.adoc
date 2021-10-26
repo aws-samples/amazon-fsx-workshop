@@ -35,10 +35,11 @@ image::sign-in-with.jpg[, align="left",width=840]
 [cols="1,1"]
 |===
 a|image::one-time-email-passcode.jpg[align="left",width=420] a| image::one-time-email-passcode.jpg[align="left",width=420]
-a|image::sign-in-with.jpg[align="left",width=420] a| image::sign-in-with.jpg[align="left",width=420]
 a|image::your-one-time-passcode-email.jpg[align="left",width=420] a| image::your-one-time-passcode-email.jpg[align="left",width=420]
 a|image::your-one-time-passcode.jpg[align="left",width=420] a| image::your-one-time-passcode.jpg[align="left",width=420]
 a|image::one-time-email-passcode.jpg[align="left",width=420] a| image::one-time-email-passcode.jpg[align="left",width=420]
+a|image::team-dashboard.jpg[align="left",width=420] a| image::team-dashboard.jpg[align="left",width=420]
+a|image::aws-console-login.jpg[align="left",width=420] a| image::aws-console-login.jpg[align="left",width=420]
 |===
 
 
