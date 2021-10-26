@@ -76,7 +76,7 @@ Parameters:
   VpcCidr:
     AllowedValues: 
     - 10.0.0.0/16
-    - 173.31.0.0/16
+    - 172.31.0.0/16
     - 192.168.0.0/16
     Default: 10.0.0.0/16
     Description: Select the private IPv4 CIDR for the VPC.
