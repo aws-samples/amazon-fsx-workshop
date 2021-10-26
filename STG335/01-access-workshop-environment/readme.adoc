@@ -34,16 +34,10 @@ image::sign-in-with.jpg[, align="left",width=840]
 +
 [cols="1,1"]
 |===
-a|image::one-time-email-passcode.jpg[align="left",width=420] a| image::one-time-email-passcode.jpg[align="left",width=420]
-a|image::your-one-time-passcode-email.jpg[align="left",width=420] a| image::your-one-time-passcode-email.jpg[align="left",width=420]
-a|image::your-one-time-passcode.jpg[align="left",width=420] a| image::your-one-time-passcode.jpg[align="left",width=420]
-a|image::one-time-email-passcode.jpg[align="left",width=420] a| image::one-time-email-passcode.jpg[align="left",width=420]
-a|image::team-dashboard.jpg[align="left",width=420] a| image::team-dashboard.jpg[align="left",width=420]
-a|image::aws-console-login.jpg[align="left",width=420] a| image::aws-console-login.jpg[align="left",width=420]
+a|image::login-with-amazon-empty.jpg[align="left",width=420] a| image::one-time-email-passcode.jpg[align="left",width=420]
+a|image::login-with-amazon-complete.jpg[align="left",width=420] a| image::your-one-time-passcode-email.jpg[align="left",width=420]
+a|image::access-profile.jpg[align="left",width=420] a| image::your-one-time-passcode.jpg[align="left",width=420]
 |===
-
-
-
 
 +
 . From the *Team Dashboard* page, *_click_* *[AWS Console]*.
@@ -52,7 +46,7 @@ image::team-dashboard.jpg[align="left",width=840]
 +
 . From the *AWS Console Login* page, *_click_* the *[Open AWS Console]* link in the *Login Link* section to open the AWS Console using the AWS sponsored account.
 +
-image:open-console-login.jpg[align="left",width=840]
+image:aws-console-login.jpg[align="left",width=840]
 
 == Next section
 
