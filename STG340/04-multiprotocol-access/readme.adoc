@@ -217,7 +217,7 @@ a| Leave unchecked
 
 Click the link below to go to the next section.
 
-image::flexclone.jpg[link=../07-flexclone/, align="left",width=420]
+image::flexclone.jpg[link=../05-flexclone/, align="left",width=420]
 
 
 
