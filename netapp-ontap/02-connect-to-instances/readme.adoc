@@ -32,7 +32,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 
 . *_Click_* *Instances (running)*.
 
-. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*.
+. *_Click_* the check box next to the instance with the name *FSx for ONTAP Workshop Linux Instance*.
 
 . *_Click_* the Connect button.
 
@@ -59,7 +59,7 @@ IMPORTANT: Read through all steps below before continuing.
 
 . Go back to the Amazon EC2 console, *_Click_* *Instances (running)*
 
-. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Windows Instance*.
+. *_Click_* the check box next to the instance with the name *FSx for ONTAP Workshop Windows Instance*.
 
 . *_Copy_* the *Public DNS (IPv4)* name of the *FSx for ONTAP Workshop Windows Instance*.
 

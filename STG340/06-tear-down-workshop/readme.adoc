@@ -48,12 +48,26 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 ----
 +
 
-. *_Run_* the below commands to clean-up FlexClone on your FSx for ONTAP file system..
+. *_Run_* the below command to offline the FlexClone volume on your FSx for ONTAP file system.
 +
 [source,bash]
 ----
 volume offline -volume vol1_clone1 -vserver svm08
+----
++
+
+. *_Run_* the below command to delete the FlexClone on your FSx for ONTAP file system.
++
+[source,bash]
+----
 volume delete -volume vol1_clone1 -vserver svm08
+----
++
+
+. *_Run_* the below command to verify the FlexClone volume was successfully removed on your FSx for ONTAP file system.
++
+[source,bash]
+----
 vol show
 ----
 +
@@ -62,13 +76,11 @@ vol show
 
 .  *_Examine_* the *Volumes* section on your file system. *_Click_* the *Volumes* tab. *_Select_* volume *vol1* -> *Actions* -> *Delete Volume*. *_Select_* *No* for create final backup, *_accept_* acknowledgment and *_Type_* *delete* in the Confirm delete section. *_Click_* *Delete volumes(s)* to delete the volume.
 
-.  *_Select_* volume *restorevol* -> *Actions* -> *Delete Volume*. *_Select_* *No* for create final backup, *_accept_* acknowledgment and *_Type_* *delete* in the Confirm delete section. *_Click_* *Delete volumes(s)* to delete the volume.
 
 .  *_Examine_* the *Storage virtual machines* section on your file system. *_Click_* the *Storage virtual machines* tab. *_Select_* SVM *svm08* -> *Actions* -> *Delete storage virtual machine*. *_Click_* *Delete storage virtual machines* to delete the SVM.
 
 . *_Verify_* the *volumes* and *Storage virtual machines* tabs to ensure there are no pending resources on your file system.
 
-. *_Verify_* the file system has been deleted successfully before proceeding with deletion of the *Workshop Environment*
 
 //. *_Click_* *Actions* on the top-right corner and *_select_* *Delete file system*. *_Type_* the *File system ID* and *_click_* *Delete file system*.
 

@@ -1,4 +1,4 @@
-= Access AWS sponsored Workshop
+= Access Workshop Environment
 :toc:
 :icons:
 :linkattrs:
@@ -11,7 +11,7 @@ A new AWS environment will be pre-built and available to you for use during this
 
 == Workshop Diagram
 
-image::workshop-environment.png[align="center"]
+image::workshop-environment.jpg[align="center"]
 
 == Step-by-step Guide
 
@@ -20,16 +20,36 @@ IMPORTANT: Follow the instructions given by the workshop administrators on how t
 IMPORTANT: Read through all steps below before continuing.
 
 
-. Go to the link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run] or access the direct link provided by the workshop administrators.
-* The AWS Event Engine was created to help AWS field teams run Workshops, GameDays, Bootcamps, Immersion Days, and other events that require hands-on access to AWS accounts.
-. *_Read_* the *Terms & Conditions*.
-. *_Enter_* the team hash you were given from the workshop administrators and *_click_* *[Accept terms and login]*.
-. From the *Team Dashboard* page, *_click_* *[AWS Console]*.
-. From the *AWS Console Login* page, *_click_* the *[Open AWS Console]* link in the *Login Link* section to open the AWS Console using the AWS sponsored account.
+. Go to the link:https://dashboard.eventengine.run[AWS Events Engine Dashboard] - link:https://dashboard.eventengine.run[https://dashboard.eventengine.run].
++
+image::event-hash-entry.jpg[align="left",width=840]
++
+. *_Enter_* the event hash you were given from the workshop administrators and *_click_* *[Accept terms and login]*.
++
+image::event-hash-accept-terms.jpg[, align="left",width=840]
++
+. From the *Sign in with* page, *_pick_* and *_click_* the sign-in method you prefer, either *One-time email passcode* or *Login with Amazon*. Follow the prompts to sign in to the AWS account provided by AWS Event Engine.
++
+image::sign-in-with.jpg[, align="left",width=840]
++
+[cols="1,1"]
+|===
+a|image::login-with-amazon-empty.jpg[align="left",width=420] a| image::one-time-email-passcode.jpg[align="left",width=420]
+a|image::login-with-amazon-complete.jpg[align="left",width=420] a| image::your-one-time-passcode-email.jpg[align="left",width=420]
+a|image::access-profile.jpg[align="left",width=420] a| image::your-one-time-passcode.jpg[align="left",width=420]
+|===
 
++
+. From the *Team Dashboard* page, *_click_* *[AWS Console]*.
++
+image::team-dashboard.jpg[align="left",width=840]
++
+. From the *AWS Console Login* page, *_click_* the *[Open AWS Console]* link in the *Login Link* section to open the AWS Console using the AWS sponsored account.
++
+image:aws-console-login.jpg[align="left",width=840]
 
 == Next section
 
 Click the button below to go to the next section.
 
-image::connect-to-instances.png[link=../02-connect-to-instances/, align="right",width=420]
+image::manage-ontap-resources.jpg[link=../03-manage-ontap-resources/, align="left",width=420]
