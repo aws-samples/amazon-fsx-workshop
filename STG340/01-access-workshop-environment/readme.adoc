@@ -52,4 +52,4 @@ image:aws-console-login.jpg[align="left",width=840]
 
 Click the button below to go to the next section.
 
-image::manage-ontap-resources.jpg[link=../03-manage-ontap-resources/, align="left",width=420]
+image::connect-to-instances.jpg[link=../02-connect-to-instances/, align="left",width=420]
