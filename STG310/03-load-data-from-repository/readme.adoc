@@ -58,13 +58,13 @@ time ls -lah $_file
 
 ----
 +
-My results are below. The file I'm using is 183 MB.
+My results are below. The file I'm using is 188 MB.
 +
 ----
 -rwxr-xr-x. 1 root root 188M Aug 15  2014 /fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
 ----
 +
-. What is the logical sizs of the file? *_Run_* du --apparent-size -sh against the file to find the logical size of the file.
+. What is the logical size of the file? *_Run_* du --apparent-size -sh against the file to find the logical size of the file.
 +
 [source,bash]
 ----
@@ -72,7 +72,7 @@ time du --apparent-size -sh $_file
 
 ----
 +
-My results are below. The file I'm using is 183 MB.
+My results are below. The file I'm using is 188 MB.
 +
 ----
 188M	/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
@@ -101,7 +101,7 @@ time lfs hsm_state $_file
 
 ----
 +
-My results are below. The file has a physical size of 512 KiB.
+My results are below.
 +
 ----
 /fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif: (0x0000000d) released exists archived, archive_id:1
@@ -154,7 +154,7 @@ user	0m0.000s
 sys     0m0.170s
 ----
 +
-. What is the logical sizs of the file? *_Run_* du --apparent-size -sh against the file to find the logical size of the file.
+. What is the logical size of the file? *_Run_* du --apparent-size -sh against the file to find the logical size of the file.
 +
 [source,bash]
 ----
@@ -162,7 +162,7 @@ time du --apparent-size -sh $_file
 
 ----
 +
-My results are below. The file I'm using is 183 MB.
+My results are below. The file I'm using is 188 MB.
 +
 ----
 188M	/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
@@ -176,7 +176,7 @@ time du -sh $_file
 
 ----
 +
-My results are below. The file has a physical size of 512 KiB.
+My results are below. The file has a physical size of 187 M.
 +
 ----
 187M	/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
@@ -190,7 +190,7 @@ time lfs hsm_state $_file
 
 ----
 +
-My results are below. The file has a physical size of 512 KiB.
+My results are below.
 +
 ----
 /fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif: (0x00000009) exists archived, archive_id:1
