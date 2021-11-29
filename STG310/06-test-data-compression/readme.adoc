@@ -1,76 +1,263 @@
-= Monitor Performance
+= Test data compression
 :toc:
 :icons:
 :linkattrs:
-:imagesdir: ../../resources/images
+:imagesdir: ./../resources/images
 
 
 == Summary
 
-This section will monitor the performance of *Amazon FSx for Lustre*.
+This section will test data compression of *Amazon FSx for Lustre*.
 
 
 == Duration
 
-NOTE: It will take approximately 5 minutes to complete this section.
+NOTE: It will take approximately 15 minutes to complete this section.
 
 
 == Step-by-step Guide
 
-=== CloudWatch dashboard
+=== Compress existing data
+
+Files are uncompressed if they were created when data compression was turned off on the Amazon FSx for Lustre file system. Turning on data compression will not automatically compress your existing uncompressed data.
+
+You can use the lfs_migrate command that is installed as a part of the Lustre client installation to compress existing files.
 
 IMPORTANT: Read through all steps below and watch the quick video.
 
 image::create-high-throughput-alarm.gif[align="left", width=600]
 
-. Open the link:https://console.aws.amazon.com/cloudwatch/[Amazon CloudWatch] console.
+TIP: If you have the two (2) session windows open from the previous section, just use the existing session windows. Do not open two (2) more session windows.
+
+. Open two (2) *SSH terminal* or *EC2 Instance Connect* session windows connected to *Linux Instance*.
+. Start `*nload*` in one of the SSH terminal session windows.
 +
-TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
+[source,bash]
+----
+nload -u M
+
+----
 +
-. Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
-. *_Select_* *Dashboards* from the left navigation pane.
-. *_Select_* the link of the dashboard created as a part of the workshop environment.
+. Complete these steps from the other *SSH terminal* or *EC2 Instance Connect* session window connected to *Linux Instance*.
 +
-TIP: The name of the dashboard should be the region name (e.g. us-east-1), dash (-), file system id of *Amazon FSx for Lustre* (e.g. us-east-1-fs-0123456789abcdef).
-. *_Scroll_* through the dashboard and review all the widgets and their settings.
-. Notice how the vertical time line is in sync across all widgets. This makes it easy to correlate different metric values for a given point in time.
-. *_Zoom_* in on a widget by *_clicking_* and *_dragging_* over a period of time. Notice all widgets also zoom in for the period of time selected.
-. *_Reset_* zoom by *_clicking_* the blue magnifying glass in the top right of any widget.
+*_Copy_* and *_execute_* the scripts below one the other *SSH terminal* or *EC2 Instance Connect* session.
++
+. *_Verify_* the file exists.
++
+[source,bash]
+----
+lfs find /fsx/ior/ior.bin.00000000
+
+----
++
+. *_Find_* the lustre stripe configuration of the file.
++
+[source,bash]
+----
+lfs getstripe /fsx/ior/ior.bin.00000000
+
+----
++
+. What is the logical size of the file? *_Run_* du --apparent-size -sh against the file to find the logical size of the file.
++
+[source,bash]
+----
+time du --apparent-size -sh /fsx/ior/ior.bin.00000000
+
+----
++
+My results are below. The file has a logical size of 32 GiB.
++
+----
+32G		/fsx/ior/ior.bin.00000000
+----
++
+. What is the physical size of the file? *_Run_* du -sh against the file to find the physical size of the file.
++
+[source,bash]
+----
+time du -sh /fsx/ior/ior.bin.00000000
+
+----
++
+My results are below. The file has a physical size of 32 GiB.
++
+----
+32G		/fsx/ior/ior.bin.00000000
+----
++
+. Migrate the ior.bin.00000000 file. *_Run_* lfs migrate against the file to migrate the file. lfs migrate will re-write the file in place.
+TIP: While the *lfs migrate* command is running, switch to the *SSH terminal* or *EC2 Instance Connect* session window running *nload* and actively monitor the performance of the *lfs migrate* operation. What is happening on the instance and file system?
++
+[source,bash]
+----
+lfs migrate /fsx/ior/ior.bin.00000000
+
+----
++
+. What is the uncompressed or logical size of the file? *_Run_* du --apparent-size -sh against the file to find the uncompressed or logical size of the file.
++
+[source,bash]
+----
+time du --apparent-size -sh /fsx/ior/ior.bin.00000000
+
+----
++
+My results are below. The file has a logical size of 32 GiB.
++
+----
+32G		/fsx/ior/ior.bin.00000000
+----
++
+. What is the compressed or physical size of the file? *_Run_* du -sh against the file to find the compressed or physical size of the file.
++
+[source,bash]
+----
+time du -sh /fsx/ior/ior.bin.00000000
+
+----
++
+My results are below. The file has a physical size of 18 GiB.
++
+----
+9.1G		/fsx/ior/ior.bin.00000000
+----
++
+. *_Calculate_* the data compression ratio of the file.
++
+The data compression ratio is the ratio between the uncompressed size and the compressed size. Take the uncompressed or logical size of the file and divide it by the compressed or physical size of the file.
++
+My calculation is below. The file has a data compression ratio of 3.52 to 1.
++
+----
+32G ÷ 9.1G = 3.52:1
+----
++
+. *_Calculate_* the space savings for the file.
++
+Space savings is the reduction in size relative to the uncompressed size. Take the compressed or physical size of the file and divide it by the uncompressed or logical size of the file and subtract that value from 1. This is typically shared as a percentage.
++
+My calculation is below. The file has a space savings of 71.56%.
++
+----
+1 - (9.1G/32G) = .7156 or 71.56%
+----
 
 
-=== CloudWatch alarm
+=== Compress new data
 
-IMPORTANT: Read through all steps below and watch the quick video before *_creating_* the alarm.
+IMPORTANT: Read through all steps below and watch the quick video.
 
 image::create-high-throughput-alarm.gif[align="left", width=600]
 
-. *_Copy_* the file system id from the top right dashboard widget.
-. *_Click_* the *Maximize* button of the *Throughput (Bytes per second)* widget.
-. *_Click_* the *View in metrics* link (at the bottom left of the window).
-. *_Find_* the metric labeled *Total Data Throughput (B/s)* and *_click_* the *Create alarm* button in the actions column.
-. *_Scroll_* down to the *Conditions* section and in the *Define the threshold value* field *_enter_* 1000000000. This will set an alarm condition that will trigger if the *Total Data Throughput (B/s)* is greater than 1000 MB/s.
-. *_Click_* *Next*.
-. *_Scroll_* down to the *Notification* section and select the existing *SNS Topic* that was created as a part of the workshop environment.
+TIP: If you have the two (2) session windows open from the previous section, just use the existing session windows. Do not open two (2) more session windows.
+
+. Open two (2) *SSH terminal* or *EC2 Instance Connect* session windows connected to *Linux Instance*.
+. Start `*nload*` in one of the SSH terminal session windows.
 +
-TIP: The name of the SNS topic should be the file system id of *Amazon FSx for Lustre* (e.g. fs-0123456789abcdef), -alarm-notification (e.g. fs-0123456789abcdef-alarm-notification).
+[source,bash]
+----
+nload -u M
+
+----
 +
-. *_Click_* *Next*.
-. In the *Alarm name* text box *_enter_* "High throughput alarm - " then *_paste_* the *file system id* you copied earlier (e.g. High throughput alarm - fs-0123456789abcdef).
-. *_Click_* *Next*.
-. *_Preview_* the alarm graph, make sure the red alarm line is at the 100M mark.
-. *_Scroll_* and *_review_* the *Conditions*, *Actions*, and *Name and description* sections.
-. *_Click_* *Create alarm*.
-. *_Wait_* a few minutes for the alarm state to transition from *Insufficient data* to *OK*.
-. *_Return_* to the previous workshop section *Test performance* and *_ior_* test again.
-* Did your *High throughput alarm* get triggered?
-* Did your email address receive an alarm notification?
+. Complete these steps from the other *SSH terminal* or *EC2 Instance Connect* session window connected to *Linux Instance*.
++
+TIP: Monitor real-time throughput using the *EC2 Instance Connect* or *SSH terminal* session window with `*nload*` running.
++
+. Use ior to generate 32 GiB of data using 1 thread. *_Run_* the mpirun ior scripts below.
++
+TIP: Monitor real-time throughput using the *EC2 Instance Connect* or *SSH terminal* session window with `*nload*` running.
++
+[source,bash]
+----
+_job_name=ior-compressed
+_segment_count=32768
+_threads=1
+_path=/fsx/${_job_name}
+mkdir -p ${_path}
+cd /fsx
+mpirun --npernode ${_threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${_segment_count} -g -v -w -i 1 -F -k -D 0 -o ${_path}/ior.bin
+
+----
++
+. How long did it take to generate ~32 GiB of data using 1 thread? The time command should return time values similar to these:
++
+[source,bash]
+----
+threads=1
+
+Results:
+
+access    bw(MiB/s)  IOPS       Latency(s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+------    ---------  ----       ----------  ---------- ---------  --------   --------   --------   --------   ----
+Commencing write performance test:
+write     659.11     659.11     49.72       1024.00    1024.00    0.000367   49.72      0.000351   49.72      0
+Max Write: 659.11 MiB/sec (691.12 MB/sec)
+
+Summary of all tests:
+Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev   Max(OPs)   Min(OPs)  Mean(OPs)     StdDev    Mean(s) Stonewall(s) Stonewall(MiB) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt   blksiz    xsize aggs(MiB)   API RefNum
+write         659.11     659.11     659.11       0.00     659.11     659.11     659.11       0.00   49.71589         NA            NA     0      1   1    1   1     0        1         0    0  32768  1048576  1048576   32768.0 POSIX      0
+Finished            :
+----
++
+. How much read and write throughput was achieved using 1 thread?
+. Compare these results with the *Test performance* section you completed earlier against the file system when data compression was not enabled.
++
+. What is the uncompressed or logical size of the file? *_Run_* du --apparent-size -sh against the file to find the uncompressed or logical size of the file.
++
+[source,bash]
+----
+time du --apparent-size -sh /fsx/ior-compressed/ior.bin.00000000
+
+----
++
+My results are below. The file has a logical size of 32 GiB.
++
+----
+32G		/fsx/ior-compressed/ior.bin.00000000
+----
++
+. What is the compressed or physical size of the file? *_Run_* du -sh against the file to find the compressed or physical size of the file.
++
+[source,bash]
+----
+time du -sh /fsx/ior-compressed/ior.bin.00000000
+
+----
++
+My results are below. The file has a physical size of 9.0 GiB.
++
+----
+9.0G	/fsx/ior-compressed/ior.bin.00000000
+----
++
+. *_Calculate_* the data compression ratio of the file.
++
+The data compression ratio is the ratio between the uncompressed size and the compressed size. Take the uncompressed or logical size of the file and divide it by the compressed or physical size of the file.
++
+My calculation is below. The file has a data compression ratio of 3.56 to 1.
++
+----
+32G ÷ 9.0G = 3.56:1
+----
++
+. *_Calculate_* the space savings for the file.
++
+Space savings is the reduction in size relative to the uncompressed size. Take the compressed or physical size of the file and divide it by the uncompressed or logical size of the file and subtract that value from 1. This is typically shared as a percentage.
++
+My calculation is below. The file has a space savings of 71.88%.
++
+----
+1 - (9.0GG/32G) = .7188 or 71.88%
+----
 
 
 == Next section
 
 Click the button below to go to the next section.
 
-image::06-delete-workshop-environment.png[link=../06-delete-workshop-environment/, align="left",width=420]
+image::monitor-performance.jpg[link=../07-monitor-performance/, align="left",width=420]
 
 
 

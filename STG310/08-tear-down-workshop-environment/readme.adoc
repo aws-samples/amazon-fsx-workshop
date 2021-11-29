@@ -1,0 +1,13 @@
+= Tear down workshop
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+*Congratulation!* You have completed the Amazon FSx for Lustre Workshop.
+
+Because you completed the STG310 - Amazon FSx for Lustre workshop at re:Invent, there are no other steps you need to do to tear down your workshop. The AWS account provided to you for the workshop will be deleted at the end of the workshop event.
+
+If you're interested in taking this workshop again, please return to this Github repo and select the link:/../../[Amazon FSx for Lustre On-Demand Workshop] and complete the workshop using your own account, or click on the link below.
+
+image::fsx-lustre-od-workshop.jpg[link=/../../, align="right",width=420]

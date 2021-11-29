@@ -1,0 +1,89 @@
+= Monitor Performance
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ./../resources/images
+
+
+== Summary
+
+This section will monitor the performance of *Amazon FSx for Lustre*.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== CloudWatch dashboard
+
+. *_Open_* the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_select_* the link of the *File system Name* or *File system ID*.
+. In the *Summary* section, *_click_* the refresh image:refresh.jpg[align="left",width=20] shortcut next to the *File system ID*.
+. *_Scroll down_* and *_select_* the *Monitoring* tab.
+. *_Scroll down_* and *_select_* *Add to dashboard*.
+. From the *Add to dashboard* window, *_select_* *Create new*.
+. In the *Create new dashboard* text field, *paste* the *File system ID* (e.g. fs-0f19b0273cce46a41) value you copied earlier then *_select_* *Create*.
+. After a few seconds the new dashboard will be created. *_Select_* *Add to dashboard*.
+. *_Select_* *Save dashboard*.
+. Make sure you are using the *new interface*. *_Click_* the *Try out the new interface* link at the top right of the dashboard window if available.
+. *_Select_* *Add widget* then the widget type *Line* then *Metrics* from the *Add widget* window.
+. In the *Metrics* search text field, *_paste_* the *File system ID* (e.g. fs-0f19b0273cce46a41) value you copied earlier.
+. *_Scroll down_* and *_select_* the *FSx > File System Metrics 8* link. This is a link to the 8 metrics for the file system ID.
+. *_Examine_* all the metrics available for the file system.
+. *_Click_* the *check boxes* next to the *Metric Names* *PhysicalDiskUsage* and *LogicalDiskUsage* then *_click_* *Create widget*.
+. Expand the width of the *LogicalDiskUsage, PhysicalDiskUsage* widget. *_Select_* the expand widget anchor (small triangle at the bottom right corning of the widget) and *_drag_* it all the way to the right side of the window.
+. From the *CloudWatch Dashboard* window, *_scroll up_* and *_click_* *Save dashboard*.
+. *_Move_* the cursor over the widget to *_examine_* and *_compare_* the difference between the physical and logical sizes of the file system over time.
+
+
+=== CloudWatch alarm
+
+IMPORTANT: Read through all steps below before *_creating_* the alarm.
+
+. From *Total throughput (bytes/sec)* widget of the dashboard, *_click_* the *Widget actions* link image:widget-actions.jpg[align="left",width=20] then *_click_* *View in Metrics* at the bottom of the pop-up actions menu.
+. *_Move_* the cursor over the graph to *_examine_* the metric math (calculated) *Total throughput* metric over time.
+. *_Find_* the metric labeled *Total throughput* and *_click_* the *Create alarm* image:create-alarm.jpg[align="left",width=20] button in the *Actions* column.
+. *_Scroll_* down to the *Conditions* section and in the *Define the threshold value* field *_enter_* 1000000000. This will set an alarm condition that will trigger if the *Total Data Throughput (B/s)* is greater than 1000 MB/s.
+. *_Click_* *Next*.
+. In the *Notification* section, *_select_* *Create a new topic...* then *_enter_* an email address to which you have immediate access.
+. *_Click_* *Create topic*.
+. *_Scroll down_* and *_select_* *Next*.
+. Give the alarm a name. *_Enter_* a name of the alarm. e.g. High throughput.
+. *_Click_* *Next*.
+. From the *Preview and create* page, *_scroll down_* and *_click_* *Create alarm*.
+. You must confirm your email subscription to the SNS topic you created for this alarm. *_Access_* the inbox of the email address you entered. It should have a new email message with a subject *AWS Notification - Subscription Confirmation* from *AWS Notifications <no-reply@sns.amazonaws.com>*. Read the email and *_click_* the *Confirm subscription* link.
+TIP: SNS topic confirmation can be done on your laptop or mobile device.
+. Open one (1) *SSH terminal* or *EC2 Instance Connect* session window connected to the *Linux Instance*.
+. Use ior to generate continuous load against the file system. *_Run_* the mpirun ior script below in *SSH terminal* or *EC2 Instance Connect* session window.
++
+[source,bash]
+----
+_job_name=ior-compressed
+_segment_count=32768
+_threads=144
+_path=/fsx/${_job_name}
+mkdir -p ${_path}
+cd /fsx
+mpirun --npernode ${_threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${_segment_count} -g -v -w -i 10 -F -k -D 0 -o ${_path}/ior.bin
+
+----
++
+. While the *mpirun ior* script is running, return to the CloudWatch dashboard and *_monitor_* performance of the file system.
+. *_Enable_* auto-refresh of all the dashboard widgets. *_Click_* the auto-fresh button image:auto-refresh.jpg[align="left",width=20] and *_select_* *1m* to automatically refresh the dashboard every minute. Monitor the file system performance for ~5 minutes.
+* How much throughput is the *mpirun ior* script generating?
+* What is happening to the free storage capacity and disk usage metrics?
+* Did your *Total throughput alarm* get triggered?
+* *_Monitor_* your email. You should receive an email with a subject *ALARM: "High throughput" in <region>*. *_Review_* the email message.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::tear-down-workshop.jpg[link=../08-tear-down-workshop-environment/, align="left",width=420]
+
+
+
+
