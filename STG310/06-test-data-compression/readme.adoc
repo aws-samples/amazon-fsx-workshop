@@ -146,9 +146,7 @@ My calculation is below. The file has a space savings of 71.56%.
 
 === Compress new data
 
-IMPORTANT: Read through all steps below and watch the quick video.
-
-image::create-high-throughput-alarm.gif[align="left", width=600]
+IMPORTANT: Read through all steps below.
 
 TIP: If you have the two (2) session windows open from the previous section, just use the existing session windows. Do not open two (2) more session windows.
 
