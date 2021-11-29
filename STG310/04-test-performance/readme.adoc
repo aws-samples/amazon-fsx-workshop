@@ -64,7 +64,7 @@ m|For example m|250x7.2= m|1300x7.2= m|2.2x7.2= m|50x7.2= m|240x7.2=
 +
 NOTE: The *Total throughput* value from the *Summary* section of the Amazon FSx console is the *Disk throughput (MB/s) Baseline* value, which is the least performant attribute of the file system. The file system is capable of performing at levels much higher than the disk baseline throughput based on access patterns (e.g. reading from Cache storage, etc.) and the network burst and baseline throughputs and disk burst throughput.
 +
-. As you complete the following performancxe tests, compare your test results with the designed performance attributes you calculated in the previous table.
+. As you complete the following performance tests, compare your test results with the designed performance attributes you calculated in the previous table.
 
 === Smallfile Read tests
 
@@ -220,7 +220,7 @@ sudo python3 ~/smallfile/smallfile_cli.py \
 
 === dd tests
 
-. Use dd to generate data ~4.3 GiB of data using 1, and 2 threads.
+. Use dd to generate data ~4.3 GiB of data using 1 and 2 threads.
 +
 [source,bash]
 ----

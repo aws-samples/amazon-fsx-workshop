@@ -107,7 +107,7 @@ My results are below. The file has a physical size of 512 KiB.
 /fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif: (0x0000000d) released exists archived, archive_id:1
 ----
 +
-. What does *released exists archieved* mean? Try to figure this out on your own. Do a couple of google searches to find the answer.
+. What does *released exists archived* mean? Try to figure this out on your own. Do a couple of google searches to find the answer.
 . Read the file and measure the time it takes to load it from the integrated Amazon S3 bucket. This command will load the file by reading it from Amazon S3 and writing it to tempfs on *Linux Instance*.
 +
 [source,bash]
