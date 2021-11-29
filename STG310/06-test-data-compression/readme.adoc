@@ -23,9 +23,7 @@ Files are uncompressed if they were created when data compression was turned off
 
 You can use the lfs_migrate command that is installed as a part of the Lustre client installation to compress existing files.
 
-IMPORTANT: Read through all steps below and watch the quick video.
-
-image::create-high-throughput-alarm.gif[align="left", width=600]
+IMPORTANT: Read through all steps below.
 
 TIP: If you have the two (2) session windows open from the previous section, just use the existing session windows. Do not open two (2) more session windows.
 
