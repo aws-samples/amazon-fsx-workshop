@@ -87,7 +87,7 @@ a| Accept the default
 a| Specify a password for the fsxadmin user. You can set a new password or use the same password as your *primary* file system. You can retrieve this password using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* Secret name *FSxPassword-<GUID>* and *_Click_* on *Retrieve Secret value* to get the fsxadmin user password
 
 | *Storage virtual machine name*
-a| Enter - svm01
+a| Enter - svmdr01
 
 | *SVM administrative password*
 a| Accept the default
@@ -159,7 +159,7 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 +
 [source,bash]
 ----
-vol create -volume vol2 -vserver svm01 -size 100G -type DP -aggregate aggr1
+vol create -volume vol2 -vserver svmdr01 -size 100G -type DP -aggregate aggr1
 ----
 +
 . *_Run_* below ONTAP CLI command, on your *primary* file system to get the Inter Cluster LIF IP addresses and Cluster name.
@@ -201,7 +201,7 @@ cluster peer show -instance
 +
 [source,bash]
 ----
-vserver peer create -vserver svm01 -peer-vserver svm01 -applications snapmirror -peer-cluster <peer cluster name> 
+vserver peer create -vserver svm01 -peer-vserver svmdr01 -applications snapmirror -peer-cluster <peer cluster name> 
 ----
 +
 TIP: If you are have the same SVM name on both your primary and secondary file system then use _-local-name_ option with the above command.
@@ -224,7 +224,7 @@ vserver peer show
 +
 [source,bash]
 ----
-vserver peer accept -vserver svm01 -peer-vserver svm01
+vserver peer accept -vserver svmdr01 -peer-vserver svm01
 ----
 +
 . *_Verify_* the Cluster Peer Relationship was created successfully on *secondary* file system.
@@ -252,7 +252,7 @@ snapmirror show
 +
 [source,bash]
 ----
-snapmirror create -source-path svm01:vol1 -destination-path svm01:vol2 -policy MirrorAllSnapshots -type XDP -schedule 5min
+snapmirror create -source-path svm01:vol1 -destination-path svmdr01:vol2 -policy MirrorAllSnapshots -type XDP -schedule 5min
 ----
 +
 . *_Verify_*  SnapMirror relationship status on *secondary* file system.
@@ -262,11 +262,11 @@ snapmirror create -source-path svm01:vol1 -destination-path svm01:vol2 -policy M
 snapmirror show
 ----
 +
-. *_Initialize_*  the SnapMirror relationship from your *secondary* file system. Replace the SVM name with *_svm01_* and volume name with *_vol2_*.
+. *_Initialize_*  the SnapMirror relationship from your *secondary* file system. Replace the SVM name with *_svmdr01_* and volume name with *_vol2_*.
 +
 [source,bash]
 ----
-snapmirror initialize -destination-path svm01:vol2
+snapmirror initialize -destination-path svmdr01:vol2
 ----
 +
 . *_Verify_*  SnapMirror relationship status from your *secondary* FSx file system. You should see the status as *Transferring* or *Finalizing*. *_Wait_* for the status to change to *Idle*.
@@ -298,7 +298,7 @@ network interface show
 +
 [source,bash]
 ----
-volume mount -vserver svm01 -volume vol2 -junction-path /vol2
+volume mount -vserver svmdr01 -volume vol2 -junction-path /vol2
 ----
 +
 . *_Run_* below command to exit the ONTAP CLI session and return to the *FSx for ONTAP Workshop Linux instance*
@@ -350,8 +350,8 @@ ssh ${ADMINUSER}@${DRMGMTENDPOINT}
 [source,bash]
 ----
 snapmirror show
-snapmirror quiesce -destination-path svm01:vol2
-snapmirror break -destination-path svm01:vol2
+snapmirror quiesce -destination-path svmdr01:vol2
+snapmirror break -destination-path svmdr01:vol2
 ----
 +
 . *_Verify_*  SnapMirror relationship status from your *secondary* FSx file system. You should see the status as *Broken-off*.
