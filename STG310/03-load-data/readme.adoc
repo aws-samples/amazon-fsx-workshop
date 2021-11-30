@@ -33,7 +33,7 @@ Complete these steps from the SSH terminal session window connected to *Linux In
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type f --name *.tif | head -100
+time lfs find /fsx --type f --name *.tif | head -100
 
 ----
 +
@@ -44,21 +44,21 @@ time lfs find /mnt/fsx --type f --name *.tif | head -100
 +
 [source,bash]
 ----
-time ls -lah FILE # e.g. time ls -lah /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+time ls -lah FILE # e.g. time ls -lah /fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
 
 ----
 +
 My results are below. The file I'm using is 183 MB.
 +
 ----
--rwxr-xr-x. 1 root root 183M Aug 15  2014 /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
+-rwxr-xr-x. 1 root root 183M Aug 15  2014 /fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif
 ----
 +
 . Read the file and measure the time it takes to load it from the integrated S3 bucket. This command will load the file by reading it from S3 and writing it to tempfs on *Linux Instance 0*.
 +
 [source,bash]
 ----
-time cat FILE >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
+time cat FILE >/dev/shm/fsx # e.g. time cat /fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
 
 ----
 +
@@ -86,7 +86,7 @@ The cache on *Linux Instance 0*. You can verify this by opening a second SSH ter
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-time cat FILE >/dev/shm/fsx # e.g. time cat /mnt/fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
+time cat FILE >/dev/shm/fsx # e.g. time cat /fsx/NAIP/ca_1m_2012/36117/m_3611718_nw_11_1_20120623.tif >/dev/shm/fsx
 
 ----
 +
@@ -120,7 +120,7 @@ nload -u M
 +
 [source,bash]
 ----
-time tree --du -h /mnt/fsx/CMIP5
+time tree --du -h /fsx/CMIP5
 
 ----
 +
@@ -128,7 +128,7 @@ time tree --du -h /mnt/fsx/CMIP5
 +
 ----
 threads=36
-time lfs find /mnt/fsx/CMIP5 --type f | parallel --will-cite -j ${threads} sudo lfs hsm_restore {}
+time lfs find /fsx/CMIP5 --type f | parallel --will-cite -j ${threads} sudo lfs hsm_restore {}
 
 ----
 . *_Monitor_* the network throughput of the instance from the other SSH terminal window running `*nload*`. These objects are not copied through the instance from S3 to the file system. The GET API is called in parallel to copy data directly from S3 to the OSTs.

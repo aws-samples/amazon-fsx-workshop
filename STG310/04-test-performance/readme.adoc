@@ -2,7 +2,7 @@
 :toc:
 :icons:
 :linkattrs:
-:imagesdir: ../../resources/images
+:imagesdir: ./../resources/images
 
 
 == Summary
@@ -19,9 +19,58 @@ NOTE: It will take approximately 15 minutes to complete this section.
 
 IMPORTANT: Read through all steps below before continuing.
 
+
+=== Examine file system performance
+
+. *_Open_* the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_select_* the link of the *File system Name* or *File system ID*.
+. In the *Summary* section, *_review_* the values for the following file system attributes:
++
+[cols="3,10"]
+|===
+| Attribute | Value
+
+| Deployment type
+| Persistent
+
+| Data compression type
+| NONE
+
+| Storage type
+| SSD
+
+| Storage capacity
+| 7.2 TiB
+
+| Throughput per unit of storage
+| 50 MB/s/TiB
+
+| Total throughput
+| 360 MB/s
+|===
++
+. *_Open_* the link:https://docs.aws.amazon.com/fsx/latest/LustreGuide/performance.html#fsx-aggregate-perf[Amazon FSx for Lustre User Guide] and *_scroll down_* to the *File system performance for SSD storage options* table. *_Review_* the table and the different performance attributes.
+
+. Using the file system attributes of the previous table and the performance capacities table that FSx for Lustre is designed to achieve from the Amazon FSx for Lusture User Guide, *_complete_* the table below to calculate the different performance attributes of the workshop file system.
++
+.PERSISTENT-50 7.2 TiB file system{counter2:index:0}
+[cols="e,e,e,e,e,e"]
+|===
+s|Storage capacity 2+>s|Network throughput (MB/s) s|Cache storage (GiB) 2+>s|Disk throughput (MB/s)
+| s|Baseline s|Burst | s|Baseline s|Burst
+|Per TiB |250 |1300 |2.2 RAM |50 |240
+|7.2 TiB |  |  | | |
+m|For example m|250x7.2= m|1300x7.2= m|2.2x7.2= m|50x7.2= m|240x7.2=
+|===
++
+NOTE: The *Total throughput* value from the *Summary* section of the Amazon FSx console is the *Disk throughput (MB/s) Baseline* value, which is the least performant attribute of the file system. The file system is capable of performing at levels much higher than the disk baseline throughput based on access patterns (e.g. reading from Cache storage, etc.) and the network burst and baseline throughputs and disk burst throughput.
++
+. As you complete the following performance tests, compare your test results with the designed performance attributes you calculated in the previous table.
+
 === Smallfile Read tests
 
-. Open two (2) SSH terminal session windows connected to *Linux Instance 0*.
+TIP: If you have the two (2) session windows open from the previous section, just use the existing session windows. Do not open two (2) more session windows.
+
+. Open two (2) *SSH terminal* or *EC2 Instance Connect* session windows connected to *Linux Instance*.
 +
 Start `*nload*` in one of the SSH terminal session windows.
 +
@@ -31,147 +80,309 @@ nload -u M
 
 ----
 +
-*_Copy_* the scripts below and *_execute_* them in the other SSH terminal session window.
-. Install smallfile. link:https://github.com/distributed-system-analysis/smallfile[smallfile] is a distributed metadata-intensive workload generator for POSIX-like filesystems. It is licensed under Apache License, Version 2.0.
+. Write, read, stat, append, rename, and delete a large number of smallfiles. *_Run_* these commands in order and review the results. link:https://github.com/distributed-system-analysis/smallfile[smallfile] is a distributed metadata-intensive workload generator for POSIX-like filesystems. It is licensed under Apache License, Version 2.0. *_Monitor_* throughput in real time by going back to the *SSH terminal* or *EC2 Instance Connect* session window running *nload* during the execution of each *smallfile* run.
++
+* Answer the following questions for each *smallfile* run:
+* How long did it take? (e.g. elapsed time)
+* What was the IOPS?
+* What was the throughput? (e.g. MiB/sec)
++
+- Write (create) 316200 files
 +
 [source,bash]
 ----
-cd
-git clone https://github.com/bengland2/smallfile.git
+_job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+_prefix=$(echo $(uuidgen)| grep -o ".\{6\}$")
+_path=/fsx/${_job_name}
+mkdir -p ${_path}
+
+_threads=32
+_file_size=64
+_file_count=10000
+_operation=create
+_same_dir=N
+_hash_into_dirs=Y
+
+sudo python3 ~/smallfile/smallfile_cli.py \
+--operation ${_operation} \
+--threads ${_threads} \
+--file-size ${_file_size} \
+--files ${_file_count} \
+--same-dir ${_same_dir} \
+--hash-into-dirs ${_hash_into_dirs} \
+--prefix ${_prefix} \
+--dirs-per-dir ${_file_count} \
+--files-per-dir ${_file_count} \
+--top ${_path}
+
 ----
 +
-Write, read, stat, append, rename, and delete a large number of smallfiles. *_Run_* these commands in order and review the results.
-+
-Write (create) 316200 files
+- Read ~316200 files
 +
 [source,bash]
 ----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
-prefix=$(echo $(uuidgen)| grep -o ".\{6\}$")
-path=/mnt/fsx/${job_name}
-sudo mkdir -p ${path}
+_operation=read
 
-threads=32
-file_size=64
-file_count=10000
-operation=create
-same_dir=N
-
-sudo python ~/smallfile/smallfile_cli.py \
---operation ${operation} \
---threads ${threads} \
---file-size ${file_size} \
---files ${file_count} \
---same-dir ${same_dir} \
---hash-into-dirs Y \
---prefix ${prefix} \
---dirs-per-dir ${file_count} \
---files-per-dir ${file_count} \
---top ${path} &
+sudo python3 ~/smallfile/smallfile_cli.py \
+--operation ${_operation} \
+--threads ${_threads} \
+--file-size ${_file_size} \
+--files ${_file_count} \
+--same-dir ${_same_dir} \
+--hash-into-dirs ${_hash_into_dirs} \
+--prefix ${_prefix} \
+--dirs-per-dir ${_file_count} \
+--files-per-dir ${_file_count} \
+--top ${_path}
 
 ----
 +
-. Read ~316200 files
+- Stat ~316200 files
 +
 [source,bash]
 ----
-operation=read
+_operation=stat
 
-sudo python ~/smallfile/smallfile_cli.py \
---operation ${operation} \
---threads ${threads} \
---file-size ${file_size} \
---files ${file_count} \
---same-dir ${same_dir} \
---hash-into-dirs Y \
---prefix ${prefix} \
---dirs-per-dir ${file_count} \
---files-per-dir ${file_count} \
---top ${path} &
+sudo python3 ~/smallfile/smallfile_cli.py \
+--operation ${_operation} \
+--threads ${_threads} \
+--file-size ${_file_size} \
+--files ${_file_count} \
+--same-dir ${_same_dir} \
+--hash-into-dirs ${_hash_into_dirs} \
+--prefix ${_prefix} \
+--dirs-per-dir ${_file_count} \
+--files-per-dir ${_file_count} \
+--top ${_path}
 
 ----
 +
-. Stat ~316200 files
+- Append ~316200 files
 +
 [source,bash]
 ----
-operation=stat
+_operation=append
 
-sudo python ~/smallfile/smallfile_cli.py \
---operation ${operation} \
---threads ${threads} \
---file-size ${file_size} \
---files ${file_count} \
---same-dir ${same_dir} \
---hash-into-dirs Y \
---prefix ${prefix} \
---dirs-per-dir ${file_count} \
---files-per-dir ${file_count} \
---top ${path} &
+sudo python3 ~/smallfile/smallfile_cli.py \
+--operation ${_operation} \
+--threads ${_threads} \
+--file-size ${_file_size} \
+--files ${_file_count} \
+--same-dir ${_same_dir} \
+--hash-into-dirs ${_hash_into_dirs} \
+--prefix ${_prefix} \
+--dirs-per-dir ${_file_count} \
+--files-per-dir ${_file_count} \
+--top ${_path}
+
+----
++
+- Rename ~316200 files
++
+[source,bash]
+----
+_operation=rename
+
+sudo python3 ~/smallfile/smallfile_cli.py \
+--operation ${_operation} \
+--threads ${_threads} \
+--file-size ${_file_size} \
+--files ${_file_count} \
+--same-dir ${_same_dir} \
+--hash-into-dirs ${_hash_into_dirs} \
+--prefix ${_prefix} \
+--dirs-per-dir ${_file_count} \
+--files-per-dir ${_file_count} \
+--top ${_path}
+
+----
++
+- Delete-renamed ~316200 files
++
+[source,bash]
+----
+_operation=delete-renamed
+
+sudo python3 ~/smallfile/smallfile_cli.py \
+--operation ${_operation} \
+--threads ${_threads} \
+--file-size ${_file_size} \
+--files ${_file_count} \
+--same-dir ${_same_dir} \
+--hash-into-dirs ${_hash_into_dirs} \
+--prefix ${_prefix} \
+--dirs-per-dir ${_file_count} \
+--files-per-dir ${_file_count} \
+--top ${_path}
 
 ----
 
 
 === dd tests
 
-. Use dd to generate data
+. Use dd to generate data ~4.3 GiB of data using 1 and 2 threads.
 +
 [source,bash]
 ----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
-bs=1024K
-count=4096
-sync=oflag=sync
-threads=1
+_job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+_bs=1024K
+_count=4096
+_sync=conv=fsync
+_threads=1
+_path=/fsx/${_job_name}
 
-sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
+mkdir -p ${_path}/{1..1}
 
-time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
-----
-+
-[source,bash]
-----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
-bs=1024K
-count=4096
-sync=oflag=sync
-threads=2
+time seq 1 ${_threads} | parallel --will-cite -j ${_threads} sudo dd if=/dev/zero of=${_path}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${_bs} count=${_count} ${_sync}
 
-sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
-
-time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
 ----
 +
 [source,bash]
 ----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
-bs=1024K
-count=4096
-sync=oflag=sync
-threads=3
+_job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+_bs=1024K
+_count=2048
+_sync=conv=fsync
+_threads=2
+_path=/fsx/${_job_name}
 
-sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
+mkdir -p ${_path}/{1..2}
 
-time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+time seq 1 ${_threads} | parallel --will-cite -j ${_threads} sudo dd if=/dev/zero of=${_path}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${_bs} count=${_count} ${_sync}
+
 ----
+
++
+. How long did it take to generate ~4.3 GiB of data using 1 and 2 threads?
+. How important is it to use parallel threads to access the lustre file system?
+
 
 === ior tests
 
-. Use ior to generate data
+. Use ior to generate 32 GiB of data using 1, 2, and 4 threads.
++
+TIP: Monitor real-time throughput using the *EC2 Instance Connect* or *SSH terminal* session window with `*nload*` running.
 +
 [source,bash]
 ----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+_job_name=ior
+_segment_count=32768
+_threads=1
+_path=/fsx/${_job_name}
+mkdir -p ${_path}
+cd /fsx
+mpirun --npernode ${_threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${_segment_count} -g -v -w -i 1 -F -k -D 0 -o ${_path}/ior.bin
 
-cd /mnt/fsx
-time seq 1 2 | parallel --will-cite -j2 'ior -b 32g -t 8m -w -r -F --posix.odirect -o /mnt/fsx/${job_name}{}.txt' &
+----
++
+[source,bash]
+----
+_job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+_segment_count=16384
+_threads=2
+_path=/fsx/${_job_name}
+mkdir -p ${_path}
+cd /fsx
+mpirun --npernode ${_threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${_segment_count} -g -v -w -i 1 -F -k -D 0 -o ${_path}/ior.bin
+
+----
++
+[source,bash]
+----
+_job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+_segment_count=8192
+_threads=4
+_path=/fsx/${_job_name}
+mkdir -p ${_path}
+cd /fsx
+mpirun --npernode $_threads --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${_segment_count} -g -v -w -i 1 -F -k -D 0 -o ${_path}/ior.bin
+
+----
++
+. How long did it take to generate 32 GiB of data using 1, 2, and 4 threads? The time command should return time values similar to these:
++
+[source,bash]
+----
+threads=1
+
+Results: 
+
+access    bw(MiB/s)  IOPS       Latency(s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+------    ---------  ----       ----------  ---------- ---------  --------   --------   --------   --------   ----
+Commencing write performance test: 
+write     539.01     539.02     59.37       1024.00    1024.00    0.000479   59.37      0.000387   59.37      0   
+Max Write: 539.01 MiB/sec (565.19 MB/sec)
+
+Summary of all tests:
+Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev   Max(OPs)   Min(OPs)  Mean(OPs)     StdDev    Mean(s) Stonewall(s) Stonewall(MiB) Test# #Tasks 
+tPN reps fPP reord reordoff reordrand seed segcnt   blksiz    xsize aggs(MiB)   API RefNum
+write         539.01     539.01     539.01       0.00     539.01     539.01     539.01       0.00   59.36833         NA            NA     0      1   1
+    1   1     0        1         0    0  32000  1048576  1048576   32000.0 POSIX      0
+----
++
+
+[source,bash]
+----
+threads=2
+
+Results: 
+
+access    bw(MiB/s)  IOPS       Latency(s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+------    ---------  ----       ----------  ---------- ---------  --------   --------   --------   --------   ----
+Commencing write performance test: 
+write     986.60     986.64     32.43       1024.00    1024.00    0.001054   32.43      0.000392   32.43      0   
+Max Write: 986.60 MiB/sec (1034.52 MB/sec)
+
+Summary of all tests:
+Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev   Max(OPs)   Min(OPs)  Mean(OPs)     StdDev    Mean(s) Stonewall(s) Stonewall(MiB) Test# #Tasks 
+tPN reps fPP reord reordoff reordrand seed segcnt   blksiz    xsize aggs(MiB)   API RefNum
+write         986.60     986.60     986.60       0.00     986.60     986.60     986.60       0.00   32.43464         NA            NA     0      2   2
+    1   1     0        1         0    0  16000  1048576  1048576   32000.0 POSIX      0
+----
++
+
+[source,bash]
+----
+threads=4
+
+Results: 
+
+access    bw(MiB/s)  IOPS       Latency(s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+------    ---------  ----       ----------  ---------- ---------  --------   --------   --------   --------   ----
+Commencing write performance test: 
+write     1370.74    1370.85    23.34       1024.00    1024.00    0.001342   23.34      0.000453   23.34      0   
+Max Write: 1370.74 MiB/sec (1437.33 MB/sec)
+
+Summary of all tests:
+Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev   Max(OPs)   Min(OPs)  Mean(OPs)     StdDev    Mean(s) Stonewall(s) Stonewall(MiB) Test# #Tasks 
+tPN reps fPP reord reordoff reordrand seed segcnt   blksiz    xsize aggs(MiB)   API RefNum
+write        1370.74    1370.74    1370.74       0.00    1370.74    1370.74    1370.74       0.00   23.34499         NA            NA     0      4   4
+    1   1     0        1         0    0   8000  1048576  1048576   32000.0 POSIX      0
+----
++
+
+. How much read and write throughput was achieved using 1, 2, and 4 threads?
+. Use ior to generate 128 GiB of data using 256 threads.
++
+TIP: Monitor real-time throughput using the *EC2 Instance Connect* or *SSH terminal* session window with `*nload*` running.
++
+[source,bash]
+----
+_job_name=ior-128
+_segment_count=512
+_threads=256
+_path=/fsx/${_job_name}
+mkdir -p ${_path}
+cd /fsx
+mpirun --npernode ${_threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${_segment_count} -g -v -w -i 1 -F -k -D 0 -o ${_path}/ior.bin
+
 ----
 
 == Next section
 
 Click the button below to go to the next section.
 
-image::05-monitor-performance.png[link=../05-monitor-performance/, align="left",width=420]
+image::enable-data-compression.jpg[link=../05-enable-data-compression/, align="left",width=420]
 
 
 

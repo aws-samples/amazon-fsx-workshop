@@ -2,7 +2,7 @@
 :toc:
 :icons:
 :linkattrs:
-:imagesdir: ../../resources/images
+:imagesdir: ./../resources/images
 
 
 == Summary
@@ -21,7 +21,7 @@ NOTE: It will take approximately 15 minutes to complete this section.
 
 IMPORTANT: Read through all steps below before continuing.
 
-=== Connect to *Linux Instance 0*
+=== Connect to *Linux Instance*
 
 image::connect-linux-instance-0.gif[align="left", width=600]
 
@@ -31,7 +31,7 @@ image::connect-linux-instance-0.gif[align="left", width=600]
 TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and Amazon EC2 console.
 +
 . Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
-. *_Select_* the EC2 instance created by the CloudFormation template. The name is "*Linux Instance 0*".
+. *_Select_* the EC2 instance created by the CloudFormation template. The name is "*Linux Instance*".
 . *_Click_* the *Connect* button.
 . *_Copy_* the SSH command and *_click_* *Close*.
 . *_Open_* your *terminal* application and *_paste_* the SSH command in a terminal window.
@@ -39,7 +39,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 
 === Examine *s3://nasanex* data repository integration
 
-*_Copy_*, *_paste_*, then *_execute_* the shell commands below in the SSH terminal session of *Linux Instance 0* to answer the following questions:
+*_Copy_*, *_paste_*, then *_execute_* the shell commands below in the SSH terminal session of *Linux Instance* to answer the following questions:
 
 . Is the FSx for Lustre file system mounted?
 +
@@ -53,7 +53,7 @@ mount -t lustre
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx
+time lfs find /fsx
 
 ----
 +
@@ -62,7 +62,7 @@ time lfs find /mnt/fsx
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type f | wc -l
+time lfs find /fsx --type f | wc -l
 
 ----
 +
@@ -70,7 +70,7 @@ time lfs find /mnt/fsx --type f | wc -l
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type d | wc -l
+time lfs find /fsx --type d | wc -l
 
 ----
 +
@@ -78,7 +78,7 @@ time lfs find /mnt/fsx --type d | wc -l
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type f --size -512k | wc -l
+time lfs find /fsx --type f --size -512k | wc -l
 
 ----
 +
@@ -86,18 +86,17 @@ time lfs find /mnt/fsx --type f --size -512k | wc -l
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type f --size +100M | wc -l
+time lfs find /fsx --type f --size +100M | wc -l
 
 ----
 +
-. How many .nc, .hdf, .tif, .gz files?
+. How many .nc, .hdf, .tif files?
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type f --name *.nc | wc -l
-time lfs find /mnt/fsx --type f --name *.hdf | wc -l
-time lfs find /mnt/fsx --type f --name *.tif | wc -l
-time lfs find /mnt/fsx --type f --name *.gz | wc -l
+time lfs find /fsx --type f --name *.nc | wc -l
+time lfs find /fsx --type f --name *.hdf | wc -l
+time lfs find /fsx --type f --name *.tif | wc -l
 
 ----
 +
@@ -106,6 +105,16 @@ time lfs find /mnt/fsx --type f --name *.gz | wc -l
 How much data (all the OSTs) has been loaded into the file system?
 +
 How much data storage capacity is available?
++
+How many Metadata Targets (MDTs) are provisioned for the file system?
++
+How much storage is provisioned, used, and available for the MDT?
++
+How many Object Storage Targets (OSTs) are provisioned for the file system?
++
+How much storage is provisioned, used, and available for each OST?
++
+Examine the UUIDs of the MDT and OSTs. Compare the prefix of each UUID to the mount name of the file system. The mount name is found in the *Summary* section of the file system in the Amazon FSx console.
 +
 [source,bash]
 ----
@@ -123,13 +132,13 @@ The results of your queries should match the following:
 | Query | Results
 
 | Is the FSx for Lustre file system mounted?
-| 10.0.1.193@tcp:/fsx on /mnt/fsx type lustre (rw,lazystatfs) (you will have a different IP address)
+| 10.0.1.193@tcp:/fsx on /fsx type lustre (rw,lazystatfs) (you will have a different IP address)
 
 | How long does it take to list the entire file system?
 | ~real	0m47.373s
 
 | What file types did you see?
-| .hdf  .nc  .gz  .tif  .json  .md5  .txt  .pdf
+| .hdf  .nc  .gz .tif  .json  .md5  .txt  .pdf
 
 | How many files?
 | 373572
@@ -143,24 +152,36 @@ The results of your queries should match the following:
 | How many large files (> 100 MiB)?
 | 169617
 
-| How many .nc, .hdf, .tif, .gz files?
-| .hdf = 207552; .tif = 11095; .nc = 87002; .gz = 42009
+| How many .nc, .hdf, .tif  files?
+| .hdf = 207552; .tif = 11095; .nc = 87002
 
 | How much storage is used by the metadata target (MDT)?
-| 934.1M
+| 1.9G
 
 | How much storage is used by all the object storage targets (OSTs)?
-| 27.M
+| 27.8M
 
 | How much data storage capacity is available?
-| 6.6 T
+| 6.5T
+
+| How many MDTs are provisioned?
+| 1
+
+| What is the data capacity makeup of the MDT?
+| bytes = 205.7G; used = 1.9G; available = 203.7G
+
+| How many OSTs are provisioned?
+| 6
+
+| What is the data capacity makeup of each OST?
+| bytes = 1.1T; used = 4.6M; available = 1.1T
 |===
 
 == Next section
 
 Click the button below to go to the next section.
 
-image::03-load-data.png[link=../03-load-data/, align="left",width=420]
+image::load-data-from-repository.jpg[link=../03-load-data-from-repository/, align="left",width=420]
 
 
 

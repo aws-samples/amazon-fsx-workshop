@@ -1,0 +1,262 @@
+= Load data from repository
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ./../resources/images
+
+
+== Summary
+
+This section will load data into Amazon FSx for Lustre from the integrated Amazon S3 bucket (data repository).
+
+The workshop environment created an FSx for Lustre file system with a data repository integrated with the "nasanex" bucket in the US West (Oregon) region. link:https://registry.opendata.aws/nasanex/[NASA NEX] is a part of the link:https://registry.opendata.aws/[Registry of Open Data on AWS] project and is a collection of Earth science datasets maintained by NASA, including climate change projections and satellite images of the Earth's surface.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below before continuing.
+
+=== Lazy load data
+
+Complete these steps from the SSH terminal session window connected to *Linux Instance*.
+
+- *_Copy_* the scripts below and *_paste_* it into your favorite text editor.
+
+- *_Copy_* the full path of one of the .tif files and *_replace_* the *_FILE_* placeholder.
+
+- *_Execute_* the script
+
+
+. Generate a list of some .tif files
++
+[source,bash]
+----
+time lfs find /fsx --type f --name *.tif | head -100
+
+----
++
+. *_Copy_* the full path of one of the .tif files and *_replace_* the *_FILE_* placeholder.
++
+*_Execute_* the script.
++
+[source,bash]
+----
+_file=FILE # e.g. _file=/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
+
+----
++
+How large is the file? Run an ls -la against the file to find out the size.
++
+[source,bash]
+----
+time ls -lah $_file
+
+----
++
+My results are below. The file I'm using is 188 MB.
++
+----
+-rwxr-xr-x. 1 root root 188M Aug 15  2014 /fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
+----
++
+. What is the logical size of the file? *_Run_* du --apparent-size -sh against the file to find the logical size of the file.
++
+[source,bash]
+----
+time du --apparent-size -sh $_file
+
+----
++
+My results are below. The file I'm using is 188 MB.
++
+----
+188M	/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
+----
++
+. What is the physical size of the file? *_Run_* du -sh against the file to find the physical size of the file.
++
+[source,bash]
+----
+time du -sh $_file
+
+----
++
+My results are below. The file has a physical size of 512 KiB.
++
+----
+512		/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
+----
++
+. Why is there a different between the physical size and the logical size of the file?
+. What is the hsm state of the file? *_Run_* lfs hsm_state against the file to find the physical size of the file.
++
+[source,bash]
+----
+time lfs hsm_state $_file
+
+----
++
+My results are below.
++
+----
+/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif: (0x0000000d) released exists archived, archive_id:1
+----
++
+. What does *released exists archived* mean? Try to figure this out on your own. Do a couple of google searches to find the answer.
+. Read the file and measure the time it takes to load it from the integrated Amazon S3 bucket. This command will load the file by reading it from Amazon S3 and writing it to tempfs on *Linux Instance*.
++
+[source,bash]
+----
+time cat $_file >/dev/shm/fsx
+
+----
++
+. How long did it take? My results are below.
++
+----
+real    0m4.702s
+user    0m0.000s
+sys     0m0.152s
+----
++
+. *_Re-run_* the same **"time cat..."** command and see how long it takes? My results are below.
++
+[source,bash]
+----
+real    0m0.110s
+user    0m0.000s
+sys     0m0.108s
+----
++
+[qanda]
+. Where did the last command get it's data?
++
+The cache on *Linux Instance*. You can verify this by opening a second SSH terminal session window to this same instance and run `nload -u M` to see real-time network throughput of the instance and re-run the command. To force the read operation to go back to FSx for Lustre, drop the cache on *Linux Instance* and re-run the command.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+time cat $_file >/dev/shm/fsx
+
+----
++
+. How long did it take? My results are below.
++
+[source,bash]
+----
+real	0m0.389s
+user	0m0.000s
+sys     0m0.170s
+----
++
+. What is the logical size of the file? *_Run_* du --apparent-size -sh against the file to find the logical size of the file.
++
+[source,bash]
+----
+time du --apparent-size -sh $_file
+
+----
++
+My results are below. The file I'm using is 188 MB.
++
+----
+188M	/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
+----
++
+. What is the physical size of the file? *_Run_* du -sh against the file to find the physical size of the file.
++
+[source,bash]
+----
+time du -sh $_file
+
+----
++
+My results are below. The file has a physical size of 187 M.
++
+----
+187M	/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif
+----
++
+. What is the hsm state of the file? *_Run_* lfs hsm_state against the file to find the physical size of the file.
++
+[source,bash]
+----
+time lfs hsm_state $_file
+
+----
++
+My results are below.
++
+----
+/fsx/NAIP/ca_1m_2012/34118/m_3411813_ne_11_1_20120428.tif: (0x00000009) exists archived, archive_id:1
+----
++
+. What does *exists archieved* mean? Try to figure this out on your own. Do a couple of google searches to find the answer. What happened to the file from the time you first ran hsm_state and now?
+. Experiment with different files and file types. Re-run the commands above but change the variable *_file=FILE* to use a different files.
+
+=== Bulk load data
+
+Complete these steps from two *SSH terminal* or *EC2 Instance Connect* session windows connected to *Linux Instance*.
+
+. Open two (2) *SSH terminal* or *EC2 Instance Connect* session windows connected to *Linux Instance*.
++
+Start `*nload*` in one of the SSH terminal session windows.
++
+[source,bash]
+----
+nload -u M
+
+----
++
+*_Copy_* the scripts below and *_execute_* them in the other SSH terminal session window.
++
+. Generate a list of files in the /CMIP5 directory.
++
+[source,bash]
+----
+time tree --du -h /fsx/CMIP5
+
+----
++
+. *_Execute_* the script below to bulk load all data for files in the /CMIP5 directory from the integrated s3://nasanex Amazon S3 bucket to the FSx for Lustre file system.
++
+[source,bash]
+----
+threads=36
+time lfs find /fsx/CMIP5 --type f | parallel --will-cite -j ${threads} sudo lfs hsm_restore {}
+
+----
+. *_Monitor_* the network throughput of the instance from the other SSH terminal window running `*nload*`. These objects are not copied through the instance from Amazon S3 to the file system. The GET API is called in parallel to copy data directly from Amazon S3 to the FSx for Lustre object storage servers (OSTs).
+
+
+. Open the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_select_* the link of the *File system Name* or *File system ID*.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. *_Select_* the *Monitoring* tab.
+. *_Scroll_* down to the *Total throughput (bytes/sec)* Amazon CloudWatch widget.
+. How long did it take to bulk load all the data for the files in the /CHIPS directory from the integrated Amazon S3 bucket?
++
+TIP: You may need to refresh the widgets a few times while the data is loading. *_Click_* the refresh image:refresh.jpg[align="left",width=20] shortcut just above the widgets to refresh the monitoring widgets.
++
+. What was the throughput during the bulk load? Continue refreshing the widgets until the *Total throughput* metric widget is back down to zero.
+. Return to the *Lazy load data* above and set the variable *_file=FILE* to different files in the */fsx/CMIP5* subdirectory.
+. What's the *hsm_state* of some of the files in */fsx/CMIP5*?
+. What happens when you access this files? Is it getting the data from Amazon S3 or Amazon FSx?
+. Monitor *nload* to see if there is a delay in returning the data from Amazon FSx.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::test-performance.jpg[link=../04-test-performance/, align="left",width=420]
+
+
+
+
