@@ -68,7 +68,7 @@ vol show
 
 . *_Verify_* the *volumes* and *Storage virtual machines* tabs to ensure there are no pending resources on your file system.
 
-. *_Verify_* the file system has been deleted successfully before proceeding with deletion of the *Workshop Environment*
+//. *_Verify_* the file system has been deleted successfully before proceeding with deletion of the *Workshop Environment*
 
 //. *_Click_* *Actions* on the top-right corner and *_select_* *Delete file system*. *_Type_* the *File system ID* and *_click_* *Delete file system*.
 
