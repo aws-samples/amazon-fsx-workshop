@@ -85,6 +85,10 @@ snapmirror release -source-path svm01:vol1 -destination-path svmdr01:vol2
 [source,bash]
 ----
 vol offline vol2 -vserver svmdr01
+----
++
+[source,bash]
+----
 vol delete vol2 -vserver svmdr01
 ----
 +
