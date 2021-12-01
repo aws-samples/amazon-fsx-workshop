@@ -47,11 +47,10 @@ mount | grep  nfs
 
 ----
 +
-
 . Do you see any NFS volumes have been mounted?
-
++
 NOTE: No volumes should be mounted at this time.
-
++
 . *_Copy_* the script below into your favorite text editor. Replace the mount point if needed.
 +
 [source,bash]
@@ -73,12 +72,6 @@ sudo chown ssm-user:ssm-user ${MOUNTPOINT}
 
 ----
 +
-. *_Return_* to the SSH connection of the *FSx for ONTAP Workshop Linux Instance*.
-+
-TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the SSH connection window and create a new one.
-+
-. *_Paste_* and run the script you copied to the clipboard in the SSH connection window.
-
 . *_Run_* below command to confirm your file system was successfully mounted.
 +
 [source,bash]
