@@ -53,7 +53,15 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 [source,bash]
 ----
 volume offline -volume vol1_clone1 -vserver svm01
+----
++
+[source,bash]
+----
 volume delete -volume vol1_clone1 -vserver svm01
+----
++
+[source,bash]
+----
 vol show
 ----
 +
