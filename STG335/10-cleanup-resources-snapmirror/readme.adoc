@@ -98,9 +98,7 @@ volume offline -volume vol1_clone1 -vserver svm01
 [source,bash]
 ----
 volume delete -volume vol1_clone1 -vserver svm01
-vol show
 ----
-+
 +
 [source,bash]
 ----
