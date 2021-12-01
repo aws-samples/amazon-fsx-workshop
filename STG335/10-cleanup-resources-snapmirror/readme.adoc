@@ -93,11 +93,20 @@ vol delete vol2 -vserver svmdr01
 [source,bash]
 ----
 volume offline -volume vol1_clone1 -vserver svm01
+----
++
+[source,bash]
+----
 volume delete -volume vol1_clone1 -vserver svm01
 vol show
 ----
 +
-
++
+[source,bash]
+----
+vol show
+----
++
 . *_Run_* the ONTAP CLI commands below to clean-up Cluster and SVM peer relationships from your *secondary* FSx for ONTAP file system.
 +
 [source,bash]
