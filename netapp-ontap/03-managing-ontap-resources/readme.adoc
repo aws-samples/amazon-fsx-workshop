@@ -104,7 +104,7 @@ a| Input a Net BIOS name which you will use to connect to SMB share. Ex: svm08
 a| Input example.com
 
 | *DNS server IP addresses*
-a| Enter the Active Directory DNS server IP addresses. You can retrieve the DNS addresses using link:https://console.aws.amazon.com/directoryservice[Directory Service]. *_click_* Directory ID with Directory name *fsxontap.com*. Under *Networking & Security* tab you will find two DNS addresses
+a| Enter the Active Directory DNS server IP addresses. You can retrieve the DNS addresses using link:https://console.aws.amazon.com/directoryservice[Directory Service]. *_click_* Directory ID with Directory name *example.com*. Under *Networking & Security* tab you will find two DNS addresses
 
 | *Service account username*
 a| Enter the Active Directory username created by the workshop resource. You can retrieve the username using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* Secret name *Password-GUID* and *_Click_* on *Retrieve Secret value* to get the username
