@@ -7,7 +7,7 @@ image:fsx-aws-logos.png[align="left",width=420]
 
 This is a workshop designed for architects and engineers who would like to learn more about Amazon Web Services (AWS) full-managed third party file system service - link:https://aws.amazon.com/fsx/[Amazon FSx].
 
-Click the link below to access the type of AWS sponsored workshop you want to run, **Amazon FSx for Lustre** or **Amazon FSx for Windows File Server**.
+Click the link below to access the type of AWS sponsored workshop you want to run, **Amazon FSx for NetApp ONTAP**, **Amazon FSx for OpenZFS**, **Amazon FSx for Lustre** or **Amazon FSx for Windows File Server**.
 
 [cols="1,1"]
 |===
