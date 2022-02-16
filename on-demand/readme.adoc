@@ -9,7 +9,7 @@ This is a set of tutorials designed for architects and engineers who would like 
 
 Click the link below to access the type of on-demand workshop you want to run, **Amazon FSx for Lustre**, **Amazon FSx for Windows File Server**, or **Amazon FSx File Gateway**.
 
-[cols="1,1"]
+[cols="2,2"]
 |===
 a|image::fsx-lustre-od-workshop.png[link=../lustre/01-create-od-environment/]
 a|image::fsx-windows-od-workshop.png[link=../windows-file-server/01-deploy-od-environment/]
