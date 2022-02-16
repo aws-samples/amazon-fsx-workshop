@@ -1,0 +1,435 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates the Amazon FSx for OpenZFS workshop environment.
+
+Metadata:
+  Authors:
+    Description: Shrinath Kurdekar (kurdekar@amazon.com)
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Amazon FSx for OpenZFS Workshop Environment
+      Parameters:
+        - VpcCidr
+        - AvailabilityZones
+        - InstanceType
+        - KeyPair
+        - DeploymentType
+        - ThroughputCapacity
+        - StorageCapacity
+        - StorageType
+        - LatestWindowsAmiId
+        - LatestLinuxAmiId
+    ParameterLabels:
+      AvailabilityZones:
+        default: Availability Zones
+      InstanceType:
+        default: Instance Type
+      KeyPair:
+        default: Key Pair
+      VpcCidr:
+        default: VPC CIDR
+      DeploymentType:
+        default: File System Deployment Type
+      ThroughputCapacity:
+        default: File System Throughput Capacity
+      StorageCapacity:
+        default: File System Storage Capacity
+      StorageType:
+        default: File System Storage Type
+      DomainName:
+        default: Microsoft AD Domain Name
+      LatestWindowsAmiId:
+        default: Latest Windows AMI ID
+      LatestLinuxAmiId:
+        default: Latest Linux AMI ID
+
+
+Parameters:
+  AvailabilityZones:
+    Description: Select an Availability Zone (AZ). One subnet will be created in the selected AZ.
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  InstanceType:
+    Description: Select the instance type. Choose instances(c5n.9xlarge/r5n.9xlarge or higher) with non variable network throughput if running performance benchmarks.
+    AllowedValues:
+    - m5.large
+    - c5.large
+    - c5.xlarge
+    - c5.2xlarge
+    - c5n.xlarge
+    - c5n.2xlarge
+    - c5n.9xlarge
+    - c5n.18xlarge
+    - r5n.8xlarge
+    - r5n.16xlarge
+    - r5n.24xlarge
+    Default: c5n.xlarge
+    Type: String
+  KeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+  VpcCidr:
+    AllowedValues: 
+    - 10.0.0.0/16
+    - 172.31.0.0/16
+    - 192.168.0.0/16
+    Default: 10.0.0.0/16
+    Description: Select the private IPv4 CIDR for the VPC.
+    Type: String
+  DeploymentType:
+    AllowedValues:
+    - SINGLE_AZ_1
+    Default: SINGLE_AZ_1
+    Type: String
+  ThroughputCapacity:
+    Description: Select Storage Throughput from 64 MB/s to 4096 MB/s.
+    AllowedValues:
+    - 64
+    - 128
+    - 256
+    - 512
+    - 1024
+    - 2048
+    - 3072
+    - 4096
+    Default: 128
+    Type: Number
+  StorageCapacity:
+    Description: Specify a Storage Capacity between 64 to 524288 GiB.
+    Default: 1024
+    Type: Number
+  StorageType:
+    Description: Leave default since only SSD supported currently.
+    AllowedValues:
+    - SSD
+    Default: SSD
+    Type: String
+  LatestWindowsAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+  LatestLinuxAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-kernel-5.10-hvm-x86_64-gp2'
+
+Resources:
+  AttachInternetGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref Vpc
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'VPC IGW | ', !Ref 'AWS::StackName' ] ]     
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Public Route Table | ', !Ref 'AWS::StackName' ] ]
+        - Key: Network
+          Value: Public
+      VpcId: !Ref Vpc
+  PublicRouteTableAssociation0:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet0
+      RouteTableId: !Ref PublicRouteTable
+  PublicSubnet0:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 0, !Ref AvailabilityZones ]
+      CidrBlock: !Select [ 0, !Cidr [ !GetAtt Vpc.CidrBlock, 2, 8 ] ]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'Public Subnet 0 | ', !Ref 'AWS::StackName' ] ]
+        - Key: SubnetType
+          Value: Public
+      VpcId: !Ref Vpc
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Join [ '', [ 'VPC | ', !Ref 'AWS::StackName' ] ]
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Amazon FSx for OpenZFS Workshop Environment
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3389
+          ToPort: 3389
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: "Amazon FSx for  OpenZFS Workshop Environment security group" 
+      VpcId:
+        !Ref Vpc
+  SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      GroupId: !Ref SecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref SecurityGroup
+
+  OpenZFSFileSystem:
+    DependsOn: [ PublicRouteTable ]
+    Type: AWS::FSx::FileSystem
+    Properties: 
+      FileSystemType: OPENZFS
+      OpenZFSConfiguration: 
+          DeploymentType: !Ref DeploymentType
+          RootVolumeConfiguration: 
+            NfsExports:
+              - ClientConfigurations: 
+                - Clients: !Ref VpcCidr
+                  Options: ["rw", "no_root_squash"]  
+          ThroughputCapacity: !Ref ThroughputCapacity
+      SecurityGroupIds: 
+        - !Ref SecurityGroup
+      StorageCapacity: !Ref StorageCapacity
+      StorageType: !Ref StorageType
+      SubnetIds: 
+        - !Ref PublicSubnet0
+      Tags: 
+        - Key: "Name"
+          Value: "FSx for OpenZFS Workshop File system"
+
+  OpenZFSVolumeSync:
+    DependsOn: [ OpenZFSFileSystem ]
+    Type: AWS::FSx::Volume
+    Properties: 
+      Name: "sync_vol"
+      VolumeType: OPENZFS
+      OpenZFSConfiguration: 
+        ParentVolumeId: !GetAtt OpenZFSFileSystem.RootVolumeId
+        StorageCapacityQuotaGiB: 1024
+        NfsExports: 
+          - ClientConfigurations: 
+            - Clients: !Ref VpcCidr
+              Options: ["rw", "crossmnt", "no_root_squash"]           
+      Tags: 
+        - Key: "Name"
+          Value: "FSx for OpenZFS volume with SYNC NFS export"
+
+  OpenZFSVolumeAsync:
+    DependsOn: [ OpenZFSFileSystem ]
+    Type: AWS::FSx::Volume
+    Properties: 
+      Name: "async_vol"
+      VolumeType: OPENZFS
+      OpenZFSConfiguration: 
+        ParentVolumeId: !GetAtt OpenZFSFileSystem.RootVolumeId
+        StorageCapacityQuotaGiB: 1024
+        StorageCapacityReservationGiB: 100
+        UserAndGroupQuotas:
+          - Type: "USER"
+            Id: 0
+            StorageCapacityQuotaGiB: 100
+        NfsExports: 
+          - ClientConfigurations: 
+            - Clients: !Ref VpcCidr  
+              Options: ["rw", "async", "crossmnt", "no_root_squash"]       
+      Tags: 
+        - Key: "Name"
+          Value: "FSx for OpenZFS volume with ASYNC NFS export"
+      
+  OpenZFSSnapshot:
+    Type: "AWS::FSx::Snapshot"
+    DependsOn: Instance1
+    Properties:
+      Name: "openzfs_workshop_volume_snapshot"
+      VolumeId: !Ref OpenZFSVolumeSync
+
+  OpenZFSVolumeClone:
+    DependsOn: [ OpenZFSSnapshot ]
+    Type: AWS::FSx::Volume
+    Properties: 
+      Name: "clone_vol"
+      VolumeType: OPENZFS
+      OpenZFSConfiguration: 
+        ParentVolumeId: !GetAtt OpenZFSFileSystem.RootVolumeId
+        StorageCapacityQuotaGiB: 1024
+        OriginSnapshot: 
+          CopyStrategy: CLONE
+          SnapshotARN: !GetAtt OpenZFSSnapshot.ResourceARN
+        NfsExports: 
+          - ClientConfigurations: 
+            - Clients: !Ref VpcCidr  
+              Options: ["rw","crossmnt", "no_root_squash"]   
+      Tags: 
+        - Key: "Name"
+          Value: "FSx for OpenZFS clone volume"
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: '/'
+      Roles:
+      - !Ref InstanceRole
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+
+  Instance0:
+    DependsOn: [ OpenZFSVolumeSync, OpenZFSVolumeAsync ]
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !Ref LatestWindowsAmiId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPair
+      Monitoring: true
+      SecurityGroupIds: 
+        - !Ref SecurityGroup
+      SubnetId: !Ref PublicSubnet0
+      Tags:
+        - Key: Name
+          Value: "FSx for OpenZFS Workshop Windows Instance"
+      UserData:
+        Fn::Base64:
+          !Sub |
+            <powershell>
+
+            # disable ie security (windows)
+            function Disable-ieESC {
+                $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+                $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+                Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
+                Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
+                Stop-Process -Name Explorer
+                Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -ForegroundColor Green
+            }
+            Disable-ieESC
+
+            # install DiskSpd (windows)
+            $path = "C:\Tools\DiskSpd-2.0.21a"
+            $url = "https://github.com/microsoft/diskspd/releases/download/v2.0.21a/DiskSpd.zip"
+            $destination = "C:\Tools\DiskSpd-2.0.21a.zip"
+            $download = New-Object -Typename System.Net.WebClient
+            New-Item -Type Directory -Path $path
+            $download.DownloadFile($url,$destination)
+            $extract = New-Object -ComObject Shell.Application
+            $files = $extract.Namespace($destination).Items()
+            $extract.NameSpace($path).CopyHere($files)
+
+            #Install NFS client
+            Install-WindowsFeature -Name NFS-Client
+
+            </powershell>
+
+  Instance1:
+    DependsOn: [ OpenZFSVolumeSync, OpenZFSVolumeAsync ]
+    Type: AWS::EC2::Instance
+    Properties:
+      IamInstanceProfile: !Ref InstanceProfile
+      ImageId: !Ref LatestLinuxAmiId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPair
+      Monitoring: true
+      SecurityGroupIds: 
+        - !Ref SecurityGroup
+      SubnetId: !Ref PublicSubnet0
+      Tags:
+        - Key: Name
+          Value: FSx for OpenZFS Workshop Linux Instance
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #cloud-config
+            repo_update: true
+            repo_upgrade: all
+
+            packages:
+            - cifs-utils
+            - jq
+
+            runcmd:
+            - pip3 install boto3
+            - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            - unzip awscliv2.zip
+            - sudo ./aws/install
+            - sudo export PATH=/usr/local/bin:$PATH
+
+            - amazon-linux-extras install -y epel
+            - yum groupinstall -y "Development Tools"
+            - yum install -y fio fpart parallel tree nload git libaio-devel openmpi openmpi-devel
+
+            # install ior
+            - git clone https://github.com/hpc/ior.git
+            - export PATH=$PATH:/usr/lib64/openmpi/bin
+            - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/openmpi/lib/
+            - cd ior
+            - ./bootstrap
+            - ./configure
+            - make
+            - sudo cp src/ior /usr/local/bin
+            - cd
+
+            - cd /home/ec2-user
+            - git clone https://github.com/bengland2/smallfile.git
+
+            # mount OpenZFS volumes
+            - _availability_zone=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+            - _region=${!_availability_zone:0:-1}
+            - _sync_mount_point=/fsxsync
+            - _async_mount_point=/fsxasync
+            - mkdir -p ${!_sync_mount_point} ${!_async_mount_point}
+            - mount -t nfs ${OpenZFSFileSystem}.fsx.${!_region}.amazonaws.com:/fsx/sync_vol ${!_sync_mount_point}
+            - mount -t nfs ${OpenZFSFileSystem}.fsx.${!_region}.amazonaws.com:/fsx/async_vol ${!_async_mount_point}
+            - chmod 777 ${!_sync_mount_point} ${!_async_mount_point}
+
+            # Create Test file
+            - echo "This is a demo for Amazon FSx for OpenZFS volume snapshot" >> /${!_sync_mount_point}/demofile01.txt
+            - chmod 777 /${!_sync_mount_point}/demofile01.txt
+
+            - /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource Instance1 --region ${AWS::Region}
+    CreationPolicy: 
+      ResourceSignal:
+        Timeout: PT5M
+  
+Outputs:
+  FileSystemId:
+    Description: Amazon FSx for OpenZFS File System ID
+    Value: !Ref OpenZFSFileSystem
+  SyncVolumeId:
+    Description: FSx for OpenZFS volume with SYNC NFS export
+    Value: !Ref OpenZFSVolumeSync
+  AsyncVolumeId:
+    Description: FSx for OpenZFS volume with ASYNC NFS export
+    Value: !Ref OpenZFSVolumeAsync
+  CloneVolumeId:
+    Description: FSx for OpenZFS clone volume
+    Value: !Ref OpenZFSVolumeClone
+  SnapshotID:
+    Description: FSx for OpenZFS snapshot
+    Value: !Ref OpenZFSSnapshot

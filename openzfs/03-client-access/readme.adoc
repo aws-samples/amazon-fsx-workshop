@@ -1,0 +1,157 @@
+= Access data from Linux and Windows clients
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will cover access to data on your *Amazon FSx for OpenZFS* volume from Linux and Windows instances using NFS protocol.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide (Access data from Linux Instance)
+
+=== Connect to the Linux Instance
+
+IMPORTANT: Read through all steps below before continuing.
+
+. Open the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this GitHub workshop and AWS console.
++
+. Make sure you are in the same *AWS Region* as the workshop environment. If you need to change the *AWS Region* of the Amazon EC2 console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
+
+. *_Click_* *Instances (running)*.
+
+. *_Click_* the radio button next to the instance with the name *FSx for OpenZFS Workshop Linux Instance*.
+
+. *_Click_* the Connect button.
+
+* Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser. (*recommended*)
+
+* SSH using Terminal client - *_Select_* *SSH client* tab and *_Copy_* the Example SSH command shown and *_click_* Close.
+
+** *_Open_* your terminal application and *_paste_* the SSH command in a terminal window.
+
+** *_Follow_* the prompts to SSH into the instance.
+
+=== Access data on Linux Instance
+
+IMPORTANT: Read through all steps below before continuing.
+
+. *_Run_* the following command to check what NFS volumes have been mounted.
++
+[source,bash]
+----
+mount | grep  nfs
+----
++
+
+. Do you see any NFS volumes have been mounted?
++
+NOTE: You should see the *sync_vol* and *async_vol* volumes created by the workshop environment already mounted.
++
+
+. *_Examine_* the mount options from the output of the *mount* command. What NFS version is used by default?
++
+TIP: Amazon FSx for OpenZFS file systems support accessing data from a wide variety of compute instances and operating systems using the Network File System (NFS) protocol (v3, v4.0, v4.1 and v4.2)
++
+
+. *_Run_* below command to examine the size and available space for both volumes.
++
+[source,bash]
+----
+df -h /fsxasync /fsxsync
+----
++
+
+. Why are the sizes different even thought both volumes have a quota of 1024 GiB?
++
+TIP: The async_vol has a space reservation of 100 GiB which guarantees this space is always available for this volume. Due to this the sync_vol only sees the remaining capacity available on the file system.
++
+
+. *_Run_* command below to list the contents of the NFS mounts.
++
+[source,bash]
+----
+ls -lt /fsxasync /fsxsync
+----
++
+
+. *_Run_* command below to view the contents of the file created by the workshop environment.
++
+[source,bash]
+----
+cat /fsxsync/demofile01.txt
+----
+
+
+== Step-by-step Guide (Access data from Windows Instance)
+
+=== Connect to the Windows Instance
+
+IMPORTANT: Read through all steps below before continuing.
+
+//image::<connect-windows-instances>.gif[align="left", width=600]
+
+
+. Go back to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console, *_Click_* *Instances (running)*
+
+. *_Click_* the radio button next to the instance with the name *FSx for OpenZFS Workshop Windows Instance*.
+
+. *_Copy_* the *Public DNS (IPv4)* name of the *FSx for OpenZFS Workshop Windows Instance*.
+
+. Launch your remote desktop application and create a new connection.
+* Windows Users - use the built-in *Remote Desktop Connection* application.
+* Mac Users - use the link:https://apps.apple.com/us/app/microsoft-remote-desktop/id1295203466?mt=12/[Microsoft Remote Desktop] app available from the Mac App Store.
+
+. Use the DNS name copied above as the host name of the new connection.
+
+. Start a remote desktop session to the new connection. 
+
+. Login using the *Administrator* user.
+
+. To get the *Administrator* password, *_Select_* the radio button next to the instance with the name *FSx for OpenZFS Workshop Windows Instance* and *_Click_* *Connect*. *_Click_* on the *RDP client* tab and then *Click* on *Get password*. In the Get Windows password window, *_Click_* on *Browse* to browse the key pair associated with this instance, *_Select_* the key pair and *_Click_* *Open*. Next, *_Click_* *Decrypt Password* and *_Copy_* the Password. *_Paste_* the copied password in your remote desktop session window to complete the login process.
+
+
+=== Access data on Windows Instance
+
+. *_Return_* to the browser tab for your for Amazon FSx for OpenZFS volume with name *async_vol* and *_Click_* *Attach* on the top right corner. On the *Attach file system* window, *_Click_* on *From Windows instances*, copy the *mount* command listed under *_Attach instruction_*
+
+. *_Return_* to the remote desktop session of the *FSx for OpenZFS Workshop Linux Instance*. *_Open_* a *command prompt* and paste the mount command you copied in previous step. 
++
+NOTE: The NFS client has already been installed by the workshop environment.
++
+[source,bash]
+----
+mount \\<DNSNAME>\fsx\sync_vol\ Z:
+----
++
+[source,bash]
+----
+mount \\fs-01234515abdcefgh.fsx.us-east-1.amazonaws.com\fsx\sync_vol\ Z:
+----
++
+
+. *_Launch_* *File Explorer*.
+
+. In the *File Explorer* window of the Z: drive you should see the file *demofile01.txt* which was created by the workshop environment.
+
+. *_Double-Click_* to open the file *demofile01.txt*  and view the contents of the file.
+
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::data-protection.png[link=../04-data-protection/, align="left",width=420]
+
+
+
+

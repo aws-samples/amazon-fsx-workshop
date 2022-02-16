@@ -1,0 +1,152 @@
+= Managing your Amazon FSx for OpenZFS File System
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will help you become familiar with using the Amazon FSx console and ONTAP CLI to manage your Amazon FSx for OpenZFS file systems.
+
+You can use the Amazon FSx console, AWS CLI or FSx API to create a new file system. 
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide (Amazon FSx Console)
+
+=== Examine Amazon FSx Console
+
+. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for OpenZFS file system. 
+
+
+. *_Examine_* the *Summary* section of the file system. *_Find_* the values of the following file system attributes:
+* File system ID
+* Lifecycle state
+* Deployment type
+* SSD Storage capacity
+* Throughput capacity
+* Provisioned IOPS
+* Availability Zones
+* Creation time
+
+. *_Examine_* the *Network & security* section of the file system. *_Click_* the *Network & security* tab. *_Find_* the values of the following file system attributes:
+* VPC
+* DNS name
+* KMS key ID
+
+
+. *_Examine_* the subnet attributes of the file system:
+* Subnet
+* Availability Zone
+* Network interface
+
+* How would you find the VPC security groups associated to the file system?
++
+Hint: *_Click_* the Network interface link. In the ENI browser tab, *_click_* the *Security groups* attribute to view the *inbound rules*. *_Close_* the browser tab of the *Network interface* console.
++
+. *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
+
+. *_Examine_* the *Administration* section of the file system. *_Click_* the *Administration* tab. *_Find_* the values of the following file system attribute:
+* Weekly maintenance window
+
+. *_Examine_* the *Backups* section of the file system. *_Click_* the *Backups* tab.
+* Are daily automatic backups enabled?
+* *_Click_* *Update* to Change backup window and retention period. Accept default values and *_Click_* *Save*.
+
+. *_Examine_* the *Tags* section of the file system. *_Click_* the *Tags* tab.
+* What tags (key/value) pairs are assigned to the file system?
+
+
+. *_Examine_* the *Volumes* section of the file system. *_Click_* the *Volumes* tab where you should see 4 x volumes created by the workshop environment:
+
+==== Examine the root volume
+
+* *_Right-Click_* on the volume named *fsx* and *_select_* *Open Link in New Tab* to *_Examine_* the volume properties in a new browser tab. Go to the new browser tab and *_Find_* the values of the following volume attributes:
+** Volume ID
+** Path
+** Parent volume ID. Why is the parent volume ID blank?
++
+NOTE: *fsx* is the root volume and is the primary data container (or volume) in your file system. You can work with this root volume directly, or you can add child volumes to further organize your data after your file system is created.
++
+** What is the *Quota* configured on this volume?
+** What is the *Reservation* configured on this volume?
++
+NOTE: *Quotas* define the maximum amount of capacity this volume is able to consume but does not guarantee the space. *Reservations* guarantee a minimum amount of capacity is always available to this volume. Only the volume with the reservation can use that storage space, regardless of the volume quotas that other volumes may have. By setting quotas without reservations, you can create space-efficient *thin-provisioned* volumes where capacity is allocated only as storage is being consumed. With *thin-provisioned* volumes, you can assign quotas that are collectively larger than the existing capacity of the file system or quota of a parent volume.
++
+** *_Examine_* the *NFS exports* section of the volume.
+*** *_Review_* the NFS mount options configured on this volume and the client IP addresses that can mount this volume.
+
+** *_Examine_* the *Quotas* section of the volume.
+*** Are any user and group quotas configured?
+
+** *_Examine_* the *Monitoring* section of the volume.
+*** What metrics can you monitor for this volume?
+
+** *_Examine_* the *Volumes* section of the volume.
+*** Are there child volumes configured under this root volume?
+
+** *_Examine_* the *Snapshots* section of the volume.
+*** Are there any snapshots created for this volume?
+
+
+
+==== Examine the child volumes
+
+* *Return* to the browser tab for your *Amazon FSx for OpenZFS* file system and *Volumes* section of your file system. If you closed the browser tab return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for OpenZFS file system and then *Volumes* section of your file system.
+
+* *_Right-Click_* on the volume named *sync_vol* and *_select_* *Open Link in New Tab* to *_Examine_* the volume properties in a new browser tab. Go to the new browser tab and *_Find_* the values of the following volume attributes:
+** Volume ID
+** Parent volume ID. *_Right-Click_* on the Parent volume ID *fsvol-<abc0123>* and *_select_* *Open Link in New Window* to *_Examine_* the parent volume name. *_Close_* this browser window and *Return* to the browser tab to continue examining the *sync_vol* volume.
++
+TIP: The parent volume can be the root volume or another volume.
++
+** Path
++
+TIP: Do you see anything different in the path name compared to the root volume?
++
+** Quota
+** Reservation
+** *_Examine_* the *NFS exports* section of this volume.
+*** *_Review_* the NFS mount options configured on this volume and the client IP addresses that can mount this volume.
+
+
+** *_Examine_* the *Snapshots* section of this volume.
+*** Are there any snapshots created for this volume?
+
+* *Return* to the browser tab for your *Amazon FSx for OpenZFS* file system and *Volumes* section of your file system. If you closed the browser tab return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for OpenZFS file system and then *Volumes* section of your file system.
+
+* *_Right-Click_* on the volume named *async_vol* and *_select_* *Open Link in New Tab* to *_Examine_* the volume properties in a new browser tab. Go to the new browser tab and *_Find_* the values of the following volume attributes:
+** Volume ID
+** Parent volume ID. *_Right-Click_* on the Parent volume ID *fsvol-<abc0123>* and *_select_* *Open Link in New Window* to *_Examine_* the parent volume name. *_Close_* this browser window and *Return* to the browser tab to continue examining the *async_vol* volume.
++
+TIP: The parent volume can be the root volume or another volume on the file system.
++
+** Path. Do you see anything different in the path name compared to the root volume?
+** Quota
+** What is the *Reservation* configured on this volume?
++
+TIP: The *Reservation* of 100 GiB guarantees this amount of capacity is always available to this volume.
++
+** *_Examine_* the *NFS exports* section of this volume.
+*** Do you see anything different with the NFS mount options for this volume when compared to the root *fsx* volume or *sync_vol*?
++
+NOTE: By default, volumes are exported with sync mount option which ensures writes are acknowledged after they have been committed to disk. When async mount option is used, replies to client requests (such as write requests) after the changes have been committed to memory on the file server, but before any changes made by that request have been committed to stable storage (i.e disk drives). This setting can improve performance for latency-intensive or IOPS-intensive workloads. Use of the async option should be carefully evaluated for your use cases as it can cause data to be lost or corrupted if a write request is acknowledged but the file server crashes before the write request is fully written to disk.
++
+** *_Examine_* the *Quotas* section of this volume.
+*** Are any user and group quotas configured?
+
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::client-access.jpg[link=../03-client-access/, align="left",width=420]
+
+
+
+

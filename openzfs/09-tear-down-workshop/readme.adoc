@@ -1,0 +1,26 @@
+= Tear down the workshop resources
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+*Congratulation!* You have completed the Amazon FSx for OpenZFS  Workshop.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+=== Delete *Workshop Environment* via CloudFormation
+
+IMPORTANT: Read through all steps below before continuing.
+
+. Open the link:https://console.aws.amazon.com/cloudformation/[Amazon CloudFormation] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this GitHub workshop and AWS console.
++
+. Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
+. *_Click_* the *radio button* next to the *fsx-OpenZFS-workshop* stack.
+. *_Click_* the *Actions* button then *Delete stack*.
+. *_Click_* *Yes, Delete* to delete the workshop environment.
+
+IMPORTANT: It may take approximately 10-15 minutes to delete all AWS resources created by the CloudFormation template. Check the status periodically to verify all resources have been delete.

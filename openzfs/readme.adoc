@@ -1,0 +1,25 @@
+= Amazon FSx for OpenZFS File Storage the AWSome Way!
+:icons:
+:linkattrs:
+:imagesdir: ./resources/images
+
+image:fsx-aws.png[alt="fsx for OpenZFS and aws logos", align="left",width=420]
+
+This is a workshop designed for architects and engineers who would like to learn more about Amazon FSx for OpenZFS file storage.
+
+=== Duration
+
+NOTE: It will take approximately between 1.5-2 hours to complete the workshop.
+
+=== Pricing
+
+NOTE: You will incur charges for this workshop as you will create resources in your AWS account.
+
+
+Click the button below to start the *Amazon FSx for OpenZFS* workshop.
+
+image::01-access-environment.png[link=01-access-workshop-environment/, align="left",width=420]
+
+=== Participation
+
+We encourage participation; if you find anything, please submit an issue. However, if you want to help raise the bar, **submit a PR**!

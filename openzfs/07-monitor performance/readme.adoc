@@ -1,0 +1,72 @@
+= Monitor Performance
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will monitor the performance of *Amazon FSx for OpenZFS*.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== CloudWatch dashboard
+
+IMPORTANT: Read through all steps below.
+
+. Open the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
+. *_Click_* the *File system ID* of your *Amazon FSx for OpenZFS* file system.
+. *_Click_* the *Monitoring* tab to review the file system metrics.
+. *_Click_* the *Add to dashboard* to launch the *CloudWatch* console in a new tab. *_Click_* *Create new* button and *_Enter_* the *File system ID* (ex:fs-0123456bcdegh89) as the *Dashboard name*. 
+
+. *_Click_* *Create* to create the new dashboard and then *_Click_* *Add to dashboard*. Next, *_Click_* *Save dashboard* to save the newly created dashboard for your file system metrics.
+. *_Scroll_* through the dashboard and review all the widgets and their settings.
+. Notice how the vertical time line is in sync across all widgets. This makes it easy to correlate different metric values for a given point in time.
+. *_Zoom_* in on a widget by *_clicking_* and *_dragging_* over a period of time. Notice all widgets also zoom in for the period of time selected.
+. *_Reset_* zoom by *_clicking_* the blue magnifying glass in the top right of any widget.
+
+
+=== CloudWatch alarm
+
+IMPORTANT: Read through all steps before *_creating_* the alarm.
+
+. *_Copy_* the file system id from the dashboard name
+. *_Click_* the *Maximize* button of the *Throughput (Bytes per second)* widget.
+. *_Click_* the *View in metrics* link (at the bottom left of the window).
+. *_Find_* the metric labeled *Total Data Throughput (B/s)* and *_click_* the *Create alarm* button in the actions column.
+. *_Scroll_* down to the *Conditions* section and in the *Define the threshold value* field *_enter_* 100000000. This will set an alarm condition that will trigger if the *Total Data Throughput (B/s)* is greater than 100 MB/s.
+. *_Click_* *Next*.
+. In the *Notification* section, *_select_* *Create a new topic...* then *_enter_* an email address to which you have immediate access.
+. *_Click_* *Create topic*.
+. *_Scroll down_* and *_select_* *Next*.
+. In the *Alarm name* text box *_enter_* "High throughput alarm - " then *_paste_* the *file system id* you copied earlier (e.g. High throughput alarm - fs-0123456789abcdef).
+. *_Click_* *Next*.
+. *_Preview_* the alarm graph, make sure the red alarm line is at the 100M mark.
+. *_Scroll_* and *_review_* the *Conditions*, *Actions*, and *Name and description* sections.
+. *_Click_* *Create alarm*.
+. You must confirm your *email subscription* to the SNS topic you created for this alarm. *_Access_* the inbox of the email address you entered. It should have a new email message with a subject *AWS Notification - Subscription Confirmation* from *AWS Notifications <no-reply@sns.amazonaws.com>*. Read the email and *_click_* the *Confirm subscription* link. 
+. *_Wait_* a few minutes for the alarm state to transition from *Insufficient data* to *OK*.
+
+. In our next section, we will run additonal performance tests with data compression enabled that will trigger the alarm we just create.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::compression.jpg[link=../08-Data Compression/, align="left",width=420]
+
+
+
+

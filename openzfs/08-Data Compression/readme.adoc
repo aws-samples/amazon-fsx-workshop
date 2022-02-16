@@ -1,0 +1,162 @@
+= Data compression
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ./../resources/images
+
+
+== Summary
+
+This section will cover *data compression* for the *Amazon FSx for OpenZFS* file system.
+
+You can use the OpenZFS data compression feature to achieve cost savings on your Amazon FSx for OpenZFS file systems and backup storage, and also increase your effective throughput. When data compression is enabled, Amazon FSx for OpenZFS automatically compresses newly written files before they are written to disk and automatically uncompresses them when they are read.
+
+You can choose a compression type of *Z-Standard* (the default) or *No compression* to turn off compression for the volume. 
+
+Enabling compression may reduce file system performance for write-heavy workloads as data is compressed as it is being written to disk. However, for read-heavy workloads, compression can significantly improve the overall throughput performance of your file system as it reduces the amount of data that needs to be sent between these disks and the storage server.
+
+
+== Duration
+
+NOTE: It will take approximately 10 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below before continuing.
+
+=== Examine data compression
+
+
+. *_Return_* to the browser tab for your Amazon FSx for OpenZFS volume with name *sync_vol* and *_Examine_* the *Summary* section.
+
+. What is the *Data compression type* set to?
+
+. *_Return_* to the SSH connection of the *FSx for OpenZFS Workshop Linux Instance*. Use ior to generate 32 GiB of data before enabling compression. *_Run_* the mpirun ior commands below:
++
+[source,bash]
+----
+job_name=ior-uncompressed
+segment_count=8192
+threads=4
+path=/fsxsync/${job_name}
+mkdir -p ${path}
+
+/usr/lib64/openmpi/bin/mpirun --npernode ${threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${segment_count} -g -v -w -i 1 -F -k -D 0 -o ${path}/ior.bin
+
+----
++
+. How much write throughput was achieved with compression disabled? Note down the write throughput.
+
+. *_Return_* to the SSH connection of the *FSx for OpenZFS Workshop Linux Instance*. Use ior to read the data generated in previous step. *_Run_* the mpirun ior commands below:
++
+[source,bash]
+----
+
+/usr/lib64/openmpi/bin/mpirun --npernode ${threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${segment_count} -g -v -r -i 1 -F -k -D 0 -o ${path}/ior.bin
+
+----
++
+. How much read throughput was achieved with compression disabled? Note down the read throughput.
+
+. *_Return_* to the browser tab for your Amazon FSx for OpenZFS volume with name *sync_vol*. *_Click_* *Action* on the top right corner and *_Select_* *Update volume*. In the *Update volume* window, *_Select_* *Data compression type* to *Z-Standard* and then *_Click_* *Update*.
+
+. Refresh your browser to monitor the *Lifecycle state* for the volume. The *Lifecycle state* should change from *Available(updating)* to *Available* and *Data compression* type should change from *No compression* to *Z-Standard*.
+
+. *_Return_* to the SSH connection of the *FSx for OpenZFS Workshop Linux Instance*. Use ior to generate 32 GiB of data with compression enabled. *_Run_* the mpirun ior commands below:
++
+[source,bash]
+----
+job_name=ior-compressed
+segment_count=8192
+threads=4
+path=/fsxsync/${job_name}
+mkdir -p ${path}
+
+/usr/lib64/openmpi/bin/mpirun --npernode ${threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${segment_count} -g -v -w -i 1 -F -k -D 0 -o ${path}/ior.bin
+
+----
++
+. How much write throughput was achieved with compression enabled? Compare the write throughput values with the write throughput achieved during the ior write test with compression disabled.
++
+TIP: Writes are expected to be slower when compression is enabled.
++
+. *_Return_* to the SSH connection of the *FSx for OpenZFS Workshop Linux Instance*. Use ior to read the data generated in previous step. *_Run_* the mpirun ior commands below:
++
+[source,bash]
+----
+/usr/lib64/openmpi/bin/mpirun --npernode ${threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${segment_count} -g -v -r -i 1 -F -k -D 0 -o ${path}/ior.bin
+
+----
++
+. How much read throughput was achieved with compression enabled? Compare the read throughput values with the read throughput achieved during the ior read test with compression disabled.
++
+TIP: For read-heavy workloads, compression can significantly improve the overall throughput performance of your file system as it reduces the amount of data that needs to be sent between these disks and the storage server.With data compression, your read throughput on data accessed from disk can scale up to the network throughput of your file system
++
+NOTE: smaller file systems can burst to higher levels of disk and network throughput. The recommended approach to test throughput performance with compression is to run the ior read  test long enough to exhaust burst credits when using file systems smaller than 1024 MB/s throughput.
+
+. What is the uncompressed or logical size of the file? *_Run_* du --apparent-size -sh against the file to find the uncompressed or logical size of the file.
++
+[source,bash]
+----
+du --apparent-size -sh /fsxsync/ior-compressed/ior.bin.00000000
+
+----
++
+My results are below. The file has a logical size of 8 GiB.
++
+----
+8G		/fsxsync/ior-compressed/ior.bin.00000000
+----
++
+. What is the compressed or physical size of the file? *_Run_* du -sh against the file to find the compressed or physical size of the file.
++
+[source,bash]
+----
+du -sh /fsxsync/ior-compressed/ior.bin.00000000
+
+----
++
+My results are below. The file has a physical size of 4.0 GiB.
++
+----
+1.4G	/fsxsync/ior-compressed/ior.bin.00000000
+----
++
+. *_Calculate_* the data compression ratio of the file.
++
+The data compression ratio is the ratio between the uncompressed size and the compressed size. Take the uncompressed or logical size of the file and divide it by the compressed or physical size of the file.
++
+My calculation is below. The file has a data compression ratio of 5.7 to 1.
++
+----
+8G ÷ 1.4G = 5.7:1
+----
++
+. *_Calculate_* the space savings for the file.
++
+Space savings is the reduction in size relative to the uncompressed size. Take the compressed or physical size of the file and divide it by the uncompressed or logical size of the file and subtract that value from 1. This is typically shared as a percentage.
++
+My calculation is below. The file has a space savings of 50%.
++
+----
+1 - (1.4G/8G) = .825 or 82.5%
+----
+
+. *ior* tests performed in this section should have triggered the *High throughput alarm*  we created in the previous section.
+* Did your *High throughput alarm* get triggered?
+* Did your email address receive an alarm notification?
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::tear-down-workshop.jpg[link=../09-tear-down-workshop/, align="left",width=420]
+
+
+
+
+
+
+
+

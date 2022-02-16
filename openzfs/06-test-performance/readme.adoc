@@ -1,0 +1,358 @@
+= Test Performance
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ./../resources/images
+
+
+== Summary
+
+This section will test the performance of *Amazon FSx for OpenZFS*.
+
+
+== Duration
+
+NOTE: It will take approximately 25 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below before continuing.
+
+
+=== Examine file system performance
+
+. *_Open_* the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_select_* the link of the *File system Name* or *File system ID*.
+. In the *Summary* section, *_review_* the values for the following file system attributes:
++
+[cols="3,10"]
+|===
+| Attribute | Value
+
+| Deployment type
+| Single-AZ 1
+
+| Storage type
+| SSD
+
+| SSD storage capacity
+| 1024 GiB
+
+| Throughput capacity
+| 128 MB/s
+
+| Provisioned IOPS
+| Automatic (3072 IOPS)
+|===
++
+. *_Open_* the link:https://docs.aws.amazon.com/fsx/latest/OpenZFSGuide/performance.html#fsx-aggregate-perf[Amazon FSx for OpenZFS User Guide] and *_scroll down_* to the *File system performance* section. *_Review_* the *Data access from in-memory cache* table and the different performance attributes. Next, *_Review_* the *Data access from disk* table and the different performance attributes.
+
+. Using the file system attributes of the previous table and the performance capacities table that FSx for OpenZFS is designed to achieve from the Amazon FSx for OpenZFS User Guide, *_Refer_* the table below to review the different performance attributes of the workshop file system.
++
+.128 MB/s Provisioned throughput OpenZFS file system{counter2:index:0}
+[cols="e,e,e,e,e,e,e,e"]
+|===
+s|Storage Provisioned throughput capacity (MBps) 2+>s|Network throughput capacity (MBps) s|In-memory cache (GB) 2+>s|Disk throughput capacity (MBps) 2+>s|Maximum Disk IOPS 
+| s|Baseline s|Burst | s|Baseline s|Burst s|Baseline s|Burst
+|128 |400 |3200 |2.8 |128 |1024 |5000 |40000
+|===
++
+NOTE: The specific level of performance a file system can provide is defined by its provisioned throughput capacity, which determines the size of the file server hosting the file system and is equivalent to the baseline disk throughput supported by your file server.This baseline disk throughput is the minimum throughput you can expect from your file system. The file system is capable of performing at levels much higher than the disk baseline throughput based on access patterns (e.g. reading from Cache storage, etc.) and the network burst and baseline throughputs and disk burst throughput. For data access from disks, your file system’s performance is also dependent on the number of provisioned SSD disk IOPS configured for the file system’s underlying disks. When a client accesses data that's stored in the in-memory cache, this network IO does not need to go to the disk and your file system can achieve the Network throughput capacity (MBps) outlined in the table above.
++
+. As you complete the following performance tests, compare your test results with the designed performance attributes you calculated in *Table 1*.
+
+=== Throughput Test (small dataset)
+
+. In this section we will test the network throughput of the file system by creating a small dataset that will fit in the in-memory cache of the file system.
+
+==== FIO write test on *sync_vol*
+
+. *_Write_* 32MB data to *sync_vol* using fio.
++
+[source,bash]
+----
+name=1M-write
+blocksize=1M
+numjobs=2
+iodepth=64
+size=16M
+directory=/fsxsync
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
+
+==== FIO read test on *sync_vol*
+
+. *_Read_* the data you created in the previous step to *_Examine_* network throughput (in-memory cache read) of your file system.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Why was the read throughput limited to ~5Gbps (~600-625 MB/s)?
+
+. *_Run_* the below commands to unmount the volumes and remount them with NFS mount option nconnect=16.
++
+[source,bash]
+----
+sudo umount /fsxsync
+sudo umount /fsxasync
+sudo umount /clone
+----
++
+. *_Return_* to the browser tab for your Amazon FSx for OpenZFS file system  and *_Select_* the *Network & security* section.  *_Copy_* the *DNS name* of your file system by *_Clicking_* on the *Copy to clipboard* icon. 
+
+. *_Return_* to the SSH connection of the *FSx for OpenZFS Workshop Linux Instance*. *_Run_* below commands to mount the openZFS volumes with NFS mount option *nconnect=16*. Replace the DNSNAME with your file system *DNS name* you copied in the previous step.
++
+TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the SSH connection window and create a new one.
++
+[source,bash]
+----
+sudo mount -t nfs -o nconnect=16 <DNSNAME>:/fsx/sync_vol/ /fsxsync
+sudo mount -t nfs -o nconnect=16 <DNSNAME>:/fsx/async_vol/ /fsxasync
+----
++
+[source,bash]
+----
+Example: sudo mount -t nfs -o nconnect=16 fs-01234515abdcefgh.fsx.us-east-1.amazonaws.com:/fsx/sync_vol/ /fsxsync
+Example: sudo mount -t nfs -o nconnect=16 fs-01234515abdcefgh.fsx.us-east-1.amazonaws.com:/fsx/async_vol/ /fsaxsync
+----
++
+. *_Run_* below command to confirm the volumes were successfully mounted with mount option nconnect=16
++
+[source,bash]
+----
+mount | grep -i nfs
+----
++
+
+. *_Read_* the data again to *_Examine_* in-memory cache read throughput.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Were you able to scale beyond the single TCP session limit of 5Gbps and achieve read throughput higher than the baseline network throughput on your file system?
++
+TIP: NFS clients can use the nconnect mount option to have multiple TCP connections (up to 16) associated with a single NFS mount. Such an NFS client multiplexes file operations onto multiple TCP connections (multi-flow) in a round-robin fashion to obtain improved performance beyond single TCP connection (single-flow) limits. NFS nconnect is included by default in Linux kernel versions 5.3 and above.
++
+NOTE: The in-memory cache read test in the previous step lasted only 60 seconds. If you run the test for a longer duration you will notice the *Burst network throughput* which is ~3200 MB/s for the workshop file system will drop to *Baseline network throughput* as seen in the graph below.
+
+image::network-throughput.png[align="center"]
+
+
+=== Throughput test (Large Dataset)
+
+. In this section we will examine the baseline disk throughput of the file system by creating a 4GB dataset that is larger than the 2.8 GiB of in-memory cache on the file system.
+
+==== FIO write test on *sync_vol*
+
+. *_Write_* 2 x 4G files to *sync_vol* using fio. 
++
+[source,bash]
+----
+name=1M-write
+blocksize=1M
+numjobs=2
+iodepth=64
+size=4G
+directory=/fsxsync
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
+
+. *Take Note* of the write IOPS and throughput achieved during this test. Your workshop file system is configured with 128 MB/s provisioned throughput. Did your write throughput exceed this baseline provisioned throughput for your file system?
++
+TIP: You are seeing benefits of burst throughput during this write test. If you run the test long enough to exhaust burst credits then your write throughput will be limited to the baseline disk throughput of your file system.
+
+
+==== FIO read test on *sync_vol*
+
+. *_Read_* the data you created in the previous step to *_Examine_* disk throughput.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
+
+. *Take Note* of read throughput achieved during this test. Your workshop file system is configured with 128 MB/s provisioned throughput. Did your read throughput exceed this baseline provisioned throughput for your file system?
++
+TIP: You are seeing benefits of burst throughput during this read test. If you run the test long enough to exhaust burst credits then your read throughput will be limited to the baseline network and disk throughput of your file system.
++
+NOTE: Each read and write tests in this section is configured to run for 60 seconds. If you run the test for a longer duration you will notice the burst credits are exhausted and you will achieve the *Baseline Disk throughput* of ~128 MB/s as seen in the graph below. The below graphs shows a burst write throughput of ~540 MB/s for several minutes before dropping closer to *Baseline Disk throughput* for the workshop file system.
+
+
+image::disk-throughput.png[align="center"]
+
+==== FIO write test on *async_vol*
+
+. *_Write_* 2 x 4G files to *async_vol* using fio. 
++
+[source,bash]
+----
+name=1M-write
+blocksize=1M
+numjobs=2
+iodepth=64
+size=4G
+directory=/fsxasync
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Compare the write throughput with the write throughput you achieved for the same test on *sync_vol*. why did you achieve higher write performance?
++
+TIP: Remember the difference we explained between sync and async mount option during the *Managing openZFS resources* section of the workshop.  When async mount option is used, replies to client requests (such as write requests) after the changes have been committed to memory on the file server, but before any changes made by that request have been committed to stable storage (that is,disk drives). This setting can improve performance for latency-intensive or IOPS-intensive workloads.
+
+
+=== Small block IOPS test with NFSv4
+
+
+==== FIO 4K block write test on *sync_vol*
+
+. *_Run_* the below command to execute 4KB block size write test on the *sync_vol* volume using fio. 
++
+[source,bash]
+----
+name=4KB-write
+blocksize=4K
+numjobs=2
+iodepth=64
+size=4G
+directory=/fsxsync
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. *Note* the write IOPS achieved during this test. Compare this with the *Provisioned IOPS* of your file system.
+
+==== FIO 4K block read test on *sync_vol*
+
+. *_Read_* the data you created in the previous step by running the below command.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. *Note* the read IOPS you achieved during this test.
+
+==== FIO 4K block write test on *async_vol*
+
+. *_Run_* the below command to execute 4KB block size write test on the *async_vol* volume using fio.  
++
+[source,bash]
+----
+name=4KB-write
+blocksize=4K
+numjobs=2
+iodepth=64
+size=4G
+directory=/fsxasync
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Compare the write IOPS from this test with the write IOPS you achieved for the same test on *sync_vol*. Did your IOPS scale on the *async_vol*?
+
+
+
+==== FIO 4K block read test on *async_vol*
+
+. *_Read_* the data you created in the previous step by running the below command.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Compare the read IOPS from this test with the read IOPS you achieved for the same test on *sync_vol*. Did the read performance change?
+
+
+=== Small block IOPS test with NFSv3
+
+. *_Run_* the below commands to unmount the *async_vol*  and remount it with NFS mount option nconnect=16 and NFS version 3.
++
+[source,bash]
+----
+sudo umount /fsxasync
+----
++
+. *_Return_* to the browser tab for your Amazon FSx for OpenZFS file system  and *_Select_* the *Network & security* section.  *_Copy_* the *DNS name* of your file system by *_Clicking_* on the *Copy to clipboard* icon. 
+
+. *_Return_* to the SSH connection of the *FSx for OpenZFS Workshop Linux Instance*. *_Run_* below commands to mount the volume with NFS mount option *nconnect=16* and *vers=3*. Replace the DNSNAME with your file system *DNS name* you copied in the previous step.
++
+TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the SSH connection window and create a new one.
++
+[source,bash]
+----
+sudo mount -t nfs -o vers=3,nconnect=16 <DNSNAME>:/fsx/async_vol/ /fsxasync
+----
++
+[source,bash]
+----
+Example: sudo mount -t nfs -o vers=3,nconnect=16 fs-01234515abdcefgh.fsx.us-east-1.amazonaws.com:/fsx/async_vol/ /fsaxsync
+----
++
+. *_Run_* below command to confirm the volume was successfully mounted with mount option nconnect=16 and NFS version 3.
++
+[source,bash]
+----
+mount | grep -i nfs
+----
+
+==== FIO 4K block write test on *async_vol*
+
+. *_Run_* the below command to execute 4KB block size write test on the *async_vol* volume using fio. 
++
+[source,bash]
+----
+name=4KB-write
+blocksize=4K
+numjobs=2
+iodepth=64
+size=4G
+directory=/fsxasync
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Compare the write IOPS from this test with the write IOPS you achieved for the same test on *async_vol* with NFS version 4. Did your IOPS scale with NFS version 3?
+
+==== FIO 4K block read test on *async_vol*
+
+. *_Read_* the data you created in the previous step by running the below command.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Compare the read IOPS from this test with the read IOPS you achieved for the same test on *async_vol* with NFS version 4. Did your IOPS scale with NFS version 3?
++
+TIP: NFSv3 performance was better compared to NFSv4 when using small block IO.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::monitor-performance.jpg[link=../07-monitor performance/, align="left",width=420]
+
+
+
+
+
+
+
+

@@ -1,0 +1,114 @@
+= Data Protection
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will cover the data protection technologies available with *Amazon FSx for OpenZFS* file system.
+
+. *Snapshots*: A read-only, point in time copy of your volume that can be used instantaneous backups and short-term recovery. 
+. *Amazon FSx Backups*: A cost-efficient offsite backup of your file system that is stored in Amazon S3. 
+
+=== Snapshots Overview
+
+A snapshot is a read-only image of an FSx for OpenZFS volume at a point in time. Snapshots offer protection against accidental deletion or modification of files in your volumes. With snapshots, your users can easily view and restore individual folders and files from an earlier snapshot. Doing this enables users to easily undo changes and compare file versions. Because snapshots are stored alongside your file system's data, they consume the file system's storage capacity. However, snapshots consume storage capacity only for the changed portions of files since the last snapshot. 
+
+
+=== Amazon FSx Backups Overview
+
+Amazon FSx backups allow you to take highly durable automatic daily backups or user-initiated backups of your file system that are stored in durable Amazon S3. These backups are incremental and the automatic daily backups can be scheduled to run during a daily backup window with a retention period between 0-90 days.
+
+Since no additional infrastructure needs to be provisioned with Amazon FSx backups, you get cost-effective offsite backups with retention period up to 90 days. You can also copy the FSx backups cross-region for disaster recovery.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+== Step-by-step Guide (Snapshots)
+
+=== Snapshot steps
+
+. *_Return_* to the SSH connection of your *FSx for OpenZFS Workshop Linux instance*.
+
+. *_Run_* command below to view contents of the file created by the workshop environment.
++
+[source,bash]
+----
+cat /fsxsync/demofile01.txt
+----
++
+
+. *_Return_* to the browser tab for your Amazon FSx for OpenZFS volume with name *sync_vol* and *_Click_* on *Snapshot* tab to view the snapshot with name *openzfs_workshop_volume_snapshot* created by the workshop environment. This snapshot contains the point in time copy of the file *demofile01.txt* we reviewed in the previous step.
++
+TIP: To learn more about creating, viewing and deleting snapshots refer to link:https://docs.aws.amazon.com/fsx/latest/OpenZFSGuide/snapshots-openzfs.html[Working with snapshots] section in our documentation.
++
+
+. *_Return_* to the SSH connection of your *FSx for OpenZFS Workshop Linux instance*.
+
+. *_Run_* command below to view the contents of the file *demofile01.txt* from the snapshot.
++
+[source,bash]
+----
+cat /fsxsync/.zfs/snapshot/openzfs_workshop_volume_snapshot/demofile01.txt
+----
++
+
+. *_Run_* command below to append data to the file *demofile01.txt*.
++
+[source,bash]
+----
+echo "Appending data to file" >> /fsxsync/demofile01.txt
+----
++
+
+. *_Run_* command below to view the updated contents of the file *demofile01.txt*.
++
+[source,bash]
+----
+cat /fsxsync/demofile01.txt
+----
++
+
+. *_Run_* commands below to copy the previous version of the file from the snapshot to a different directory.
++
+[source,bash]
+----
+mkdir /fsxsync/restore
+cp /fsxsync/.zfs/snapshot/openzfs_workshop_volume_snapshot/demofile01.txt /fsxsync/restore/demofile01.txt
+----
++
+
+. *_Run_* command below to compare the contents of the source file and the point in time copy restored from the snapshot.
++
+[source,bash]
+----
+cat /fsxsync/demofile01.txt /fsxsync/restore/demofile01.txt
+----
++
+
+
+
+== Step-by-step Guide (Amazon FSx Backups)
+
+=== Amazon FSx Backup steps
+
+. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *_File system ID_* of your Amazon FSx for OpenZFS file system.
+
+. *_Click_* on the *Backups* tab and *_Click_* *Create backup*. Input a *Backup name* for example: OpenZFS_Workshop_backup and *_Click_* *Create backup*.
+
+. You can see the backup status as *Creating*. Once the backup is complete the status will show as *Available* and can be used to restore your file system.
+
+NOTE: When you restore from backup, you can modify Throughput capacity, Network & security configuration, Backup and maintenance window and apply additonal Tags to the new file system that will be created from backup.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::clone.jpg[link=../05-clone/, align="left",width=420]
+
+
+
+
