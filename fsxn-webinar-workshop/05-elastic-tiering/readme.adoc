@@ -1,0 +1,122 @@
+= Elastic Tiering
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will cover cost-optimized Elastic capacity pool tiering feature on your *Amazon FSx for NetApp ONTAP* file system.
+
+Tiering allows you to optimize costs by enabling tiering policies that will move your hot or cold data between the performance(SSD Storage) tier and the elastic capacity pool tier. The capacity pool tier is elastic and grows and shrinks based on usage. You can enable tiering at the volume level on your file system.
+
+You can configure the following Tiering policies:
+
+* *SNAPSHOT-ONLY*: Moves data blocks of volume snapshot copies that are not associated with the active file system to the capacity tier. Min cooling period is 2 days and can be modified between 2-183 days.
+* *AUTO*: Moves cold data blocks in both snapshots and active file system to the capacity tier. Default cooling period is 31 days  and can be changed between 2-183 days.
+* *ALL*: Moves all user data blocks in active file system and snapshots to Capacity tier. Moving blocks back to the performance tier is not allowed.
+* *NONE*: No data movement. All data is stored in capacity tier
+
+Changing the tiering policy from auto to snapshot-only or none does not cause active file system blocks that are already moved to the capacity tier to be moved back to the performance tier.  Data read patterns determine if data will be read from the capacity pool tier based on data retrieval rules Policy as shown below:
+
+* *NONE*: Seq and Random reads
+* *SNAPSHOT-ONLY*: Seq and Random reads 
+* *AUTO*: random reads
+* *ALL*: no data retrieval
+
+
+== Duration
+
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Enable tiering
+
+
+=== Set tiering policy
+
+
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the cluster management endpoint of your FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+. *_Run_* command below to check tiering policy set on your volume.
++
+[source,bash]
+----
+vol show -volume vol1 -fields tiering-policy
+----
++
+. *_Run_* command below to check current data footprint between your performance and capacity pool tiers.
++
+[source,bash]
+----
+volume show-footprint -volume vol1
+----
++
+. *_Run_* command below to modify the Tiering Policy on your volume to *ALL*
++
+[source,bash]
+----
+volume modify -volume vol1 -vserver svm01 -tiering-policy ALL
+----
++
+NOTE: Setting the tiering policy to *ALL* moves all user data blocks in active file sytem and snapshots to Capacity tier. Moving blocks back to the performance tier is not allowed.
+
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and *_Run_* the script below to create some test data on the volume.
++
+[source,bash]
+----
+mkdir ${MOUNTPOINT}/8KB
+threads=36
+filesize=8
+filecount=1000
+
+sudo python3 /home/ec2-user/smallfile/smallfile_cli.py --operation create --threads $threads --file-size $filesize --files $filecount --top ${MOUNTPOINT}/8KB &
+----
++
+
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the cluster management endpoint of your FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
+
+
+
+=== Verify tiering policy
+
+
+. *_Run_* command below to check if the tiering policy was updated
++
+[source,bash]
+----
+vol show -volume vol1 -fields tiering-policy
+----
++
+
+. *_Run_* command below to check current data footprint between your performance and capacity pool tiers. Repeat command to monitor the change in space between performance and capacity tiers.
++
+[source,bash]
+----
+volume show-footprint -volume vol1
+----
++
+
+. Did the data foot-print change? 
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::storage-efficiency.jpg[link=../06-storage-efficiency/, align="left",width=420]
+
+
+
+

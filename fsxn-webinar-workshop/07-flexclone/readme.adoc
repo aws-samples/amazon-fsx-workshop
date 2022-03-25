@@ -1,0 +1,203 @@
+= FlexClone
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will cover FlexClone feature available with *Amazon FSx for NetApp ONTAP* file system.
+
+=== FlexClone Overview
+
+FlexClone allows you to create a clone of your source volume and allows you to make changes independently to both volumes. Common use cases include development or test environments where you want to create a copy of 
+your production volume and use it for testing. For example, you may want to take a clone of your database and test changes before applying them in production. With FlexClone, you do not need to copy the data to 
+another volume. When you create a FlexClone, ONTAP creates a snapshot of the parent volume, and the FlexClone is created from this snapshot. Since the snapshot is created instantaneously the FlexClone is immediately
+available for use and does not take up additional space. Once the FlexClone volume is created you can manage it as a separate volume. Any new data you write to the FlexClone volume is written to new blocks and will 
+occupy space on disk.
+
+You can create multiple clones for the same parent volume. You can split the parent volume and FlexClone volume into two physically separate volumes. When split, any shared data blocks will be split into two separate copies.
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+== Step-by-step Guide (FlexClone)
+
+=== FlexClone steps
+
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and *_Run_* below script to generate data (10 x 128 MB files) on your source volume.
++
+[source,bash]
+----
+jobName=$(echo $(uuidgen) | grep -o ".\{6\}$")
+count=10
+threads=36
+blockSize=16M
+blockCount=8
+
+mkdir ${MOUNTPOINT}/128MB
+seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/zero of=${MOUNTPOINT}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
+----
++
+
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the file system management endpoint of your FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+
+. *_Run_* the command below to list current snapshots on your volume.
++
+[source,bash]
+----
+vol snapshot show -volume vol1
+----
++
+
+. *_Run_* below command to check create a new FlexClone.
++
+[source,bash]
+----
+volume clone create -vserver svm01 -flexclone vol1_clone1 -parent-volume vol1
+----
++
+
+. *_Run_* below command to list the FlexClone Volumes.
++
+[source,bash]
+----
+volume clone show
+----
++
+
+. *_Run_* the command below to list snapshots on your volume again. Do you see a new snapshot created by the FlexClone?
++
+[source,bash]
+----
+vol snapshot show -volume vol1
+----
++
+
+. *_Run_* below command to create a junction path for your clone volume.
++
+[source,bash]
+----
+volume mount -vserver svm01 -volume vol1_clone1 -junction-path /vol1_clone1
+----
++
+
+. *_Run_* below commands to check the space usage between the source and FlexClone volume.
++
+[source,bash]
+----
+volume show -vserver svm01 -volume vol1 -fields size,used,available,percent-used,physical-used,physical-used-percent
+volume show -vserver svm01 -volume vol1_clone1 -fields size,used,available,percent-used,physical-used,physical-used-percent
+----
++
+
+TIP: Since both volumes share data blocks on creation of the FlexClone, you can see *physical-used* space is lower on the FlexClone volume. Any new data written to either the parent or the FlexClone volume is not shared between the volumes. New data that gets written to the FlexClone volume leads to an increase in the space used on your file system.
+
+. *_Run_* command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
++
+
+. *_Run_* below script from the SSH connection of your *FSx for ONTAP Workshop Linux instance*.
++
+[source,bash]
+----
+CLONEDIR=/clone
+sudo mkdir ${CLONEDIR}
+sudo mount -t nfs ${NFSENDPOINT}:/vol1_clone1 ${CLONEDIR}
+mount | grep ${CLONEDIR}
+----
++
+. *_Run_* below command to set the *user:group* for the mount point. *_Copy_* the command with *ssm-user:ssm-user* if you are using a SSH session from *Session Manager*.  *_Copy_* the command with *ec2-user:ec2-user* if you are using a SSH session from your *Terminal*.
++
+[source,bash]
+----
+sudo chown ec2-user:ec2-user ${CLONEDIR}
+
+or 
+
+sudo chown ssm-user:ssm-user ${CLONEDIR}
+
+----
++
+. *_Run_* below commands to compare the contents and space used by the source and FlexClone volume. 
++
+[source,bash]
+----
+ls -lt ${MOUNTPOINT} ${CLONEDIR}
+df -h ${MOUNTPOINT} ${CLONEDIR}
+----
++
+
+TIP: You should see identical contents and space usage reported for both volumes.
+
+. *_Run_* the below command to create a new file on the FlexClone volume.
++
+[source,bash]
+----
+echo "Amazon FSx for NetApp ONTAP workshop - New file on Cloned Volume" >> ${CLONEDIR}/clone.txt
+----
++
+. *_Run_* the below command to create a new 128MB file on the FlexClone volume.
++
+[source,bash]
+----
+jobName=$(echo $(uuidgen) | grep -o ".\{6\}$")
+count=1
+threads=1
+blockSize=16M
+blockCount=8
+
+seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/zero of=${CLONEDIR}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
+----
++
+. *_Run_* below commands to compare the contents of of your source and FlexClone volume. 
++
+[source,bash]
+----
+ls -lt ${MOUNTPOINT} ${CLONEDIR}
+df -h ${MOUNTPOINT} ${CLONEDIR}
+----
++
+. Are the contents and space used still identical?
++
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the cluster management endpoint of your FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+
+. *_Run_* below commands to check the space usage between the source and FlexClone volume.
++
+[source,bash]
+----
+volume show -vserver svm01 -volume vol1 -fields size,used,available,percent-used,physical-used,physical-used-percent
+volume show -vserver svm01 -volume vol1_clone1 -fields size,used,available,percent-used,physical-used,physical-used-percent
+----
++
+
+. Did the physical-used space change on your FlexClone volume?
+
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::data-protection.jpg[link=../08-data-protection/, align="left",width=420]
+
+
+
+

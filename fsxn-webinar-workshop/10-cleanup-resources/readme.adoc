@@ -1,0 +1,82 @@
+= Cleanup resources
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+*Congratulation!* You have completed the Amazon FSx for NetApp ONTAP  Workshop.
+
+
+== Duration
+
+NOTE: It will take approximately 25 minutes to complete this section.
+
+=== Delete *Amazon FSx for ONTAP resources* 
+
+IMPORTANT: Read through all steps below before continuing.
+
+NOTE: It is *very important* that you delete the following resources prior to deleting the workshop environment via CloudFormation.
+
+* Volumes on all file systems
+* SVMs on all file systems
+
+=== Delete FSx resources
+
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance*
+
+. *_Run_* the script below to unmount all the volumes
++
+[source,bash]
+----
+sudo umount ${MOUNTPOINT}
+sudo umount ${CLONEDIR}
+----
++
+
+. *_Run_* the below command to validate there are no volumes still mounted.
++
+[source,bash]
+----
+mount | grep nfs
+----
++
+
+. *_Return_* to the SSH connection of your *FSx for ONTAP Workshop Linux instance* and SSH to the cluster management endpoint of your FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+
+. *_Run_* the below commands to clean-up FlexClone on your FSx for ONTAP file system..
++
+[source,bash]
+----
+volume offline -volume vol1_clone1 -vserver svm01
+----
++
+[source,bash]
+----
+volume delete -volume vol1_clone1 -vserver svm01
+----
++
+[source,bash]
+----
+vol show
+----
++
+
+. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your Amazon FSx for NetApp ONTAP file system. 
+
+.  *_Examine_* the *Volumes* section on your file system. *_Click_* the *Volumes* tab. *_Select_* volume *vol1* -> *Actions* -> *Delete Volume*. *_Select_* *No* for create final backup, *_accept_* acknowledgment and *_Type_* *delete* in the Confirm delete section. *_Click_* *Delete volumes(s)* to delete the volume.
+
+.  *_Select_* volume *restorevol* -> *Actions* -> *Delete Volume*. *_Select_* *No* for create final backup, *_accept_* acknowledgment and *_Type_* *delete* in the Confirm delete section. *_Click_* *Delete volumes(s)* to delete the volume.
+
+.  *_Examine_* the *Storage virtual machines* section on your file system. *_Click_* the *Storage virtual machines* tab. *_Select_* SVM *svm01* -> *Actions* -> *Delete storage virtual machine*. *_Click_* *Delete storage virtual machines* to delete the SVM.
+
+. *_Verify_* the *volumes* and *Storage virtual machines* tabs to ensure there are no pending resources on your file system.
+
+//. *_Verify_* the file system has been deleted successfully before proceeding with deletion of the *Workshop Environment*
+
+//. *_Click_* *Actions* on the top-right corner and *_select_* *Delete file system*. *_Type_* the *File system ID* and *_click_* *Delete file system*.
+
