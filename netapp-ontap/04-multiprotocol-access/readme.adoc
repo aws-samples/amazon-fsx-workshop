@@ -181,6 +181,7 @@ a| Leave checked
 a| Leave unchecked
 |===
 +
+. Click *Finish*, when prompted for *Network Credentials* enter the *Service Account* username and password from the Active Directory. You can retrieve them using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager], as in the previous section. *_Select_* Secret name *Password-<GUID>* and *_Click_* on *Retrieve Secret value* to get the username and password.
 . In the *File Explorer* window of the *Z:* drive you should see the file *multiprotocol-demo.txt* which was created on the NFS mount point on your Linux instance.
 
 . *_Double-Click_* to open the file *multiprotocol-demo.txt* and see if you can read the contents of the file.
