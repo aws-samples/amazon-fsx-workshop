@@ -1,0 +1,91 @@
+= Connect to Instances
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+In this section you will establish connections with the Windows and Linux instances that you will use for the remainder of the workshop.
+
+
+== Duration
+
+NOTE: It will take approximately 05 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Connect to the Linux Instance
+
+IMPORTANT: Read through all steps below before continuing.
+
+//image::<connect-linux-instances>.gif[align="left", width=600]
+
+
+. Open the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this GitHub workshop and AWS console.
++
+. Make sure you are in the same *AWS Region* as the workshop environment. If you need to change the *AWS Region* of the Amazon EC2 console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
+
+. *_Click_* *Instances (running)*.
+
+. *_Click_* the check box next to the instance with the name *FSx for ONTAP Workshop Linux Instance*.
+
+. *_Click_* the Connect button.
+
+* Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser. (*recommended*)
+
+* SSH using Terminal client - *_Select_* *SSH client* tab and *_Copy_* the Example SSH command shown and *_click_* Close.
+
+** *_Open_* your terminal application and *_paste_* the SSH command in a terminal window.
+
+** *_Follow_* the prompts to SSH into the instance.
+
+TIP: For a smooth experience to toggle between multiple sessions connecting to: +
+1) FSx for ONTAP Workshop Linux Instance + 
+2) ONTAP CLI session to your FSx for NetApp ONTAP file system and + 
+we recommend you create 2 x SSH terminal or Session Manager sessions (tabs) to the Linux Instance.
+
+=== Connect to the Windows instance
+
+IMPORTANT: Read through all steps below before continuing.
+
+//image::<connect-windows-instances>.gif[align="left", width=600]
+
+
+. Go back to the Amazon EC2 console, *_Click_* *Instances (running)*
+
+. *_Click_* the check box next to the instance with the name *FSx for ONTAP Workshop Windows Instance*.
+
+. *_Copy_* the *Public DNS (IPv4)* name of the *FSx for ONTAP Workshop Windows Instance*.
+
+. Launch your remote desktop application and create a new connection.
+* Windows Users - use the built-in *Remote Desktop Connection* application.
+* Mac Users - use the link:https://apps.apple.com/us/app/microsoft-remote-desktop/id1295203466?mt=12/[Microsoft Remote Desktop] app available from the Mac App Store.
+
+. Use the DNS name copied above as the host name of the new connection.
+
+. Start a remote desktop session to the new connection (you will retrieve the *user name* and *password* from *AWS Secrets Manager*).
+
+. Open the link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this GitHub workshop and AWS console.
++
+. *_Click_* the *Secret name* link for *Password-<GUID>*.
+
+. *_Scroll_* to the *Secret value* section and *_click_* the *Retrieve secret value* button.
+
+. Use the *Secret key/value* pairs of *username* and *password* as the credentials to authenticate to the *FSx for ONTAP Workshop Windows Instance* for the remote desktop session.
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::managing-ontap-resources.png[link=../03-managing-ontap-resources/, align="left",width=420]
+
+
+
+
