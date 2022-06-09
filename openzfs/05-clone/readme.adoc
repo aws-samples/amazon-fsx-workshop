@@ -100,7 +100,7 @@ blockCount=8
 seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/zero of=/clone/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
 ----
 +
-. *_Run_* below commands to compare the contents of of your source and FlexClone volume. 
+. *_Run_* below commands to compare the contents of of your source and Clone volume. 
 +
 [source,bash]
 ----

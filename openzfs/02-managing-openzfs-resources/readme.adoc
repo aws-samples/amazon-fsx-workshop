@@ -7,7 +7,7 @@
 
 == Summary
 
-This section will help you become familiar with using the Amazon FSx console and ONTAP CLI to manage your Amazon FSx for OpenZFS file systems.
+This section will help you become familiar with using the Amazon FSx console to manage your Amazon FSx for OpenZFS file systems.
 
 You can use the Amazon FSx console, AWS CLI or FSx API to create a new file system. 
 
