@@ -264,7 +264,7 @@ vol show -volume cachevol -fields logical-used,physical-used
 +
 . Are they identical?
 
-. *_Run_* below ONTAP CLI command to check the pre-populate a file from your *secondary* file system. *_Enter_* *y* when prompted to continue in advanced privilege mode. Replace the file path *1GB/file_srcdir/ip-10-0-0-17.us-east-2.compute.internal/thrd_00/d_000/_ip-10-0-0-17.us-east-2.compute.internal_00_1_* with the path on your Linux instance. You will find this under *${MOUNTPOINT}* directory.
+. *_Run_* below ONTAP CLI command to check the pre-populate a file from your *secondary* file system. *_Enter_* *y* when prompted to continue in advanced privilege mode. Replace the file path *1GB/file_srcdir/ip-10-0-0-17.us-east-2.compute.internal/thrd_00/d_000/\_ip-10-0-0-17.us-east-2.compute.internal_00_1_* with the path on your Linux instance. You will find this under *$\{MOUNTPOINT}* directory.
 +
 [source,bash]
 ----
