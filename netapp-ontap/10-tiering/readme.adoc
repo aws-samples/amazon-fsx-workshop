@@ -15,7 +15,7 @@ You can configure the following Tiering policies:
 * *SNAPSHOT-ONLY*: Moves data blocks of volume snapshot copies that are not associated with the active file system to the capacity tier. Min cooling period is 2 days and can be modified between 2-183 days.
 * *AUTO*: Moves cold data blocks in both snapshots and active file system to the capacity tier. Default cooling period is 31 days  and can be changed between 2-183 days.
 * *ALL*: Moves all user data blocks in active file system and snapshots to Capacity tier. Moving blocks back to the performance tier is not allowed.
-* *NONE*: No data movement. All data is stored in capacity tier
+* *NONE*: No data movement. All data is stored in primary SSD tier
 
 Changing the tiering policy from auto to snapshot-only or none does not cause active file system blocks that are already moved to the capacity tier to be moved back to the performance tier.  Data read patterns determine if data will be read from the capacity pool tier based on data retrieval rules Policy as shown below:
 
