@@ -1,4 +1,4 @@
-= Welcom to the Amazon FSx for NetApp ONTAP File Storage Workshop!!
+= Welcome to the Amazon FSx for NetApp ONTAP File Storage Workshop!!
 :icons:
 :linkattrs:
 :imagesdir: ./resources/images
