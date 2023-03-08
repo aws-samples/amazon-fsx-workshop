@@ -1,0 +1,463 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates the Amazon FSx for NetApp ONTAP workshop environment.
+
+Metadata:
+  Authors:
+    Description: Shrinath Kurdekar (kurdekar@amazon.com) and Aaron Dailey (aaronda@amazon.com)
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Amazon FSx for NetApp ONTAP workshop VPC environment
+      Parameters:
+        - PrimaryAvailabilityZones
+        - PrimaryVpcCidr
+        - DRAvailabilityZones
+        - DRVpcCidr
+    - Label:
+        default: Amazon FSx for NetApp ONTAP workshop compute environment
+      Parameters:
+        - InstanceType
+        - KeyPair
+        - LatestWindowsAmiId
+        - LatestLinuxAmiId
+        - MicrosoftADDomain
+        - OrganizationalUnitDistinguishedName
+    - Label:
+        default: Amazon FSx for NetApp ONTAP filesystem parameters
+      Parameters:
+        - StorageType
+        - StorageCapacity
+        - ThroughputCapacity
+    - Label:
+        default: Amazon FSx for NetApp ONTAP storage virtual machine and volume parameters.
+      Parameters:
+        - RootVolumeSecurityStyle
+        - SecurityStyle
+        - TieringPolicy
+        - VolumeSize
+        - StorageEfficiencyEnabled
+        - LowFreeDataStorageCapacityThreshold
+
+    ParameterLabels:
+      PrimaryAvailabilityZones:
+        default: Availability Zones for the Primary VPC
+      PrimaryVpcCidr:
+        default: CIDR range for the Primary VPC subnets
+      DRAvailabilityZones:
+        default: Availability Zone for the DR VPC
+      DRVpcCidr:
+        default: CIDR range for the DR VPC subnets
+      InstanceType:
+        default: Instance Type
+      KeyPair:
+        default: SSH key pair for the EC2 instances
+      LatestWindowsAmiId:
+        default: Latest Windows AMI ID
+      LatestLinuxAmiId:
+        default: Latest Linux AMI ID
+      MicrosoftADDomain:
+        default: Domain name
+      OrganizationalUnitDistinguishedName:
+        defualt: Active Directory OU to place the FSx computer object in Active Directory
+      StorageType:
+        default: Filesystem storage type
+      StorageCapacity:
+        default: Storage capacity of the Amazon FSx for NetApp ONTAP filesystem
+      ThroughputCapacity:
+        default: Throughput capacity of the Amazon FSx for NetApp ONTAP filesystem
+      RootVolumeSecurityStyle:
+        default: Security style of the root volume
+      SecurityStyle:
+        default: Security style for the data volume
+      TieringPolicy:
+        default: Tiering policy for the volume
+      VolumeSize:
+        default: Size of the volume in MB (MegaBytes)
+      StorageEfficiencyEnabled:
+        default: Storage efficiency configuration
+      LowFreeDataStorageCapacityThreshold:
+        default: Threshold of alarm
+
+Parameters:
+  PrimaryAvailabilityZones:
+    Description: Select two (2) Availability Zones (AZ) for the Primary file system. One preferred subnet and one standby subnet will be created in each AZ.
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  DRAvailabilityZones:
+    Description: Select one (1) Availability Zones (AZ) for the DR file system. One subnet will be created for the DR file system.
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  PrimaryVpcCidr:
+    AllowedValues: 
+    - 10.0.0.0/16
+    - 10.144.0.0/16
+    - 173.31.0.0/16
+    - 192.168.0.0/16
+    Default: 10.0.0.0/16
+    Description: Select the private IPv4 CIDR for the Primary VPC.
+    Type: String
+  DRVpcCidr:
+    AllowedValues: 
+    - 10.0.0.0/16
+    - 10.144.0.0/16
+    - 173.31.0.0/16
+    - 192.168.0.0/16
+    Default: 192.168.0.0/16
+    Description: Select the private IPv4 CIDR for the DR VPC ensuring it is differnt than that of the Primary VPC.
+    Type: String
+  InstanceType:
+    Description: Select the instance type. Choose instances(c5n.9xlarge/r5n.9xlarge or higher) with non variable network throughput if running performance benchmarks.
+    AllowedValues:
+    - m5.large
+    - m5.xlarge
+    - m5.2xlarge
+    - t3.small
+    - t3.medium
+    - t3.large
+    - t3.xlarge
+    - c5n.xlarge
+    - c5n.2xlarge
+    - c5n.9xlarge
+    - c5n.18xlarge
+    - r5n.8xlarge
+    - r5n.16xlarge
+    - r5n.24xlarge
+    Default: c5n.xlarge
+    Type: String
+  KeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+  LatestWindowsAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+  LatestLinuxAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-kernel-5.10-hvm-x86_64-gp2'
+  MicrosoftADDomain:
+    Description: Domain Name for Microsoft AD
+    AllowedValues:
+      - example.com
+      - fsxontap.com
+    Default: example.com
+    Type: String
+  OrganizationalUnitDistinguishedName:
+    Description: OU for the FSx computer object in Active Directory
+    AllowedValues:
+      - "OU=Computers,OU=example,DC=example,DC=com"
+      - "OU=Computers,OU=fsxontap,DC=fsxontap,DC=com"
+    Default: "OU=Computers,OU=example,DC=example,DC=com"
+    Type: String
+  StorageType:
+    Description: Leave default since only SSD supported currently.
+    AllowedValues:
+    - SSD
+    Default: SSD
+    Type: String
+  StorageCapacity:
+    Description: Specify a Storage Capacity between 1024 to 196608.
+    Default: 1024
+    Type: Number
+  ThroughputCapacity:
+    Description: Select Storage Throughput from 128, 256, 512, 1024 or 2048 MB/s.
+    AllowedValues:
+    - 128
+    - 256
+    - 512
+    - 1024
+    - 2048
+    Default: 128
+    Type: Number
+  RootVolumeSecurityStyle:
+    Description: Security Style of the Root volume. Either in [MIXED, UNIX, NTFS].
+    Type: String
+    Default: UNIX
+    AllowedValues:
+      - UNIX
+      - NTFS
+      - MIXED
+  SecurityStyle:
+    Description: Security style for the volume
+    Type: String
+    Default: UNIX
+    AllowedValues:
+      - UNIX
+      - NTFS
+      - MIXED
+  TieringPolicy:
+    Description: Tiering policy for the volume
+    Type: String
+    Default: AUTO
+    AllowedValues:
+      - SNAPSHOT_ONLY
+      - AUTO
+      - ALL
+      - NONE
+  VolumeSize:
+    Description: Volume Size
+    Type: Number
+    Default: 102400
+  StorageEfficiencyEnabled:
+    Description: Storage Efficiency 
+    Type: String
+    Default: True
+    AllowedValues:
+      - True
+      - False
+  LowFreeDataStorageCapacityThreshold:
+    ConstraintDescription: Must be an integer.
+    Default: 90
+    Description: Used storage capacity threshold (%)
+    Type: Number
+    MaxValue: 99
+    MinValue: 1
+
+Rules:
+  VpcCidrCompare:
+    Assertions:
+      - Assert:
+          'Fn::Not':
+            - 'Fn::Equals':
+              - !Ref PrimaryVpcCidr
+              - !Ref DRVpcCidr
+    AssertDescription: 'The Primary VPC CIDR and the DR VPC CIDR can not be equal.'
+
+  ExampleDomainOUCompare:
+    RuleCondition: !Equals
+      - !Ref MicrosoftADDomain
+      - example.com
+    Assertions:
+      - Assert:
+          'Fn::Contains':
+            - - OU=Computers,OU=example,DC=example,DC=com
+            - !Ref OrganizationalUnitDistinguishedName
+    AssertDescription: 'The OU used for the FSx computer object must match the Domain Name selected.'
+
+  FSxDomainOUCompare:
+    RuleCondition: !Equals
+      - !Ref MicrosoftADDomain
+      - fsxontap.com
+    Assertions:
+      - Assert:
+          'Fn::Contains':
+            - - OU=Computers,OU=fsxontap,DC=fsxontap,DC=com
+            - !Ref OrganizationalUnitDistinguishedName
+    AssertDescription: 'The OU used for the FSx computer object must match the Domain Name selected.'
+
+Resources:
+  PrimaryVpc:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        PrimaryAZ0:
+          !Select [ 0, !Ref PrimaryAvailabilityZones ]
+        PrimaryAZ1:
+          !Select [ 1, !Ref PrimaryAvailabilityZones ]
+        PrimaryVpcCidr: !Ref PrimaryVpcCidr
+        ParentStackName: !Ref AWS::StackName
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/01-primary-vpc.yaml
+  
+  DRVpc:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        DRAZ:
+          !Select [ 0, !Ref DRAvailabilityZones ]
+        DRVpcCidr: !Ref DRVpcCidr
+        ParentStackName: !Ref AWS::StackName
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/02-dr-vpc.yaml
+  
+  VpcPeering:
+    DependsOn: [ PrimaryVpc, DRVpc ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        ParentStackName: !Ref AWS::StackName
+        PrimaryVpcId:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryVpcId
+        PrimaryPrivateRouteTable0:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryPrivateRouteTable0
+        PrimaryPrivateRouteTable1:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryPrivateRouteTable1
+        PrimaryPrivateSubnet0Cidr:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryPrivateSubnet0Cidr        
+        PrimaryPrivateSubnet1Cidr:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryPrivateSubnet1Cidr   
+        DRVpcId:
+          Fn::GetAtt:
+          - DRVpc
+          - Outputs.DRVpcId  
+        DRPrivateRouteTable:
+          Fn::GetAtt:
+          - DRVpc
+          - Outputs.DRPrivateRouteTable  
+        DRPrivateSubnetCidr:
+          Fn::GetAtt:
+          - DRVpc
+          - Outputs.DRPrivateSubnetCidr  
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/03-vpc-peering.yaml
+  
+  Directory:
+    DependsOn: [ PrimaryVpc, DRVpc ]
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        ParentStackName: !Ref AWS::StackName
+        DomainName: !Ref MicrosoftADDomain  
+        PrimaryPrivateSubnetId0:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryPrivateSubnetId0
+        PrimaryPrivateSubnetId1:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryPrivateSubnetId1
+        PrimaryVpcId:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryVpcId
+        PrimaryDefaultSecurityGroupId:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryDefaultSecurityGroupId
+        DRVpcId:
+          Fn::GetAtt:
+          - DRVpc
+          - Outputs.DRVpcId
+      TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/04-directory.yaml
+  
+  FSxFilesystem:
+      DependsOn: [ Directory, VpcPeering ]
+      Type: AWS::CloudFormation::Stack
+      Properties:
+        Parameters:
+          ParentStackName: !Ref AWS::StackName
+          DomainName: !Ref MicrosoftADDomain
+          OrganizationalUnitDistinguishedName: !Ref OrganizationalUnitDistinguishedName
+          StorageType: !Ref StorageType
+          StorageCapacity: !Ref StorageCapacity
+          ThroughputCapacity: !Ref ThroughputCapacity
+          RootVolumeSecurityStyle: !Ref RootVolumeSecurityStyle
+          SecurityStyle: !Ref SecurityStyle
+          TieringPolicy: !Ref TieringPolicy
+          VolumeSize: !Ref VolumeSize
+          StorageEfficiencyEnabled: !Ref StorageEfficiencyEnabled
+          LowFreeDataStorageCapacityThreshold: !Ref LowFreeDataStorageCapacityThreshold
+          PrimaryPrivateSubnetId0:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryPrivateSubnetId0
+          PrimaryPrivateSubnetId1:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryPrivateSubnetId1
+          PrimaryVpcId:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryVpcId
+          PrimaryDefaultSecurityGroupId:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryDefaultSecurityGroupId
+          PrimaryPrivateRouteTable0:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryPrivateRouteTable0
+          PrimaryPrivateRouteTable1:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryPrivateRouteTable1
+          DRVpcId:
+            Fn::GetAtt:
+            - DRVpc
+            - Outputs.DRVpcId         
+          DRPrivateSubnetId:
+            Fn::GetAtt:
+            - DRVpc
+            - Outputs.DRPrivateSubnetId
+          DRDefaultSecurityGroupId:
+            Fn::GetAtt:
+            - DRVpc
+            - Outputs.DRDefaultSecurityGroupId
+          MSDirectoryDnsIP0:
+            Fn::GetAtt:
+            - Directory
+            - Outputs.MSDirectoryDnsIP0
+          MSDirectoryDnsIP1:
+            Fn::GetAtt:
+            - Directory
+            - Outputs.MSDirectoryDnsIP1
+        TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/05-fsx-filesystem.yaml
+
+  Clients:
+      DependsOn: [ FSxFilesystem ]
+      Type: AWS::CloudFormation::Stack
+      Properties:
+        Parameters:
+          ParentStackName: !Ref AWS::StackName
+          DomainName: !Ref MicrosoftADDomain
+          LatestWindowsAmiId: !Ref LatestWindowsAmiId
+          LatestLinuxAmiId: !Ref LatestLinuxAmiId
+          InstanceType: !Ref InstanceType
+          KeyPair: !Ref KeyPair
+          PrimaryPublicSubnetId0:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryPublicSubnetId0
+          PrimaryPublicSubnetId1:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryPublicSubnetId1     
+          PrimaryPrivateSubnetId0:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryPrivateSubnetId0
+          PrimaryPrivateSubnetId1:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryPrivateSubnetId1
+          PrimaryVpcId:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryVpcId
+          PrimaryDefaultSecurityGroupId:
+            Fn::GetAtt:
+            - PrimaryVpc
+            - Outputs.PrimaryDefaultSecurityGroupId
+          MSDirectoryId:
+            Fn::GetAtt:
+            - Directory
+            - Outputs.MSDirectoryId
+          MSDirectoryDnsIP0:
+            Fn::GetAtt:
+            - Directory
+            - Outputs.MSDirectoryDnsIP0
+          MSDirectoryDnsIP1:
+            Fn::GetAtt:
+            - Directory
+            - Outputs.MSDirectoryDnsIP1
+          PrimaryFileSystemId:
+            Fn::GetAtt:
+            - FSxFilesystem
+            - Outputs.PrimaryFileSystemId
+          PrimarySvmId:
+            Fn::GetAtt:
+            - FSxFilesystem
+            - Outputs.PrimarySvmId
+          DRFileSystemId:
+            Fn::GetAtt:
+            - FSxFilesystem
+            - Outputs.DRFileSystemId
+          DRSvmId:
+            Fn::GetAtt:
+            - FSxFilesystem
+            - Outputs.DRSvmId
+        TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/06-clients.yaml

@@ -1,0 +1,269 @@
+= Data Protection
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will cover the data protection technologies available with *Amazon FSx for NetApp ONTAP* file system.
+
+. *Snapshots*: A read-only, point in time copy of your volume that can be used for near instantaneous backups and short-term recovery. 
+. *Amazon FSx Backups*: A cost-efficient offsite backup of your volume that is stored in highly durable storage within the same region. 
+. *SnapMirror Vault*: Disk based backup technology for performing offsite backups of your volume snapshots to a *secondary* file system in the same or different region.
+. *SnapMirror*: Native block level replication technology for disaster recovery and data migrations. We will cover this feature in our disaster recovery section of this workshop.
+
+=== Snapshots Overview
+
+When a new snapshot is created, it creates new pointers to existing blocks on the volume. Since no data is copied, snapshots do not consume any space on creation and are nearly instantaneous. As data blocks on your volume get modified or deleted, the blocks locked by the snapshot are retained and the snapshot starts to consume space over time. 
+
+Snapshots are recommended for short-term recovery and provide the ability to restore a single file, directory or entire volume using the point in time copy. Since snapshots are stored along side your volume, they are not ideal for long-term and offsite backup and do not protect against volume or file system failures. You can schedule automatic snapshots using a snapshot policy and also trigger manual snapshots. 
+
+
+=== Amazon FSx Backups Overview
+
+Amazon FSx backups allow you to take highly durable automatic daily backups or user-initiated backups of your volume all stored within highly durable storage in the same region. These backups are incremental and the automatic daily backups can be scheduled to run during a daily backup window with a retention period between 0-90 days.  You can also initiate a manual backup of a volume at any time.  These user initiated backups never expire and are retained even after the volume or file system is deleted.
+
+Since no additional infrastructure needs to be provisioned with Amazon FSx backups, you get cost-effective offsite backups with a retention period up to 90 days.  If more fine grained policies are needed or retention periods longer than 90 days, you can utilize link:https://aws.amazon.com/backup/[AWS Backup] with your Amazon FSx for NetApp ONTAP file system.
+
+
+=== SnapMirror Vault Overview
+
+SnapMirror Vault is a disk-based storage backup feature in ONTAP, which allows you to backup snapshot copies of your volume to a *secondary* volume on a different file system for long-term retention. You can restore data from the SnapMirror Vault *secondary* volume to the associated source volume or to a different volume. The snapshot policy assigned to the source volume determines when snapshots are created. A SnapMirror Vault policy assigned to the SnapMirror Vault relationship determines which snapshots on the source volume are replicated to the *secondary* volume. Storage efficiencies if enabled are preserved.
+
+SnapMirror Vault can be used to backup volumes from multiple source file systems to a central *secondary* system for offsite backups in same or different region. 
+
+SnapMirror Vault uses the SnapMirror engine, so replication works exactly the same way. 
+
+Note: SnapMirror Vault will not be covered in this workshop.
+
+== Duration
+
+NOTE: It will take approximately 10 minutes to complete this section.
+
+== Diagram 
+
+You will be using resources deployed in *Primary VPC* for this section of the workshop.
+
+image::primary-architecture.png[align="center"]
+
+== Step-by-step Guide (Snapshots)
+
+=== Snapshot steps
+
+. *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
+
++
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
++
+
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+
+. *_Run_* command below to check for available snapshots.
++
+[source,bash]
+----
+volume snapshot show
+----
++
+
+. *_Run_* below command to check the default snapshot policy that is enabled on your volume.
++
+[source,bash]
+----
+snapshot policy show -policy default
+----
++
+
+NOTE: You can see the default schedule in the output which retains a total of 10 snapshots *(6 hourly, 2 daily and 2 weekly)*.  
+
+. *_Run_* below command to check the timings for the various schedules:
++
+[source,bash]
+----
+job schedule cron show
+----
++
+NOTE: As you can see the hourly snapshots happen 5 mins past the hour, the daily snapshots 10 mins past midnight and weekly snapshots 15 mins past midnight on Sunday.
+
+
+. *_Run_* command below to trigger a *manual* snapshot for your volume. Provide a snapshot name *vol1_primary_FSxOntapWorkshop*  and a comment as shown below.
++
+[source,bash]
+----
+volume snapshot create -vserver svm01-primary -volume vol1_primary -snapshot vol1_primary_FSxOntapWorkshop -comment "Manual Snapshot created for FSx Workshop"
+----
++
+
+. *_Run_* command below to list the snapshots.
++
+[source,bash]
+----
+volume snapshot show vol1_primary
+----
++
+
+. *_Run_* below command to check the snapshot snapreserve space assigned to the volume:
++
+[source,bash]
+----
+volume show vol1_primary -fields percent-snapshot-space,snapshot-space-used
+----
++
+
+. Alternately, you can also *_run_* the below command to check the snapshot snapreserve space usage on the volume:
++
+[source,bash]
+----
+df -h vol1_primary
+----
++
+
+NOTE: By default *5%* of the volume space is configured for *_snapreserve_* and this value can be modified. If the snapshot space used exceeds the 5% snapreserve, then snapshots will start consuming space in the data area of your volume.
+
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
++
+
+. Next, lets make some changes to the text file created in the multiprotocol access section of the workshop. *_Run_* the below command to make the changes to the text file. 
++
+[source,bash]
+----
+cat ${MOUNTPOINT}/${DIRNAME}/multiprotocol-demo.txt
+echo "Appending text before single file restore" >> ${MOUNTPOINT}/${DIRNAME}/multiprotocol-demo.txt
+cat ${MOUNTPOINT}/${DIRNAME}/multiprotocol-demo.txt
+----
++
+. We are now going to restore the previous version of the file. *_Restore_* the previous version of the file from the snapshot taken earlier in this workshop.  You can overwrite the file in its original location or copy the file to a new location. Lets create a new directory to restore this file.
++
+[source,bash]
+----
+mkdir -p ${MOUNTPOINT}/${DIRNAME}/restore
+----
++
+
+. *_Change directory_* to the *_.snapshot_* directory and list snapshots available for restore. *_Change directory_* to the the snapshot *vol1_primary_FSxOntapWorkshop* directory that corresponds to the manual snapshot created earlier and copy the file from the snapshot to the target directory.
++
+[source,bash]
+----
+cd ${MOUNTPOINT}/${DIRNAME}/.snapshot
+ls
+cd vol1_primary_FSxOntapWorkshop/
+ls
+cat multiprotocol-demo.txt
+cp -p multiprotocol-demo.txt ${MOUNTPOINT}/${DIRNAME}/restore/
+cd
+----
++
+. *_cat_* the restored file to view its contents.
++
+[source,bash]
+----
+cat ${MOUNTPOINT}/${DIRNAME}/restore/multiprotocol-demo.txt
+----
++
+. Was the file successfully restored to a previous point in time?
+
++
+TIP: To *perform* an entire volume restore from snapshot you can run *volume snapshot restore -vserver <SVM> -volume <Volume> -snapshot <snapshot name>* from your ONTAP CLI session. 
+
+. *_Return_* to the RDP to your Windows Instance with name *FSx for ONTAP Workshop Windows Instance*
+
+. Using *File explorer*  *_Right-click_* on the file *multiprotocol-demo.txt*, *_Select_* *properties* -> *_click_* on *Previous Versions* tab to browse for available snapshots.  *_Double-Click_* on the version of the file shown under *File versions:* to view the contents.  *_click_* *Restore* to restore to a previous point in time.
+
+. Were you able to restore the file?
+
+. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux instance-<Region>* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+
+. *_Run_* the command below to check the security style for your volume.
++
+[source,bash]
+----
+volume show -volume vol1_primary -fields security-style
+----
++
+
+NOTE: Your volume inherited the *Unix* security style from the SVM and enforces Unix style permissions. ONTAP performs name mapping between Windows and Unix users to authorize access. If a Windows user tries to access a Unix security style volume their Windows username will be mapped to Unix UID because a Unix security style volume will not understand its Windows username. The Unix user will be verified by /etc/password files, NIS or LDAP.  Administrators can configure explicit manual mapping from a Windows user to Unix user. For example a windows user "john" is mapped to Unix user "john" to identify the permissions and authorize access. if no mappings are found then its mapped to *pcuser* with UID and GID 65634.  You were denied access because you were trying overwrite a file owned by Unix user *ssm-user* as *admin* user from Windows. To learn more about user mapping and multiprotocol best practices refer link:https://www.netapp.com/pdf.html?item=/media/27436-tr-4887.pdf[Multiprotocol NAS in NetApp ONTAP]
+
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
+
+== Step-by-step Guide (Amazon FSx Backups)
+
+=== Amazon FSx Backup steps
+
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console in the *AWS Region* of the workshop, *_click_* the *_File system ID_* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary-<Region>*.
+
+. Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
+
+
+. *_Click_* on the *volumes* tab. *_Select_* *vol1_primary* and *_click_* *Actions* -> *Create backup*. Input a name for your backup (Ex: FSxONTAP-workshop-backup) and *_click_* *Create backup*.
+
+. *_Click_* on the *backups* section on the left and you can see the backup status as *Creating*. Once the backup is complete the status will show as *Available*.
+NOTE: It can take several minutes for the backup status to change to complete.
+
+. *_Restore_* the backup to a new volume. *_Select_* the backup we created in the previous step, *_click_* *Actions* -> *Restore backup*. Input the following values:
+
++
+[cols="2,7"]
+|===
+| *File system*
+a| Accept default
+
+| *Storage virtual machine name*
+a| Accept default
+
+| *Volume name*
+a| Input restorevol
+
+| *Junction path*
+a| Input /restorevol
+
+| *Volume Size*
+a| Input 102400
+
+| *Storage efficiency*
+a| Select Disabled
+
+| *Capacity pool tiering policy*
+a| Accept Default
+
+| *Snapshot policy*
+a| Select None
+|===
++
+. After you have entered or accepted values for all parameters, *_click_* *Confirm*.
+
+. *_Click_* on the *Volumes* section on the left to check the progress of the restore. Once the status changes to *Created* you can mount the volume to access the data.
+
+. Were you able to modify any volume configuration parameters during the restore when compared to your source volume?
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::flexclone.png[link=../05-flexclone/, align="left",width=420]
+
+
+
+

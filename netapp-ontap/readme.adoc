@@ -1,4 +1,4 @@
-= Amazon FSx for NetApp ONTAP File Storage the AWSome Way!
+= Welcom to the Amazon FSx for NetApp ONTAP File Storage Workshop!!
 :icons:
 :linkattrs:
 :imagesdir: ./resources/images
@@ -9,7 +9,7 @@ This is a workshop designed for architects and engineers who would like to learn
 
 === Duration
 
-NOTE: It will take approximately between 2.5 to 3 hours to complete the workshop.
+NOTE: It will take approximately between 3.5 to 4 hours to complete the workshop.
 
 === Pricing
 

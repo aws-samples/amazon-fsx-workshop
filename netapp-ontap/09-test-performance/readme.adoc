@@ -1,0 +1,295 @@
+= Test Performance
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ./../resources/images
+
+
+== Summary
+
+This section will test the performance of *Amazon FSx for NetApp ONTAP*.
+
+
+== Duration
+
+NOTE: It will take approximately 20 minutes to complete this section.
+
+== Diagram 
+
+You will be using resources deployed in *Primary VPC* for this section of the workshop.
+
+image::primary-architecture.png[align="center"]
+
+== Step-by-step Guide (Performance)
+
+IMPORTANT: Read through all steps below before continuing.
+
+
+=== Examine File System Performance
+
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console in the *AWS Region* of the workshop, *_Click_* the *_File system ID_* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary-<Region>*.
+
+. In the *Summary* section, *_review_* the values for the following file system attributes:
++
+[cols="3,10"]
+|===
+| Attribute | Value
+
+| Deployment type
+| Multi-AZ
+
+| SSD storage capacity
+| 1024 GiB
+
+| Throughput capacity
+| 128 MB/s
+
+| Provisioned IOPS
+| 3072
+|===
++
+. *_Open_* the link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html[Amazon FSx for ONTAP User Guide] and *_scroll down_* to the *Impact of throughput capacity on performance* section. *_Review_* the table and the different performance attributes.
+
+. Using the file system attributes of the previous table and the performance capacities table that FSx for ONTAP is designed to achieve from the Amazon FSx for ONTAP User Guide, *_refer_* to the table below to review the different performance attributes of the workshop file system.
++
+.128 MB/s Provisioned throughput NetApp ONTAP file system{counter2:index:0}
+[cols="e,e,e,e,e,e,e,e,e"]
+|===
+s|FSx throughput capacity (MBps) 2+>s|Network throughput capacity (MBps) s|In-memory caching (GB) s|NVMe caching (GB) 2+>s|Disk throughput(MBps) 2+>s|SSD drive IOPS  
+| s|Baseline s|Burst | s| s|Baseline s|Burst s|Baseline s|Burst
+|128 |188 |1500 |16 |238 |128 |1250 |6000 |40000
+|===
++
+NOTE: The specific level of performance a file system can provide is defined by its provisioned throughput capacity, which determines the size of the file server hosting the file system and is equivalent to the baseline disk throughput supported by your file server.  This baseline disk throughput is the minimum throughput you can expect from your file system. The file system is capable of performing at levels much higher than the disk baseline throughput based on access patterns (e.g. reading from Cache storage, etc.) and the network burst and baseline throughputs and disk burst throughput. For data access from disks, your file system’s performance is also dependent on the number of provisioned SSD disk IOPS configured for the file systems underlying disks. When a client accesses data that's stored in the in-memory cache or NVMe cache, this network IO does not need to go to the disk and your file system can achieve the Network throughput capacity (MBps) outlined in the table above.
++
+. As you complete the following performance tests, compare your test results with the designed performance attributes you calculated in *Table 1*.
+
+=== Throughput Test (in-memory cache)
+
+. In this section we will test the network throughput of the file system by creating a small dataset that will fit in the in-memory cache of the file system.
+
+==== FIO write test 
+
+. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux instance-<Region>*
+
++
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
++
+
+. *_Write_* 32MB data using fio.
++
+[source,bash]
+----
+name=1M-write
+blocksize=1M
+numjobs=2
+iodepth=64
+size=16M
+directory=${MOUNTPOINT}
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
+
+==== FIO read test 
+
+. *_Read_* the data you created in the previous step to *_examine_* network throughput (in-memory cache read) of your file system.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Why was the read throughput limited to ~5Gbps (~600-625 MB/s)?
+
+NOTE: For single-flow (5-tuple) traffic, bandiwdth is limited to 5Gb/s when the instances are not in the same cluster placement group.  This is documented on the link:https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html[Amazon EC2 instance network bandwidth] page.
+
+. *_Run_* the below commands to unmount the volumes.
++
+[source,bash]
+----
+cd
+sudo umount ${MOUNTPOINT}
+sudo umount ${CLONEDIR}
+----
++
+
+. *_Run_* below commands to mount the NetApp ONTAP volumes with NFS mount option *nconnect=16*.
++
+[source,bash]
+----
+sudo mount -t nfs -o nconnect=16 ${NFSENDPOINT}:/vol1_primary ${MOUNTPOINT}
+sudo mount -t nfs -o nconnect=16 ${NFSENDPOINT}:/vol1_primary_clone1 ${CLONEDIR}
+----
++
+
+. *_Run_* the below command to confirm the volumes were successfully mounted with mount option *nconnect=16*.
++
+[source,bash]
+----
+mount | grep -i nfs
+----
++
+
+. *_Read_* the data again to *_examine_* in-memory cache read throughput.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Were you able to scale beyond the single TCP session limit of 5Gbps and achieve read throughput higher than the baseline network throughput on your file system?
++
+TIP: NFS clients can use the nconnect mount option to have multiple TCP connections (up to 16) associated with a single NFS mount. Such an NFS client multiplexes file operations onto multiple TCP connections (multi-flow) in a round-robin fashion to obtain improved performance beyond single TCP connection (single-flow) limits. NFS nconnect is included by default in Linux kernel versions 5.3 and above.  Your SMB based clients can achieve the same outcome utilziing SMB3.0's multi-channel capability.
++
+NOTE: The in-memory cache read test in the previous step lasted only 60 seconds. If you run this test for a longer duration you will achieve throughput closer to the *Burst network throughput* which is ~1250 MB/s for the workshop file system and notice the throughput will eventually drop to *Baseline network throughput* as seen in the graph below. Remember you are still achieving higher throughput than the 128 MB/s throughput provisioned on your workshop file system.
+
+image::network-throughput-in-memory-read.png[align="center"]
+
+=== Throughput Test (NVMe cache)
+
+. In this section we will test the network throughput of the file system by creating a 32GB dataset that will fit in the 150GB NVMe cache of the workshop file system.
+
+==== FIO write test 
+
+. *_Write_* 32GB using fio.
++
+[source,bash]
+----
+name=1M-write
+blocksize=1M
+numjobs=2
+iodepth=64
+size=16G
+directory=${MOUNTPOINT}
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
+
+==== FIO read test 
+
+. *_Read_* the data you created in the previous step to *_examine_* network throughput (NVMe cache read) of your file system.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+. Was your throughput higher than the 128 MB/s baseline throughput provisioned for the workshop file system?
++
+NOTE: You can achieve higher levels of throughput when data is cached in the NVMe cache of your file system. The NVMe cache read test in the previous step lasted only 60 seconds. If you run this test for a longer duration you will notice once the burst credits are exhausted for the workshop file system the throughput will drop to *Baseline network throughput* as seen in the graph below.
+
+image::network-throughput-NVMe-cache.png[align="center"]
+
+
+=== IOPS Test (NVMe cache)
+
+. In this section we will test the IOPS of the file system by creating a 32GB dataset that will fit in the 150GB NVMe cache of the workshop file system.
+
+==== FIO 4K block write 
+
+. *_Run_* the below command to execute 4KB block size write test on the *vol1_primary* volume using fio. 
++
+[source,bash]
+----
+name=4KB-write
+blocksize=4K
+numjobs=2
+iodepth=64
+size=16G
+directory=${MOUNTPOINT}
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. *Note* the write IOPS achieved during this test. Compare this with the *Provisioned IOPS* of your file system.
+
+==== FIO 4K block read test
+
+. *_Read_* the data you created in the previous step by running the below command.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. *Note* the read IOPS you achieved during this test.
++
+TIP: You will achieve ~29K write IOPS and ~59k read IOPS which is much higher than the 3072 *Provisioned IOPS* for the workshop file system when data is cached in the NVMe cache on your file system.
+
+
+=== IOPS Test with NFSv3
+
+. *_Run_* the below commands to unmount the *${MOUNTPOINT}*.
++
+[source,bash]
+----
+cd
+sudo umount ${MOUNTPOINT}
+----
++
+. *_Return_* to the Session Manager connection of the *FSx for NetApp ONTAP Workshop Linux Instance*. *_Run_* below commands to mount the volume with NFS mount option *nconnect=16* and *vers=3*.
++
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
++
+[source,bash]
+----
+sudo mount -t nfs -o vers=3,nconnect=16 ${NFSENDPOINT}:/vol1_primary ${MOUNTPOINT}
+----
+
+. *_Run_* the below command to confirm the volume was successfully mounted with mount option *nconnect=16* and *NFS version 3*.
++
+[source,bash]
+----
+mount | grep -i ${MOUNTPOINT}
+----
+
+==== FIO 4K block write test
+
+. *_Run_* the below command to execute 4KB block size write test using fio. 
++
+[source,bash]
+----
+name=4KB-write
+blocksize=4K
+numjobs=2
+iodepth=64
+size=16G
+directory=${MOUNTPOINT}
+
+fio --name=${name} --rw=write --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Compare the write IOPS from this test with the write IOPS you achieved for the same test with NFS version 4. Did your IOPS scale with NFS version 3?
+
+==== FIO 4K block read test
+
+. *_Read_* the data you created in the previous step by running the below command.
++
+[source,bash]
+----
+fio --name=${name} --rw=read --time_based --bs=${blocksize} --ioengine=libaio --numjobs=${numjobs} --direct=1 --iodepth=${iodepth} --offset=0 --size=${size} --directory=${directory} --group_reporting --runtime 60
+----
++
+
+. Compare the read IOPS from this test with the read IOPS you achieved for the same test with NFS version 4. Did your IOPS scale with NFS version 3?
++
+TIP: NFSv3 can perform better compared to NFSv4 when working with small block IO.
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::monitor-performance.jpg[link=../10-monitor performance/, align="left",width=420]
+
+
+
+
+
+
+
+

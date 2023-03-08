@@ -1,0 +1,234 @@
+= FlexCache
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will cover how you can setup NetApp FlexCache on your *Amazon FSx for NetApp ONTAP* file system, caching only the actively-read data instead of copying entire datasets or volumes. You can use FlexCache to:
+
+* Increase throughput for read-intensive applications like seismic analysis, media rendering workflows, chip design, financial simulation etc.
+* Provide low-latency access to data in your Amazon FSx for NetApp ONTAP file system from another region and extend your workflows across multiple AWS regions or to on-premises NetApp environments.
+* Burst your workloads to Cloud by creating a FlexCache volume on the FSx file system and link it to a origin volume on your on-premises NetApp storage.
+
+
+=== FlexCache Overview
+
+A FlexCache volume is a sparsely populated volume that acts as a cache for your source volume also referred as origin volume and stores frequently accessed data. If a file is not available in the FlexCache volume its read from the origin volume and served to clients. Subsequent access to data will be faster at lower latencies.
+
+Media Rendering, Electronic Design Automation (EDA), Financial applications and other use cases often need generated data in one region to be accessed from compute instances or end user workstations in another region at lower latencies. While data can be replicated to another volume in second region to make it available locally, this is not ideal (duplication of data, additional infrastructure, replication delays administration overhead etc.)  Instead, You can use a FlexCache volume to speed up access to data or to offload traffic for read-intensive volumes. You can have a FlexCache volume in same file system to accelerate performance for frequently accessed data or distribute data across multiple file systems in another region to reduce WAN latencies. You can create a FlexCache volume on FSx, linked to an origin volume located on-premises NetApp storage and burst to cloud, or you can create a FlexCache volume in different AWS region/on-premises NetApp filer and link it to an origin volume on FSx to provide low latency access to data.
+
+
+== Duration
+
+NOTE: It will take approximately 10 minutes to complete this section.
+
+== Diagram 
+
+You will be using resources deployed in *Primary VPC* and *Secondary VPC* for this section of the workshop.
+
+image::primary-dr-architecture.png[align="center"]
+
+
+== Step-by-step Guide (FlexCache)
+
+IMPORTANT: Read through all steps below before continuing.
+
+//image::xxx.gif[align="left", width=600]
+
+
+NOTE: If you are creating a FlexCache between FSx file systems in a different accounts or different regions you will need to establish VPC communication using link:https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html[VPC peering] or link:https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html[Transit gateway]. Once the VPC communication is in place, you will need to create cluster and SVM peering between your FSx file systems. The workshop environment has already created VPC peering between Region A and Region B along with Cluster peering between the two FSx file systems and SVM peering between SVM in Region A and SVM in Region B.
+
+=== Generate Test data
+
+. *_Return_* to the Session Manager session of your *FSx for ONTAP Workshop Linux instance-<Region>* and run the script below to create a 1 GB file.
++
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
++
+
++
+[source,bash]
+----
+mkdir ${MOUNTPOINT}/1GB
+threads=1
+filesize=1024000
+filecount=1
+sudo python3 /tmp/smallfile/smallfile_cli.py --operation create --threads $threads --file-size $filesize --files $filecount --top ${MOUNTPOINT}/1GB &
+----
+
+=== Create FlexCache 
+
+TIP: To learn more about FlexCache best practices refer link:https://www.netapp.com/pdf.html?item=/media/7336-tr4743pdf.pdf[FlexCache Best Practices]
+
+. *_Run_* the command below to SSH to the cluster management endpoint of your *DR/Secondary* FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${DRMGMTENDPOINT}
+----
++
+. *_Verify_* if any existing FlexCache relationships exist by running the command below.
++
+[source,bash]
+----
+volume flexcache show
+----
++
+. *_Create_* a FlexCache volume by running the below command on your *DR/Secondary*. 
++
+[source,bash]
+----
+volume flexcache create -vserver svm01-dr -volume cachevol -aggr-list aggr1 -size 100G -origin-vserver svm01-primary -origin-volume vol1_primary -aggr-list-multiplier 2
+----
++
+. *_Verify_* the FlexCache relationship from your *DR/Secondary* file system.
++
+[source,bash]
+----
+volume flexcache show
+----
++
+. *_Run_* the below command to mount and create a junction path for the FlexCache volume from your *DR/Secondary* file system. 
++
+[source,bash]
+----
+volume mount -vserver svm01-dr -volume cachevol -junction-path /cachevol
+----
++
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
++
+. *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+. *_Verify_* the FlexCache relationships from the ONTAP CLI session of your *Primary* file system.
++
+[source,bash]
+----
+volume flexcache origin show-caches 
+----
++
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
++
+. *_Run_* the below script to list usage and contents of your FlexCache volume.
++
+[source,bash]
+----
+sudo mkdir ${CACHEMOUNT}
+sudo mount -t nfs ${DRNFSENDPOINT}:/cachevol ${CACHEMOUNT}
+df -h ${CACHEMOUNT}
+ls -lt ${CACHEMOUNT}
+----
++
+. Compare the contents with Origin(source) volume.
++
+[source,bash]
+----
+df -h ${MOUNTPOINT} 
+ls -lt ${MOUNTPOINT}
+----
++
+TIP: You will see the the FlexCache Volume shows exact same properties as the Origin Volume. You can create a FlexCache volume that is smaller than your origin volume and size it large enough to fit your working data set. Files will be imported into the FlexCache volume when they are accessed.
+
++
+. *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+. *_Run_* the below ONTAP CLI command to check the *logical* and *physical* space used on the source volume from your *Primary* file system.
++
+[source,bash]
+----
+vol show -volume vol1_primary -fields logical-used,physical-used
+----
++
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
++
+. *_Run_* the command below to SSH to the cluster management endpoint of your *DR/Secondary* FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${DRMGMTENDPOINT}
+----
++
+. *_Run_* the below ONTAP CLI command to check the *logical* and *physical* space used on the FlexCache volume from your *DR/Secondary* file system.
++
+[source,bash]
+----
+vol show -volume cachevol -fields logical-used,physical-used
+----
++
+. Are they identical?
+
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
++
+
+. On the *FSx for ONTAP Workshop Linux instance-<Region>* instance change directory to the *${MOUNTPOINT}/1GB/file_srcdir/<your-machine-id>/thrd_00/d_000/* directory and copy the file name of one of the files in this directory to your local text editor for the next steps.
+
+. *_Run_* the command below to SSH to the cluster management endpoint of your *DR/Secondary* FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${DRMGMTENDPOINT}
+----
++
+
+. *_Run_* the below ONTAP CLI command to check pre-populate a file from your *Primary* file system.  Replace the file path *1GB/file_srcdir/<your-machine-id>/thrd_00/d_000/_ip-10-0-0-17.us-east-2.compute.internal_00_1_* in the example code below with the path to the file on your Linux instance from the previous step.
++
+IMPORTANT: You will need to run each command below individually.
++
+[source,bash]
+----
+set -privilege advanced
+flexcache prepopulate start -cache-volume cachevol -path-list 1GB/file_srcdir/<your-machine-id>/thrd_00/d_000/_ip-10-0-0-17.us-east-2.compute.internal_00_1_
+set -privilege admin
+----
+
+. *_Run_* the below command on your *DR/Secondary* file system and check the *logical* and *physical* space used.
++
+[source,bash]
+----
+vol show -volume cachevol -fields logical-used,physical-used
+----
+
+. Did the utilization change?
+
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::test-performance.jpg[link=../09-test-performance/, align="left",width=420]

@@ -1,0 +1,83 @@
+= Monitor Performance
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+This section will cover monitoring the performance of your *Amazon FSx for NetApp ONTAP* file system.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+== Diagram 
+
+You will be using resources deployed in *Primary VPC* for this section of the workshop.
+
+image::primary-architecture.png[align="center"]
+
+== Step-by-step Guide
+
+=== CloudWatch dashboard
+
+IMPORTANT: Read through all steps below.
+
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_click_* the *File system ID* of your *Primary Amazon FSx for NetApp ONTAP* file system with name *FSxNetAppOntap-Primary-<Region>*.
+
+. Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
+
+. *_Click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system.
+
+. *_Click_* the *Monitoring* tab to review the file system metrics.
+
+. *_Click_* the *Add to dashboard* to launch the *CloudWatch* console in a new tab. *_Click_* *Create new* button and *_enter_* the *File system ID-<Region>* (ex:fs-0123456bcdegh89-us-east-1) as the *Dashboard name*. 
+
+. *_Click_* *Create* to create the new dashboard and then *_click_* *Add to dashboard*. Next, *_click_* *Save dashboard* to save the newly created dashboard for your file system metrics.
+
+. *_Scroll_* through the dashboard and review all the widgets and their settings.
+. Notice how the vertical time line is in sync across all widgets. This makes it easy to correlate different metric values for a given point in time.
+. *_Zoom_* in on a widget by *_clicking_* and *_dragging_* over a period of time. Notice all widgets also zoom in for the period of time selected.
+. *_Reset_* zoom by *_clicking_* the blue magnifying glass in the top right of any widget.
+
+
+=== CloudWatch Alarm
+
+IMPORTANT: Read through all steps before *_creating_* the alarm.
+
+. *_Copy_* the file system id from the dashboard name or *_go_* to link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and copy the file system id of your *Primary* file system.
+. *_Click_* the *Maximize* button of the *Total Throughput (bytes/sec)* widget.
+. *_Click_* the *View in metrics* link (at the bottom of the window).
+. *_Find_* the metric labeled *Total Throughput (bytes/sec)* and *_click_* the *Create alarm* button in the actions column.
+. *_Scroll_* down to the *Conditions* section and in the *Define the threshold value* field *_enter_* 100000000. This will set an alarm condition that will trigger if the *Total Throughput (bytes/sec)* is greater than 100 MB/s.
+. *_Click_* *Next*.
+. In the *Notification* section, *_select_* *Create new topic...* then *_enter_* a meaningful name for the topic in the name field and *_enter_* an email address to which you have immediate access in the email address field.
+. *_Click_* *Create topic*.
+. *_Scroll down_* and *_select_* *Next*.
+. In the *Alarm name* text box *_enter_* "High throughput alarm - " then *_paste_* the *file system id* you copied earlier (e.g. High throughput alarm - fs-0123456789abcdef).
+. *_Click_* *Next*.
+. *_Preview_* the alarm graph, make sure the red alarm line is at the 100M mark.
+. *_Scroll_* and *_review_* the *Conditions*, *Actions*, and *Name and description* sections.
+. *_Click_* *Create alarm*.
+. You must confirm your *email subscription* to the SNS topic you created for this alarm. *_Access_* the inbox of the email address you entered. It should have a new email message with a subject *AWS Notification - Subscription Confirmation* from *AWS Notifications <no-reply@sns.amazonaws.com>*. Read the email and *_click_* the *Confirm subscription* link. 
++
+TIP: SNS topic confirmation can be done on your laptop or mobile device.
++
+. *_Wait_* a few minutes for the alarm state to transition from *Insufficient data* to *OK*.
+. *_Return_* to the previous workshop section *Test performance* and run the *FIO write test* under *Throughput Test (NVMe cache)* again.
+* Did your *High throughput alarm* get triggered?
+* Did your email address receive an alarm notification?
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::elastic-tiering.png[link=../11-tiering/, align="left",width=420]
+
+
+
+

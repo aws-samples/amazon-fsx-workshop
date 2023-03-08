@@ -1,0 +1,231 @@
+= Managing your Amazon FSx for NetApp ONTAP File System
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+== Summary
+
+This section will help you become familiar with using the Amazon FSx console and ONTAP CLI to manage your Amazon FSx for NetApp ONTAP file systems.
+
+You can use the Amazon FSx console, AWS CLI or FSx API to create a new file system. In addition to these AWS management tools you can also use NetApp management tools like NetApp BlueXP, ONTAP CLI and ONTAP REST API to manage the file system.
+
+== Duration
+
+NOTE: It will take approximately 10 minutes to complete this section.
+
+== Diagram 
+
+You will be using resources deployed in the *Primary VPC* for this section of the workshop.
+
+image::primary-architecture.png[align="center"]
+
+== Step-by-step Guide (Amazon FSx Console)
+
+=== Examine Amazon FSx Console
+
+. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console in the *AWS Region* you deployed the stack.
+
+. Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
+
+. *_Click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary-<Region>*. 
+
+. *_Examine_* the *Summary* section of the file system. *_Find_* the values of the following file system attributes:
+* File system ID
+* Lifecycle state
+* Deployment type
+* SSD Storage capacity
+* Throughput capacity
+* Provisioned IOPS
+* Availability Zones
+* Creation time
++
+TIP: The *Update* button next to *SSD Storage capacity*, *Throughput Capacity*, and *Provisioned IOPS* allows you to scale your file system SSD storage capacity or provisioned IOPS respectively. You can only scale up your *SSD storage capacity*. You can scale up/down the *Throughput Capacity* and/or *Provisioned IOPS* on your file system.
++
+
+. *_Examine_* the *Network & security* section of the file system. *_Click_* the *Network & security* tab. *_Find_* the values of the following file system attributes:
+* VPC
+* Endpoint IP address range
+* KMS key ID
+* Route tables
+* Management endpoint - DNS name and IP address
+* Inter-cluster endpoint - DNS name and IP address
+
+
+. *_Examine_* the subnet attributes of the file system. *_Find_* the values of preferred and standby subnets:
+* Subnets
+* Availability Zones
+* Network interfaces
+
+* How would you find the VPC security groups associated to the file system?
+* Hint: *_Click_* the *Network interface* link of the preferred subnet for the file system. *_Click_* the box next to the network interface for the file system to view the details.  From the Details tab of the preferred file server’s ENI, *_click_* the link for the associated *Security groups* to take you to the details of the security group.  *_Click_* the *Inbound rules* tab within the Security groups attribute to view the allowed traffic. Close the browser tab of the Network interface console and the tab of the associated Security group.
+
+. *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary-<Region>*.
+
+. *_Examine_* the *CloudWatch Monitoring* section of the file system. *_Click_* the *Monitoring* tab. *Review* the metrics available in the monitoring dashboard:
+* What metrics can you monitor for the file system?
+
+. *_Examine_* the *Backups* section of the file system. *_Click_* the *Backups* tab.
+* Are daily automatic backups enabled?
+* *_Click_* *Update* to change the backup window and retention period. Accept default values and *_click_* *Save*.
+
+. *_Examine_* the *Tags* section of the file system. *_Click_* the *Tags* tab.
+* What tags (key/value) pairs are assigned to the file system?
+
+. *_Examine_* the *Administration* section of the file system. *_Click_* the *Administration* tab. *_Find_* the values of the following file system attributes:
+* ONTAP administrator username
+* Management endpoint - DNS name and IP address
+* Inter-cluster endpoint - DNS name IP address
+* Weekly maintenance window
+
+==== Examine the Storage Virtual Machines (SVMs) in your *Primary* file system.
+
+. *_Examine_* the *Storage virtual machines(SVMs)* section of the file system. *_Click_* the *Storage virtual machines* tab. *_Find_* the values of the following file system attributes:
+* SVM Name
+* SVM ID
+* Is the SVM joined to an Active Directory?
+
+. *_Right-Click_* on the SVM name *svm01-primary* and *_select_* *Open Link in New Tab* to *_examine_* the SVM properties in a new browser tab. Go to the new browser tab and *_find_* the values of the following SVM attributes in the *Summary* section:
+** SVM ID
+** File system ID
+** Active Directory
+** Net BIOS name
+** Service account username
+** Organizational unit distinguished name
+** DNS server IP addresses
++
+NOTE: The SVM of your Primary file system in the Primary VPC is joined to *Microsoft AD* using the attributes you reviewed above.
++
+. *_Examine_* the *Endpoints* section and review the DNS names and IP addresses for the Management, NFS, SMB and iSCSI endpoints.
+
+. *Return* to the browser tab for your Amazon FSx for NetApp ONTAP *Primary* file system and *Volumes* section of your file system. If you closed the browser tab return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the *File system ID* of your Amazon FSx for NetApp ONTAP *Primary* file system and then *Volumes* section of your file system.
+
+
+==== Examine the volumes in your Primary file system.
+
+. *_Examine_* the *Volumes* section of the file system. *_Click_* the *Volumes* tab. *_Find_* the values of the following file system attributes:
+* Volume Name 
+* Which SVM does the volume belong to?
+* What is the junction path for the volume? 
++
+TIP: Each SVM has a unique namespace with the SVM root volume being the entry point to the namespace. Do you see */* as Junction Path for the root?  You add volumes to this namespace by creating a junction path. The *vol1_primary* volume uses */* as the entry point and has junction path */vol1_primary*. You can create junction points directly below the parent volume or on a directory within the volume. Ex: /vol1/vol2. You will use the junction path to mount your volume.
++
+. *_Right-click_* on the Volume name *vol1_primary* and *_select_* *Open Link in New Tab* to *_examine_* the Volume properties in a new browser tab. 
+** *_Go_* to the new browser tab and *_find_* the values of the following Volume attributes in the *Summary* section:
+** Volume ID
+** SVM ID
+** File system ID
+** Size
+** Junction path
+** Tiering policy name
+** Tiering policy cooling period (days)
+** Storage efficiency enabled
+
+. *_Examine_* the *Monitoring* section of the volume.
+*** What metrics can you monitor for this volume?
+
+=== Step-by-step Guide (ONTAP CLI)
+
+==== Connect to the Linux Instance.
+
+. Open the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this GitHub workshop and AWS console.
++
+. Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon EC2 console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
+
+. *_Click_* *Instances (running)*.
+
+. *_Click_* the check box next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*.
+
+. *_Click_* the Connect button.
+
+. Connect using AWS Systems Manager - *_select_* *Session Manager* tab and *_click_* the *Connect* button to open a session.
+
++
+TIP: For a smooth experience to toggle between multiple sessions connecting to: +
+1) FSx for ONTAP Workshop Linux Instance + 
+2) ONTAP CLI session to your FSx for NetApp ONTAP file system and + 
+we recommend you create 2 x Session Manager sessions (tabs) to the Linux Instance.
+
+==== Connect to the FSx for NetApp ONTAP file system
+
+. From the Session Manager connection of your *FSx for ONTAP Workshop Linux instance-<Region>*, SSH to the *cluster management endpoint* of your *Primary* file system.
++
+[source,bash]
+----
+bash
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
+
+. *_Enter_* *yes*, if you get the authenticity warning to trust the host on the SSH connection. At the *_password_* prompt, enter the password for your file system. You can retrieve the password using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* secret name *FSxadmin-<StackInfo>* and *_click_* on *Retrieve Secret value* to get the fsxadmin user password. Upon successful login you will see the prompt as shown below:
++
+TIP: Keep the AWS Secrets Manager console opened in another tab as you will be referencing this often.
+
++
+[source,bash]
+----
+FsxId08361928e949c6b55::>
+----
++
+. *_Type_* *?* to get a list of available ONTAP CLI commands.
+
++
+[source,bash]
+----
+FsxId08361928e949c6b55::> ?
+  cluster>                    Manage clusters
+  event>                      Manage system events
+  exit                        Quit the CLI session
+  history                     Show the history of commands for this CLI session
+  job>                        Manage jobs and job schedules
+  lun>                        Manage LUNs
+  man                         Display the on-line manual pages
+  network>                    Manage physical and virtual network connections
+  qos>                        QoS settings
+  redo                        Execute a previous command
+  rows                        Show/Set the rows for this CLI session
+  security>                   The security directory
+  set                         Display/Set CLI session settings
+  snaplock>                   Manages SnapLock attributes in the system
+  snapmirror>                 Manage SnapMirror
+  statistics>                 Display operational statistics
+  statistics-v1>              The statistics-v1 directory
+  storage>                    Manage physical storage, including disks, aggregates, and failover
+  system>                     The system directory
+  top                         Go to the top-level directory
+  up                          Go up one directory
+  volume>                     Manage virtual storage, including volumes, snapshots, and mirrors
+  vserver>                    Manage Vservers
+----
++
+. *_Run_* below command to get a list of available volumes. Does this match the volumes you reviewed in the Amazon FSx console?
++
+[source,bash]
+----
+vol show
+----
++
+. *_Run_* below command to list all the Logical Interfaces (LIFs). How many LIFs do you see and what are they used for?
++
+[source,bash]
+----
+network interface show
+----
++
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::multiprotocol-access.png[link=../03-multiprotocol-access/, align="left",width=420]
+
+
+
+
