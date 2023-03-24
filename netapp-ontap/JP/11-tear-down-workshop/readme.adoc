@@ -1,0 +1,189 @@
+= ワークショップ リソースのクリーンアップ
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+*おめでとうございます!* あなたは Amazon FSx for NetApp ONTAP ワークショップを完了しました！
+
+
+== 所要時間
+
+NOTE: このセクションを完了するのに約 15 分かかります。
+
+=== *Amazon FSx for NetApp ONTAP リソース* の削除 
+
+IMPORTANT: 続ける前に全てのステップを読んでください。
+
+NOTE: CloudFormation からワークショップ環境を削除する前に、以下のリソースを削除することが *非常に重要* です。そうしないと、CloudFormation スタックによって作成されたファイルシステムの削除に失敗し、引き続き料金が発生します。
+
+* 全てのファイルシステム上のボリューム
+* 全てのファイルシステム上の SVM 
+* Amazon FSx コンソールから作成した セカンダリー Amazon FSx for NetApp ONTAP ファイルシステム 
+
+=== FSx リソースの削除
+
+. *Amazon FSx for ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_* ます。
+
+. 以下のスクリプトを *_実行_* して、全てのボリュームをアンマウントします。
++
+[source,bash]
+----
+sudo umount ${MOUNTPOINT}
+sudo umount ${CLONEDIR}
+sudo umount ${SMMOUNT}
+sudo umount ${CACHEMOUNT}
+----
++
+
+. 以下のコマンドを *_実行_* して、まだマウントされているボリュームがないことを確認します。
++
+[source,bash]
+----
+mount | grep nfs
+----
++
+
+. *Amazon FSx for ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、*セカンダリー* Amazon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${DRMGMTENDPOINT}
+----
++
+
+. 以下のコマンドを *_実行_* して、*セカンダリー* Amazon FSx for NetApp ONTAP ファイルシステムから SnapMirror 関係を削除します。
++
+[source,bash]
+----
+snapmirror delete -destination-path svm01:vol2
+----
++
+
+. 以下のコマンドを *_実行_* して、*セカンダリー* Amazon FSx for NetApp ONTAP ファイルシステムから SnapMirror 関係が削除されたことを確認します。
++
+[source,bash]
+----
+snapmirror show
+----
++
+
+. *Amazon FSx for ONTAP ワークショップの Linux インスタンス* の SSH 接続に *_戻り_*、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムのクラスター管理エンドポイントに SSH 接続します。
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
++
+
+. 以下のコマンドを *_実行_* して、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムからSnapMirror 関係を解消します。SVM とボリュームを別の名前で作成した場合は、それらを置き換えます。
++
+[source,bash]
+----
+snapmirror release -source-path svm08:vol1 -destination-path svm01:vol2
+----
++
+. 以下のコマンドを *_実行_* して、*セカンダリー* Amazon FSx for NetApp ONTAP ファイルシステムの SnapMirror デスティネーション ボリュームをクリーンアップします。
++
+[source,bash]
+----
+vol offline vol2 -vserver svm01
+vol delete vol2 -vserver svm01
+----
++
+. 以下のコマンドを *_実行_* して、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムの FlexClone をクリーンアップします。
++
+[source,bash]
+----
+volume offline -volume vol1_clone1 -vserver svm08
+volume delete -volume vol1_clone1 -vserver svm08
+vol show
+----
++
+
+. 以下の ONTAP CLI コマンドを *_実行_* して、*セカンダリー* Amazon FSx for NetApp ONTAP ファイルシステムから FlexCache 関係をクリーンアップします。
++
+[source,bash]
+----
+volume offline -vserver svm01 -volume cachevol
+volume flexcache delete -vserver svm01 -volume cachevol
+----
++
+
+. 以下の ONTAP CLI コマンドを *_実行_* して、*セカンダリー* Amazon FSx for NetApp ONTAP ファイルシステムからクラスターと SVM ピア関係をクリーンアップします。
++
+[source,bash]
+----
+vserver peer show
+vserver peer delete -vserver svm01 -peer-vserver svm08
+cluster peer show -instance
+cluster peer delete <peer cluster name>
+----
++
+
+. 以下の ONTAP CLI コマンドを *_実行_* して、*セカンダリー* Amazon FSx for NetApp ONTAP ファイルシステムにクラスターまたは SVM 関係が存在しないことを確認します。
++
+[source,bash]
+----
+vserver peer show
+cluster peer show
+----
++
+
+
+. 以下の ONTAP CLI コマンドを *_実行_* して、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムからクラスター ピア関係をクリーンアップします。
++
+[source,bash]
+----
+cluster peer show -instance
+cluster peer delete <peer cluster name>
+----
++
+
+. 以下の ONTAP CLI コマンドを *_実行_* して、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムに クラスター または SVM 関係が存在しないことを確認します。
++
+[source,bash]
+----
+vserver peer show
+cluster peer show
+----
++
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールに移動し、*セカンダリー* Amazon FSx for NetApp ONTAP ファイルシステムの *ファイルシステム ID* を *_クリック_* します。
+
+. ファイルシステムの *ストレージ仮想マシン* セクションを *_調べます_*。 *ストレージ仮想マシン* タブを *クリック* します。SVM *svm01* にチェックを入れる -> *アクション*-> *ストレージ仮想マシンを削除* を *_選択_* します。 *ストレージ仮想マシンを削除* をクリックして SVM を削除します。
+(ボリューム セクションに cachevol と vol2 が残存している場合にはコンソールの画面上でも削除してからストレージ仮想マシンを削除します。)
+
+. *ボリューム* タブと *ストレージ仮想マシン* タブから Pending リソースが存在しないことを確認します。
+
+. 右上角の *アクション* を *_クリック_* し、*ファイルシステムを削除* を *_選択_* します。*ファイルシステム ID* を *_タイプ_* して *ファイルシステムを削除* を *_クリック_* します。
+
+. link:https://console.aws.amazon.com/fsx/[Amazon FSx] コンソールに移動し、*プライマリー* Amazon FSx for NetApp ONTAP ファイルシステムの *ファイルシステム ID* を *_クリック_* します。
+
+. ファイルシステムの *ボリューム* セクションを *_調べます_*。*ボリューム* タブを *_クリック_* します。ボリューム *vol1* にチェックを入れる -> *アクション* -> *ボリュームを削除* を *_選択_* します。最終バックアップの作成は *No* を *_選択_* し、削除の *_確認_* では削除確認セクションに *delete* と *_タイプ_* します。*ボリュームの削除* を *_クリック_* してボリュームを削除します。
+
+. ボリューム *restorevol* にチェックを入れる -> *アクション* -> *ボリュームを削除* を *_選択_* します。最終バックアップの作成は *No* を *_選択_* し、削除の *_確認_* では削除確認セクションに *delete* と *_タイプ_* します。*ボリュームの削除* を *_クリック_* してボリュームを削除します。
+
+. ファイルシステムの *ストレージ仮想マシン* セクションを *_調べます_*。 *ストレージ仮想マシン* タブを *クリック* します。SVM *svm08* にチェックを入れる -> *アクション*-> *ストレージ仮想マシンを削除* を *_選択_* します。 *ストレージ仮想マシンを削除* をクリックして SVM を削除します。
+
+. *ボリューム* タブと *ストレージ仮想マシン* タブから *プライマリー* ファイルシステムの Pending リソースが存在しないことを確認します。
+
+. *ワークショップ環境* の削除を進める前に *セカンダリー* ファイルシステムの削除が成功していることを *_確認_* します。
+
+//. *_Click_* *Actions* on the top-right corner and *_select_* *Delete file system*. *_Type_* the *File system ID* and *_click_* *Delete file system*.
+
+
+
+=== CloudFormation で *ワークショップ環境* を削除
+
+IMPORTANT: 続ける前に全てのステップを読んでください。
+
+. link:https://console.aws.amazon.com/cloudformation/[Amazon CloudFormation] コンソールを開きます。
++
+TIP: 上のリンクを *_コンテキストクリック (右クリック)_* して新しいタブまたは新しいウィンドウで開き、この GitHub ワークショップと AWS コンソールを行ったり来たりし易いようにします。
++
+. ワークショップ環境を *_作成_* した *AWS リージョン* と同じリージョンであることを確認します。*fsx-ontap-workshop* スタックの隣にある *ラジオボタン* を *_クリック_* します。
+. *削除* ボタンを *_クリック_* します。
+. *スタックの削除* を *_クリック_* してワークショップ環境を削除します。
+
+IMPORTANT: CloudFormation テンプレートによって作成されたすべての AWS リソースを削除するには、約 25 分かかる場合があります。ステータスを定期的にチェックして、すべてのリソースが削除されたことを確認してください。
+

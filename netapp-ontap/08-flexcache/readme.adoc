@@ -42,9 +42,9 @@ NOTE: If you are creating a FlexCache between FSx file systems in a different ac
 
 === Generate Test data
 
-. *_Return_* to the Session Manager session of your *FSx for ONTAP Workshop Linux instance-<Region>* and run the script below to create a 1 GB file.
+. *_Return_* to the Session Manager session of your *FSx for ONTAP Workshop Linux Instance* and run the script below to create a 1 GB file.
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -190,7 +190,7 @@ quit
 ----
 +
 
-. On the *FSx for ONTAP Workshop Linux instance-<Region>* instance change directory to the *${MOUNTPOINT}/1GB/file_srcdir/<your-machine-id>/thrd_00/d_000/* directory and copy the file name of one of the files in this directory to your local text editor for the next steps.
+. On the *FSx for ONTAP Workshop Linux Instance* change directory to the *${MOUNTPOINT}/1GB/file_srcdir/<your-machine-id>/thrd_00/d_000/* directory and copy the file name of one of the files in this directory to your local text editor for the next steps.
 
 . *_Run_* the command below to SSH to the cluster management endpoint of your *DR/Secondary* FSx for ONTAP file system.
 +

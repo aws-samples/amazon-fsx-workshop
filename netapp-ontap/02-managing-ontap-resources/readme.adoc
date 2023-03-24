@@ -28,7 +28,7 @@ image::primary-architecture.png[align="center"]
 
 . Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
 
-. *_Click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary-<Region>*. 
+. *_Click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary*. 
 
 . *_Examine_* the *Summary* section of the file system. *_Find_* the values of the following file system attributes:
 * File system ID
@@ -60,7 +60,7 @@ TIP: The *Update* button next to *SSD Storage capacity*, *Throughput Capacity*, 
 * How would you find the VPC security groups associated to the file system?
 * Hint: *_Click_* the *Network interface* link of the preferred subnet for the file system. *_Click_* the box next to the network interface for the file system to view the details.  From the Details tab of the preferred file server’s ENI, *_click_* the link for the associated *Security groups* to take you to the details of the security group.  *_Click_* the *Inbound rules* tab within the Security groups attribute to view the allowed traffic. Close the browser tab of the Network interface console and the tab of the associated Security group.
 
-. *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary-<Region>*.
+. *Return* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary*.
 
 . *_Examine_* the *CloudWatch Monitoring* section of the file system. *_Click_* the *Monitoring* tab. *Review* the metrics available in the monitoring dashboard:
 * What metrics can you monitor for the file system?
@@ -136,7 +136,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 
 . *_Click_* *Instances (running)*.
 
-. *_Click_* the check box next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*.
+. *_Click_* the check box next to the instance with the name *FSx for ONTAP Workshop Linux Instance*.
 
 . *_Click_* the Connect button.
 
@@ -150,7 +150,7 @@ we recommend you create 2 x Session Manager sessions (tabs) to the Linux Instanc
 
 ==== Connect to the FSx for NetApp ONTAP file system
 
-. From the Session Manager connection of your *FSx for ONTAP Workshop Linux instance-<Region>*, SSH to the *cluster management endpoint* of your *Primary* file system.
+. From the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance*, SSH to the *cluster management endpoint* of your *Primary* file system.
 +
 [source,bash]
 ----

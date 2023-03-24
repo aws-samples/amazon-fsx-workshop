@@ -28,9 +28,9 @@ image::primary-architecture.png[align="center"]
 
 === FlexClone steps
 
-. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux instance-<Region>* and *_run_* the below script to generate data (10 x 128 MB files) on your source volume.
+. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance* and *_run_* the below script to generate data (10 x 128 MB files) on your source volume.
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -114,7 +114,7 @@ quit
 ----
 +
 
-. *_Run_* the below script from the Session Manager connection of your *FSx for ONTAP Workshop Linux instance-<Region>* instance.
+. *_Run_* the below script from the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance*.
 +
 [source,bash]
 ----

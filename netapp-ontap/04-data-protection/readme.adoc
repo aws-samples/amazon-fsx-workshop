@@ -54,7 +54,7 @@ image::primary-architecture.png[align="center"]
 . *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -176,13 +176,13 @@ cat ${MOUNTPOINT}/${DIRNAME}/restore/multiprotocol-demo.txt
 +
 TIP: To *perform* an entire volume restore from snapshot you can run *volume snapshot restore -vserver <SVM> -volume <Volume> -snapshot <snapshot name>* from your ONTAP CLI session. 
 
-. *_Return_* to the RDP to your Windows Instance with name *FSx for ONTAP Workshop Windows Instance*
+. *_Return_* to the RDP to your Windows instance with name *FSx for ONTAP Workshop Windows Instance*
 
 . Using *File explorer*  *_Right-click_* on the file *multiprotocol-demo.txt*, *_Select_* *properties* -> *_click_* on *Previous Versions* tab to browse for available snapshots.  *_Double-Click_* on the version of the file shown under *File versions:* to view the contents.  *_click_* *Restore* to restore to a previous point in time.
 
 . Were you able to restore the file?
 
-. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux instance-<Region>* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
+. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 +
 [source,bash]
 ----
@@ -211,7 +211,7 @@ quit
 
 === Amazon FSx Backup steps
 
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console in the *AWS Region* of the workshop, *_click_* the *_File system ID_* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary-<Region>*.
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console in the *AWS Region* of the workshop, *_click_* the *_File system ID_* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary*.
 
 . Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
 

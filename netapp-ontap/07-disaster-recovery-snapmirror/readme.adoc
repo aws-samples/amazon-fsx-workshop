@@ -43,7 +43,7 @@ IMPORTANT: Read through all steps before continuing.
 
 === Examine your *DR/Secondary* file system in DR VPC.
 
-. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.  *_Click_* the *File system ID* of your *DR/Secondary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-DR-<Region>*. 
+. Go to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console.  *_Click_* the *File system ID* of your *DR/Secondary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-DR*. 
 
 . Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
 
@@ -59,9 +59,9 @@ IMPORTANT: Read through all steps before continuing.
 
 NOTE: If you are creating a SnapMirror relationship between FSx file systems in a different accounts or different region you will need to establish VPC communication using link:https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html[VPC peering] or link:https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html[Transit gateway]. Once the VPC communication is in place, you will need to create cluster and SVM peering between your FSx file systems. The workshop environment has already created VPC peering between the Primary VPC and Secondary VPC along with Cluster peering between the two FSx file systems and SVM peering between SVM in the Primary VPC and SVM in the Secondary VPC.
 
-. *_Return_* to the Session Manager connection of the *FSx for ONTAP Workshop Linux instance-<Region>* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
+. *_Return_* to the Session Manager connection of the *FSx for ONTAP Workshop Linux Instance* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -160,7 +160,7 @@ quit
 ----
 +
 
-. On your *FSx for ONTAP Workshop Linux Instance-<Region>* instance *mount* the volume from your *DR* storage virtual machine.
+. On your *FSx for ONTAP Workshop Linux Instance* *mount* the volume from your *DR* storage virtual machine.
 +
 [source,bash]
 ----

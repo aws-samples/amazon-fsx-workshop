@@ -14,7 +14,7 @@ NOTE: It will take approximately 10 minutes to complete this section.
 . *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance-<Region>*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -97,13 +97,13 @@ volume flexcache delete -vserver svm01-dr -volume cachevol
 ----
 +
 
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary-<Region>*.
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary*.
 
 . *_Click_* on the *Volumes* tab and *if* still present select the restorevol volume, click the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and click the delete volume(s) button.
 
 . *If* still present select the vol1_primary_clone1 volume, click the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and click the delete volume(s) button.
 
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your *DR/secondary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-DR-<Region>*.
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your *DR/secondary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-DR*.
 
 . *_Click_* on the *Volumes* tab and if still present select the cachevol volume, click the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and click the delete volume(s) button.
 

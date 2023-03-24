@@ -26,7 +26,7 @@ image::primary-architecture.png[align="center"]
 
 IMPORTANT: Read through all steps below.
 
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_click_* the *File system ID* of your *Primary Amazon FSx for NetApp ONTAP* file system with name *FSxNetAppOntap-Primary-<Region>*.
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_click_* the *File system ID* of your *Primary Amazon FSx for NetApp ONTAP* file system with name *FSxNetAppOntap-Primary*.
 
 . Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
 
@@ -34,7 +34,7 @@ IMPORTANT: Read through all steps below.
 
 . *_Click_* the *Monitoring* tab to review the file system metrics.
 
-. *_Click_* the *Add to dashboard* to launch the *CloudWatch* console in a new tab. *_Click_* *Create new* button and *_enter_* the *File system ID-<Region>* (ex:fs-0123456bcdegh89-us-east-1) as the *Dashboard name*. 
+. *_Click_* the *Add to dashboard* to launch the *CloudWatch* console in a new tab. *_Click_* *Create new* button and *_enter_* the *File system ID* (ex:fs-0123456bcdegh89-us-east-1) as the *Dashboard name*. 
 
 . *_Click_* *Create* to create the new dashboard and then *_click_* *Add to dashboard*. Next, *_click_* *Save dashboard* to save the newly created dashboard for your file system metrics.
 
