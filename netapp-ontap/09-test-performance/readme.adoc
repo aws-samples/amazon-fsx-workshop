@@ -48,21 +48,13 @@ IMPORTANT: Read through all steps below before continuing.
 | 3072
 |===
 +
-. *_Open_* the link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html[Amazon FSx for ONTAP User Guide] and *_scroll down_* to the *Impact of throughput capacity on performance* section. *_Review_* the table and the different performance attributes.
+. *_Open_* the link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html[Amazon FSx for ONTAP User Guide] and *_scroll down_* to the *Impact of throughput capacity on performance* section. *_Expand_* the tables on the page based on the region the workhop is being run, and *_review_* the different performance specifications.
 
-. Using the file system attributes of the previous table and the performance capacities table that FSx for ONTAP is designed to achieve from the Amazon FSx for ONTAP User Guide, *_refer_* to the table below to review the different performance attributes of the workshop file system.
-+
-.128 MB/s Provisioned throughput NetApp ONTAP file system{counter2:index:0}
-[cols="e,e,e,e,e,e,e,e,e"]
-|===
-s|FSx throughput capacity (MBps) 2+>s|Network throughput capacity (MBps) s|In-memory caching (GB) s|NVMe caching (GB) 2+>s|Disk throughput(MBps) 2+>s|SSD drive IOPS  
-| s|Baseline s|Burst | s| s|Baseline s|Burst s|Baseline s|Burst
-|128 |188 |1500 |16 |238 |128 |1250 |6000 |40000
-|===
+. Using the workshop file system attributes listed in the table above and the performance specifications table on the Amazon FSx for ONTAP User Guide, *_review_* the full set of performance specifications for the workshop file system.
 +
 NOTE: The specific level of performance a file system can provide is defined by its provisioned throughput capacity, which determines the size of the file server hosting the file system and is equivalent to the baseline disk throughput supported by your file server.  This baseline disk throughput is the minimum throughput you can expect from your file system. The file system is capable of performing at levels much higher than the disk baseline throughput based on access patterns (e.g. reading from Cache storage, etc.) and the network burst and baseline throughputs and disk burst throughput. For data access from disks, your file system’s performance is also dependent on the number of provisioned SSD disk IOPS configured for the file systems underlying disks. When a client accesses data that's stored in the in-memory cache or NVMe cache, this network IO does not need to go to the disk and your file system can achieve the Network throughput capacity (MBps) outlined in the table above.
 +
-. As you complete the following performance tests, compare your test results with the designed performance attributes you calculated in *Table 1*.
+. As you complete the following performance tests, compare your test results with the designed performance specifications of the file system.
 
 === Throughput Test (in-memory cache)
 
