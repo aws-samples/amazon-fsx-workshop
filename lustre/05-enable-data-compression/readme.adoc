@@ -1,0 +1,47 @@
+= Enable data compression
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+== Summary
+
+This section will enable data compression for the Amazon FSx for Lustre file system.
+
+You can use the Lustre data compression feature to achieve cost savings on your high-performance Amazon FSx for Lustre file systems and backup storage. When data compression is enabled, Amazon FSx for Lustre automatically compresses newly written files before they are written to disk and automatically uncompresses them when they are read.
+
+Data compression uses the LZ4 algorithm, which is optimized to deliver high levels of compression without adversely impacting file system performance. LZ4 is a Lustre community-trusted and performance-oriented algorithm that provides a balance between compression speed and compressed file size.
+
+Data compression reduces the amount of data that is transferred between Amazon FSx for Lustre file servers and storage. If you are not already using compressed file formats, you will see an increase in overall file system throughput capacity when using data compression.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+IMPORTANT: Read through all steps below before continuing.
+
+=== Enable data compression
+
+. *_Open_* the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console and *_select_* the link of the *File system Name* or *File system ID*.
+. In the *Summary* section, *_click_* the *Update* button next to *Data compression type*.
+. From the *Select a new data compression type* dropdown menu, *_select_* *LZ4*.
+. *_Click_* *Update*.
+The *Data compression type* should now be set to *NONE (Updating to LZ4)*.
+. *_Wait_* a for 1-2 minutes and *_refresh_* the browser window.
+The *Lifecycle state* should now be set to *Available* and the *Data compression type* should now be set to *LZ4*.
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::test-data-compression.jpg[link=../06-test-data-compression/, align="left",width=420]
+
+
+
+

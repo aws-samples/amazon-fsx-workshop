@@ -1,0 +1,264 @@
+= Test data compression
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../../resources/images
+
+
+== Summary
+
+This section will test data compression of *Amazon FSx for Lustre*.
+
+
+== Duration
+
+NOTE: It will take approximately 15 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Compress existing data
+
+Files are uncompressed if they were created when data compression was turned off on the Amazon FSx for Lustre file system. Turning on data compression will not automatically compress your existing uncompressed data.
+
+You can use the lfs_migrate command that is installed as a part of the Lustre client installation to compress existing files.
+
+IMPORTANT: Read through all steps below.
+
+TIP: If you have the two (2) session windows open from the previous section, just use the existing session windows. Do not open two (2) more session windows.
+
+. Open the link:https://console.aws.amazon.com/ec2/home[Amazon EC2] console.
++
+NOTE: Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon EC2 console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
++
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/home[Amazon EC2] console. *_Click_* the check box next to the instance with the name *Linux Instance 0*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the *Connect* button to open a session in your browser.  Change the shell back to bash by typing the command *_bash_* and then return.
+. Open two (2) *Session Manager* windows connected to *Linux Instance 0*.
+. Start `*nload*` in one of the *Session Manager* terminal windows.
++
+[source,bash]
+----
+nload -u M
+
+----
++
+. *_Copy_* and *_execute_* the commands below on the other *Session Manager* session connected to *Linux Instance 0*.
++
+. *_Verify_* the file exists.
++
+[source,bash]
+----
+lfs find /fsx/ior/ior.bin.1.00000000
+
+----
++
+. *_Find_* the lustre stripe configuration of the file.
++
+[source,bash]
+----
+lfs getstripe /fsx/ior/ior.bin.1.00000000
+
+----
++
+. What is the logical size of the file? *_Run_* du --apparent-size -sh against the file to find the logical size of the file.
++
+[source,bash]
+----
+du --apparent-size -sh /fsx/ior/ior.bin.1.00000000
+
+----
++
+My results are below. The file has a logical size of 32 GiB.
++
+----
+32G		/fsx/ior/ior.bin.1.00000000
+----
++
+. What is the physical size of the file? *_Run_* du -sh against the file to find the physical size of the file.
++
+[source,bash]
+----
+du -sh /fsx/ior/ior.bin.1.00000000
+
+----
++
+My results are below. The file has a physical size of 32 GiB.
++
+----
+32G		/fsx/ior/ior.bin.1.00000000
+----
++
+. Migrate the ior.bin.1.00000000 file. *_Run_* lfs migrate against the file to migrate the file. lfs migrate will re-write the file in place.
++
+TIP: While the *lfs migrate* command is running, switch to the *Session Manager* window running *nload* and actively monitor the performance of the *lfs migrate* operation. What is happening on the instance and file system?
++
+[source,bash]
+----
+lfs migrate /fsx/ior/ior.bin.1.00000000
+
+----
++
+. What is the uncompressed or logical size of the file? *_Run_* du --apparent-size -sh against the file to find the uncompressed or logical size of the file.
++
+[source,bash]
+----
+du --apparent-size -sh /fsx/ior/ior.bin.1.00000000
+
+----
++
+My results are below. The file has a logical size of 32 GiB.
++
+----
+32G		/fsx/ior/ior.bin.1.00000000
+----
++
+. What is the compressed or physical size of the file? *_Run_* du -sh against the file to find the compressed or physical size of the file.
++
+[source,bash]
+----
+du -sh /fsx/ior/ior.bin.1.00000000
+
+----
++
+My results are below. The file has a physical size of 18 GiB.
++
+----
+18G		/fsx/ior/ior.bin.1.00000000
+----
++
+. *_Calculate_* the data compression ratio of the file.
++
+The data compression ratio is the ratio between the uncompressed size and the compressed size. Take the uncompressed or logical size of the file and divide it by the compressed or physical size of the file.
++
+My calculation is below. The file has a data compression ratio of 1.78 to 1.
++
+----
+32G ÷ 18G = 1.78:1
+----
++
+. *_Calculate_* the space savings for the file.
++
+Space savings is the reduction in size relative to the uncompressed size. Take the compressed or physical size of the file and divide it by the uncompressed or logical size of the file and subtract that value from 1. This is typically shared as a percentage.
++
+My calculation is below. The file has a space savings of 43.75%.
++
+----
+1 - (18G/32G) = .4375 or 43.75%
+----
+
+
+=== Compress new data
+
+IMPORTANT: Read through all steps below.
+
+TIP: If you have the two (2) session windows open from the previous section, just use the existing session windows. Do not open two (2) more session windows.
+
+. Open two (2) *Session Manager* windows connected to *Linux Instance 0*.
+. Start `*nload*` in one of the Session Manager terminal windows.
++
+[source,bash]
+----
+nload -u M
+
+----
++
+. Complete these steps from the other *Session Manager* terminal window connected to *Linux Instance 0*.
++
+TIP: Monitor real-time throughput using the *Session Manager* terminal window with `*nload*` running.
++
+. Use ior to generate 32 GiB of data using 1 thread. *_Run_* the mpirun ior scripts below.
++
+TIP: Monitor real-time throughput using the *Session Manager* window with `*nload*` running.
++
+[source,bash]
+----
+_job_name=ior-compressed
+_segment_count=32768
+_threads=1
+_path=/fsx/${_job_name}
+mkdir -p ${_path}
+cd /fsx
+mpirun --npernode ${_threads} --oversubscribe ior --posix.odirect -t 1m -b 1m -s ${_segment_count} -g -v -w -i 1 -F -k -D 0 -o ${_path}/ior.bin
+
+----
++
+. How long did it take to generate ~32 GiB of data using 1 thread? The time command should return time values similar to these:
++
+[source,bash]
+----
+threads=1
+
+Results:
+
+access    bw(MiB/s)  IOPS       Latency(s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+------    ---------  ----       ----------  ---------- ---------  --------   --------   --------   --------   ----
+Commencing write performance test:
+write     659.11     659.11     49.72       1024.00    1024.00    0.000367   49.72      0.000351   49.72      0
+Max Write: 659.11 MiB/sec (691.12 MB/sec)
+
+Summary of all tests:
+Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev   Max(OPs)   Min(OPs)  Mean(OPs)     StdDev    Mean(s) Stonewall(s) Stonewall(MiB) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt   blksiz    xsize aggs(MiB)   API RefNum
+write         659.11     659.11     659.11       0.00     659.11     659.11     659.11       0.00   49.71589         NA            NA     0      1   1    1   1     0        1         0    0  32768  1048576  1048576   32768.0 POSIX      0
+Finished            :
+----
++
+. How much read and write throughput was achieved using 1 thread?
+. Compare these results with the *Test performance* section you completed earlier against the file system when data compression was not enabled.
++
+. What is the uncompressed or logical size of the file? *_Run_* du --apparent-size -sh against the file to find the uncompressed or logical size of the file.
++
+[source,bash]
+----
+du --apparent-size -sh /fsx/ior-compressed/ior.bin.00000000
+
+----
++
+My results are below. The file has a logical size of 32 GiB.
++
+----
+32G		/fsx/ior-compressed/ior.bin.00000000
+----
++
+. What is the compressed or physical size of the file? *_Run_* du -sh against the file to find the compressed or physical size of the file.
++
+[source,bash]
+----
+du -sh /fsx/ior-compressed/ior.bin.00000000
+
+----
++
+My results are below. The file has a physical size of 17.0 GiB.
++
+----
+17.0G	/fsx/ior-compressed/ior.bin.00000000
+----
++
+. *_Calculate_* the data compression ratio of the file.
++
+The data compression ratio is the ratio between the uncompressed size and the compressed size. Take the uncompressed or logical size of the file and divide it by the compressed or physical size of the file.
++
+My calculation is below. The file has a data compression ratio of 1.88 to 1.
++
+----
+32G ÷ 17.0G = 1.88:1
+----
++
+. *_Calculate_* the space savings for the file.
++
+Space savings is the reduction in size relative to the uncompressed size. Take the compressed or physical size of the file and divide it by the uncompressed or logical size of the file and subtract that value from 1. This is typically shared as a percentage.
++
+My calculation is below. The file has a space savings of 46.88%.
++
+----
+1 - (17.0G/32G) = .4688 or 46.88%
+----
+
+
+== Next section
+
+Click the button below to go to the next section.
+
+image::monitor-performance.jpg[link=../07-monitor-performance/, align="left",width=420]
+
+
+
+

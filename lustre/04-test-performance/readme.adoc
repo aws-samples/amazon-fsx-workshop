@@ -21,35 +21,39 @@ IMPORTANT: Read through all steps below before continuing.
 
 === Smallfile Read tests
 
-. Open two (2) SSH terminal session windows connected to *Linux Instance 0*.
+. Open the link:https://console.aws.amazon.com/ec2/home[Amazon EC2] console.
 +
-Start `*nload*` in one of the SSH terminal session windows.
+NOTE: Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon EC2 console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
++
+TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/home[Amazon EC2] console. *_Click_* the check box next to the instance with the name *Linux Instance 0*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the *Connect* button to open a session in your browser.  Change the shell back to bash by typing the command *_bash_* and then return.
+. Open two (2) Session Manager windows connected to *Linux Instance 0*.
+. Start `*nload*` in one of the Session Manager terminal windows.
 +
 [source,bash]
 ----
+bash
 nload -u M
 
 ----
 +
-*_Copy_* the scripts below and *_execute_* them in the other SSH terminal session window.
+*_Copy_* the commands below and *_execute_* them in the other Session Manager terminal window.
 . Install smallfile. link:https://github.com/distributed-system-analysis/smallfile[smallfile] is a distributed metadata-intensive workload generator for POSIX-like filesystems. It is licensed under Apache License, Version 2.0.
 +
 [source,bash]
 ----
+bash
 cd
 git clone https://github.com/bengland2/smallfile.git
 ----
-+
-Write, read, stat, append, rename, and delete a large number of smallfiles. *_Run_* these commands in order and review the results.
-+
-Write (create) 316200 files
+. Write (create) 316200 files
 +
 [source,bash]
 ----
+sudo chown ssm-user:ssm-user /fsx
 job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 prefix=$(echo $(uuidgen)| grep -o ".\{6\}$")
-path=/mnt/fsx/${job_name}
-sudo mkdir -p ${path}
+path=/fsx/${job_name}
+mkdir -p ${path}
 
 threads=32
 file_size=64
@@ -57,7 +61,7 @@ file_count=10000
 operation=create
 same_dir=N
 
-sudo python ~/smallfile/smallfile_cli.py \
+python ~/smallfile/smallfile_cli.py \
 --operation ${operation} \
 --threads ${threads} \
 --file-size ${file_size} \
@@ -67,17 +71,16 @@ sudo python ~/smallfile/smallfile_cli.py \
 --prefix ${prefix} \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
---top ${path} &
+--top ${path}
 
 ----
-+
 . Read ~316200 files
 +
 [source,bash]
 ----
 operation=read
 
-sudo python ~/smallfile/smallfile_cli.py \
+python ~/smallfile/smallfile_cli.py \
 --operation ${operation} \
 --threads ${threads} \
 --file-size ${file_size} \
@@ -87,17 +90,16 @@ sudo python ~/smallfile/smallfile_cli.py \
 --prefix ${prefix} \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
---top ${path} &
+--top ${path}
 
 ----
-+
 . Stat ~316200 files
 +
 [source,bash]
 ----
 operation=stat
 
-sudo python ~/smallfile/smallfile_cli.py \
+python ~/smallfile/smallfile_cli.py \
 --operation ${operation} \
 --threads ${threads} \
 --file-size ${file_size} \
@@ -107,14 +109,14 @@ sudo python ~/smallfile/smallfile_cli.py \
 --prefix ${prefix} \
 --dirs-per-dir ${file_count} \
 --files-per-dir ${file_count} \
---top ${path} &
+--top ${path}
 
 ----
 
 
 === dd tests
 
-. Use dd to generate data
+. Use dd to generate data initially with a single thread.
 +
 [source,bash]
 ----
@@ -124,10 +126,11 @@ count=4096
 sync=oflag=sync
 threads=1
 
-sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
+mkdir -p /fsx/${job_name}/{1..128}
 
-time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+time seq 1 ${threads} | parallel --will-cite -j ${threads} dd if=/dev/zero of=/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync}
 ----
+. Use dd to generate data with two threads doubling the amount of data generated from the single threaded test.  Does it take twice as long to generate twice the amount of data?
 +
 [source,bash]
 ----
@@ -137,10 +140,11 @@ count=4096
 sync=oflag=sync
 threads=2
 
-sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
+mkdir -p /fsx/${job_name}/{1..128}
 
-time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+time seq 1 ${threads} | parallel --will-cite -j ${threads} dd if=/dev/zero of=/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync}
 ----
+. Use dd to generate data with three threads trippling the amount of data generated from the single threaded test.  Does it take three times as long to generate three times the amount of data?
 +
 [source,bash]
 ----
@@ -150,9 +154,9 @@ count=4096
 sync=oflag=sync
 threads=3
 
-sudo mkdir -p /mnt/fsx/${job_name}/{1..128}
+mkdir -p /fsx/${job_name}/{1..128}
 
-time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero of=/mnt/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync} &
+time seq 1 ${threads} | parallel --will-cite -j ${threads} dd if=/dev/zero of=/fsx/${job_name}/{}/dd-$(date +%Y%m%d%H%M%S.%3N) bs=${bs} count=${count} ${sync}
 ----
 
 === ior tests
@@ -161,18 +165,12 @@ time seq 1 ${threads} | parallel --will-cite -j ${threads} sudo dd if=/dev/zero 
 +
 [source,bash]
 ----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
-
-cd /mnt/fsx
-time seq 1 2 | parallel --will-cite -j2 'ior -b 32g -t 8m -w -r -F --posix.odirect -o /mnt/fsx/${job_name}{}.txt' &
+mkdir -p /fsx/ior
+time seq 1 2 | parallel --will-cite -j2 'ior -b 32g -t 8m -w -r -k -F --posix.odirect -o /fsx/ior/ior.bin.{}'
 ----
 
 == Next section
 
 Click the button below to go to the next section.
 
-image::05-monitor-performance.png[link=../05-monitor-performance/, align="left",width=420]
-
-
-
-
+image::enable-data-compression.jpg[link=../05-enable-data-compression/, align="left",width=420]

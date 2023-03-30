@@ -6,10 +6,9 @@
 
 
 == Summary
+The Lustre file system utilizes a client software package to mount and interact with the file system.  The Lustre client contains the lfs helper utility used to manage aspects of the file system.  The lfs helper utility should always be used to interact with the file system instead of native Linux utilities.  Using the lfs helper utility you can query the file system object storage targets (OSTs) and metadata  targets (MDTs).  All file data in Lustre is store on the OST storage volumes.  All file metadata including file names, timestamps, permissions, and more is stored on the MDT.
 
-This section will examine Amazon FSx for Lustre data repository integration with Amazon S3.
-
-The workshop environment created an FSx for Lustre file system with a data repository integrated with the "nasanex" bucket in the US West (Oregon) region. link:https://registry.opendata.aws/nasanex/[NASA NEX] is a part of the link:https://registry.opendata.aws/[Registry of Open Data on AWS] project and is a collection of Earth science datasets maintained by NASA, including climate change projections and satellite images of the Earth's surface.
+This section will examine Amazon FSx for Lustre data repository integration with Amazon S3.  The workshop environment created an FSx for Lustre file system with a data repository integrated with the "nasanex" bucket in the US West (Oregon) region. link:https://registry.opendata.aws/nasanex/[NASA NEX] is a part of the link:https://registry.opendata.aws/[Registry of Open Data on AWS] project and is a collection of Earth science datasets maintained by NASA, including climate change projections and satellite images of the Earth's surface.
 
 
 == Duration
@@ -23,46 +22,45 @@ IMPORTANT: Read through all steps below before continuing.
 
 === Connect to *Linux Instance 0*
 
-image::connect-linux-instance-0.gif[align="left", width=600]
-
-
 . Open the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
 +
 TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and Amazon EC2 console.
 +
-. Make sure you are in the same *AWS Region* where you *_created_* your workshop environment.
-. *_Select_* the EC2 instance created by the CloudFormation template. The name is "*Linux Instance 0*".
+NOTE: Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon EC2 console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
++
+. *_Click_* *Instances (running)*.
+. *_Click_* the check box next to the instance with the name *Linux Instance 0*.
 . *_Click_* the *Connect* button.
-. *_Copy_* the SSH command and *_click_* *Close*.
-. *_Open_* your *terminal* application and *_paste_* the SSH command in a terminal window.
-. *_Follow_* the prompts to SSH into the instance.
+. *_Connect_* using AWS Systems Manager - *_select_* the *Session Manager* tab and *click* the *Connect* button to open a session.
 
 === Examine *s3://nasanex* data repository integration
 
-*_Copy_*, *_paste_*, then *_execute_* the shell commands below in the SSH terminal session of *Linux Instance 0* to answer the following questions:
+*_Copy_*, *_paste_*, then *_execute_* the shell commands below in the Session Manager terminal session of *Linux Instance 0* to answer the following questions:
 
 . Is the FSx for Lustre file system mounted?
 +
 [source,bash]
 ----
+bash
 mount -t lustre
 
 ----
 +
 . How long does it take to list the entire file system?
 +
+NOTE: The lfs client helper utility is used to work with the Lustre file system.
 [source,bash]
++
 ----
-time lfs find /mnt/fsx
+time lfs find /fsx > /dev/null
 
 ----
 +
-. What file types did you see?
-. How many files?
+. What file types did you see?  How many files?
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type f | wc -l
+lfs find /fsx --type f | wc -l
 
 ----
 +
@@ -70,7 +68,7 @@ time lfs find /mnt/fsx --type f | wc -l
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type d | wc -l
+lfs find /fsx --type d | wc -l
 
 ----
 +
@@ -78,7 +76,7 @@ time lfs find /mnt/fsx --type d | wc -l
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type f --size -512k | wc -l
+lfs find /fsx --type f --size -512k | wc -l
 
 ----
 +
@@ -86,7 +84,7 @@ time lfs find /mnt/fsx --type f --size -512k | wc -l
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type f --size +100M | wc -l
+lfs find /fsx --type f --size +100M | wc -l
 
 ----
 +
@@ -94,25 +92,24 @@ time lfs find /mnt/fsx --type f --size +100M | wc -l
 +
 [source,bash]
 ----
-time lfs find /mnt/fsx --type f --name *.nc | wc -l
-time lfs find /mnt/fsx --type f --name *.hdf | wc -l
-time lfs find /mnt/fsx --type f --name *.tif | wc -l
-time lfs find /mnt/fsx --type f --name *.gz | wc -l
+lfs find /fsx --type f  | rev | cut -d '.' -f 1 | rev | sort -n | uniq -c | egrep '(nc|hdf|tif|gz)'
 
 ----
 +
 . How much metadata (MDT) has been loaded into the file system?
 +
-How much data (all the OSTs) has been loaded into the file system?
-+
-How much data storage capacity is available?
-+
 [source,bash]
 ----
-time lfs df -h
-
+lfs df -h
 ----
-
++
+NOTE: The metadata target (MDT) holds the Lustre file systems directory structure, permissions time stamps, system namespace, and other file system details.
++
+How much data (all the OSTs) has been loaded into the file system?
++
+NOTE: The object storage targets (OSTs) are the storage volumes where data is stored within the Lustre file system.
++
+How much data storage capacity is available?
 
 === Verify your results
 
@@ -123,10 +120,10 @@ The results of your queries should match the following:
 | Query | Results
 
 | Is the FSx for Lustre file system mounted?
-| 10.0.1.193@tcp:/fsx on /mnt/fsx type lustre (rw,lazystatfs) (you will have a different IP address)
+| 10.0.1.193@tcp:/fsx on /fsx type lustre (rw,lazystatfs) (you will have a different IP address)
 
 | How long does it take to list the entire file system?
-| ~real	0m47.373s
+| ~real	1m10.618s
 
 | What file types did you see?
 | .hdf  .nc  .gz  .tif  .json  .md5  .txt  .pdf
@@ -144,23 +141,23 @@ The results of your queries should match the following:
 | 169617
 
 | How many .nc, .hdf, .tif, .gz files?
-| .hdf = 207552; .tif = 11095; .nc = 87002; .gz = 42009
+| .nc = 87002; .hdf = 207552; .tif = 11095; .gz = 42009
 
 | How much storage is used by the metadata target (MDT)?
-| 934.1M
+| 1.9G
 
 | How much storage is used by all the object storage targets (OSTs)?
 | 27.M
 
 | How much data storage capacity is available?
-| 6.6 T
+| 6.6T
 |===
 
 == Next section
 
 Click the button below to go to the next section.
 
-image::03-load-data.png[link=../03-load-data/, align="left",width=420]
+image::load-data-from-repository.jpg[link=../03-load-data-from-repository/, align="left",width=420]
 
 
 
