@@ -202,8 +202,4 @@ quit
 
 Click the button below to go to the next section.
 
-image::storage-efficiency.png[link=../06-storage-efficiency/, align="left",width=420]
-
-
-
-
+image::elastic-tiering.png[link=../06-tiering/, align="left",width=420]

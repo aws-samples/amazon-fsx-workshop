@@ -39,7 +39,7 @@ Note: SnapMirror Vault will not be covered in this workshop.
 
 == Duration
 
-NOTE: It will take approximately 10 minutes to complete this section.
+NOTE: It will take approximately 20 minutes to complete this section.
 
 == Diagram 
 
@@ -182,6 +182,9 @@ TIP: To *perform* an entire volume restore from snapshot you can run *volume sna
 
 . Were you able to restore the file?
 
++
+NOTE: Your volume inherited the *Unix* security style from the SVM and enforces Unix style permissions. ONTAP performs name mapping between Windows and Unix users to authorize access. If a Windows user tries to access a Unix security style volume their Windows username will be mapped to Unix UID because a Unix security style volume will not understand its Windows username. The Unix user will be verified by /etc/password files, NIS or LDAP.  Administrators can configure explicit manual mapping from a Windows user to Unix user. For example a windows user "john" is mapped to Unix user "john" to identify the permissions and authorize access. if no mappings are found then its mapped to *pcuser* with UID and GID 65634.  You were denied access because you were trying overwrite a file owned by Unix user *ssm-user* as *admin* user from Windows. To learn more about user mapping and multiprotocol best practices refer link:https://www.netapp.com/pdf.html?item=/media/27436-tr-4887.pdf[Multiprotocol NAS in NetApp ONTAP]
+
 . *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 +
 [source,bash]
@@ -196,9 +199,6 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 ----
 volume show -volume vol1_primary -fields security-style
 ----
-+
-
-NOTE: Your volume inherited the *Unix* security style from the SVM and enforces Unix style permissions. ONTAP performs name mapping between Windows and Unix users to authorize access. If a Windows user tries to access a Unix security style volume their Windows username will be mapped to Unix UID because a Unix security style volume will not understand its Windows username. The Unix user will be verified by /etc/password files, NIS or LDAP.  Administrators can configure explicit manual mapping from a Windows user to Unix user. For example a windows user "john" is mapped to Unix user "john" to identify the permissions and authorize access. if no mappings are found then its mapped to *pcuser* with UID and GID 65634.  You were denied access because you were trying overwrite a file owned by Unix user *ssm-user* as *admin* user from Windows. To learn more about user mapping and multiprotocol best practices refer link:https://www.netapp.com/pdf.html?item=/media/27436-tr-4887.pdf[Multiprotocol NAS in NetApp ONTAP]
 
 . *_Run_* the command below to quit the ONTAP CLI session.
 +

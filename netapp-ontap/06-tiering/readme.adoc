@@ -128,4 +128,4 @@ volume show-footprint -volume vol1_primary
 
 Click the button below to go to the next section.
 
-image::tear-down-workshop.png[link=../12-tear-down-workshop/, align="left",width=420]
+image::storage-efficiency.png[link=../07-storage-efficiency/, align="left",width=420]

@@ -276,7 +276,7 @@ TIP: NFSv3 can perform better compared to NFSv4 when working with small block IO
 
 Click the button below to go to the next section.
 
-image::monitor-performance.jpg[link=../10-monitor performance/, align="left",width=420]
+image::monitor-performance.jpg[link=../11-monitor performance/, align="left",width=420]
 
 
 

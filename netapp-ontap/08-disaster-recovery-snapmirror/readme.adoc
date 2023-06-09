@@ -223,7 +223,7 @@ cat ${SMMOUNT}/snapmirror.txt
 
 Click the button below to go to the next section.
 
-image::flexcache.png[link=../08-flexcache/, align="left",width=420]
+image::flexcache.png[link=../09-flexcache/, align="left",width=420]
 
 
 
