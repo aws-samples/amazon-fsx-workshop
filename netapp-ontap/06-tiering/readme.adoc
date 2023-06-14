@@ -134,7 +134,6 @@ TIP: You should now see the data on the file system has been moved to the capaci
 ----
 volume modify -volume vol1_primary -vserver svm01-primary -tiering-policy none
 ----
-+
 
 == Next section
 
