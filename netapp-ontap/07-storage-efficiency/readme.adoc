@@ -57,9 +57,7 @@ volume efficiency show
 ----
 +
 . *_Examine_* the fields *State* and *Policy*. 
-+
-NOTE: All volumes are assigned the *auto* efficiency policy by default when storage efficiency is enabled. The auto policy performs continuous deduplication in the background and runs when 20% of the data is changed on your volume. If required, you can assign a custom policy and a schedule for your post-process deduplication jobs.
-+
+
 . *_Run_* the below command to check which Storage Efficiency features are enabled or disabled on your volume.
 +
 [source,bash]
@@ -74,18 +72,21 @@ volume efficiency show -vserver svm01-primary -volume vol1_primary
 * Inline Dedupe
 * Data Compaction
 
-. *_Run_* the below command to check the Storage Efficiency savings for your volume.
++
+NOTE: All volumes are assigned the *auto* efficiency policy by default when storage efficiency is enabled and use the storage efficiency mode of efficient. This default configuration performs inline deduplication, inline compression, and inline compaction. If required, you can assign a custom policy and a schedule for your post-process deduplication jobs.
++
+. *_Run_* the below command to check the deduplication savings for your volume.
 +
 [source,bash]
 ----
-volume show -vserver svm01-primary -volume vol1_primary -fields compression-space-saved,compression-space-saved-percent,dedupe-space-saved,dedupe-space-saved-percent
+volume show -vserver svm01-primary -volume vol1_primary -fields dedupe-space-saved,dedupe-space-saved-percent
 ----
 +
 
 . Do you see any deduplication savings?
 
 +
-. *_Run_* the below command to view statistics of efficiency operations on your volume.
+. *_Run_* the below command to view statistics of inline compression operations on your volume.
 +
 [source,bash]
 ----

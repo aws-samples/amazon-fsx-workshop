@@ -112,6 +112,7 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 vol show -volume vol1_primary -fields tiering-policy
 ----
 +
+NOTE: Wait 60 seconds prior to continuing to the next step.  This will allow the system enough time to tier the data from the performance tier to the capacity pool.
 
 . *_Run_* the command below to check current data footprint between your performance and capacity pool tiers. Repeat command to monitor the change in space between performance and capacity tiers.
 +
@@ -121,8 +122,19 @@ volume show-footprint -volume vol1_primary
 ----
 +
 
-. Did the data foot-print change? 
+. Did the data foot-print change?
 
++
+TIP: You should now see the data on the file system has been moved to the capacity pool tier labeled on the CLI as the "FSxFabircpoolObjectStore."  The remaining capacity on the performance tier is metadata for the file system.
++
+
+. *_Run_* the command below to modify the tiering policy of the volume to *none*.  This will not move any data already tiered to the capacity pool tier back to the performance tier, but will allow future data to be written to the performance tier.
++
+[source,bash]
+----
+volume modify -volume vol1_primary -vserver svm01-primary -tiering-policy none
+----
++
 
 == Next section
 

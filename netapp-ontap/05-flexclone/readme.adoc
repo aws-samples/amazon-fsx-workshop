@@ -140,7 +140,7 @@ df -h ${MOUNTPOINT} ${CLONEDIR}
 ----
 +
 
-TIP: You should see identical contents and space usage reported for both volumes.
+TIP: You should see nearly identical contents and space usage reported for both volumes.
 
 . *_Run_* the below command to create a new file on the FlexClone volume.
 +
@@ -190,6 +190,10 @@ volume show -vserver svm01-primary -volume vol1_primary_clone1 -fields size,used
 +
 
 . Did the physical-used space change on your FlexClone volume?
+
++
+
+TIP: You should see the physical capacity of the FlexClone volume increase.  This is because we've written data blocks to the FlexClone which aren't shared with the parent volume.
 
 . *_Run_* the command below to quit the ONTAP CLI session.
 +
