@@ -43,7 +43,7 @@ blockSize=16M
 blockCount=8
 
 mkdir ${MOUNTPOINT}/128MB
-seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/zero of=${MOUNTPOINT}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
+seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/random of=${MOUNTPOINT}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
 ----
 +
 
@@ -114,7 +114,7 @@ quit
 ----
 +
 
-. *_Run_* the below script from the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance*.
+. *_Run_* the below commands from the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance*.
 +
 [source,bash]
 ----
@@ -159,7 +159,7 @@ threads=1
 blockSize=16M
 blockCount=8
 
-seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/zero of=${CLONEDIR}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
+seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/random of=${CLONEDIR}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
 ----
 +
 . *_Run_* the below commands to compare the contents of of your source and FlexClone volume. 
@@ -171,6 +171,7 @@ df -h ${MOUNTPOINT} ${CLONEDIR}
 ----
 +
 . Are the contents still identical?
+TIP: You will see that the contents and capacity of the FlexClone directory have changed from the source as we've written data directly to the FlexClone volume.
 +
 . *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 +

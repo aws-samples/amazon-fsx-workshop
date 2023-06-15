@@ -59,7 +59,7 @@ mount | grep  nfs
 NOTE: No volumes should be mounted at this time.
 +
 
-. *_Run_* the script below to mount the NFS export. Replace the mount point if needed.
+. *_Run_* the below commands to mount the NFS export. Replace the mount point if needed.
 +
 [source,bash]
 ----

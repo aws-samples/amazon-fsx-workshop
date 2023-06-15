@@ -180,7 +180,10 @@ ssh ${ADMINUSER}@${DRMGMTENDPOINT}
 vol show -volume cachevol -fields logical-used,physical-used
 ----
 +
-. Are they identical?
+. Are the logical and physical capacities of the FlexCache volume the same as the source volume?
++
+TIP: FlexCache is a sparse caching technology so only the metadata is initially loaded into the cache.
++
 
 . *_Run_* the command below to quit the ONTAP CLI session.
 +

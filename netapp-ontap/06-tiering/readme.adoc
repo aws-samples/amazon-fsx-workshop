@@ -112,9 +112,8 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 vol show -volume vol1_primary -fields tiering-policy
 ----
 +
-NOTE: Wait 60 seconds prior to continuing to the next step.  This will allow the system enough time to tier the data from the performance tier to the capacity pool.
 
-. *_Run_* the command below to check current data footprint between your performance and capacity pool tiers. Repeat command to monitor the change in space between performance and capacity tiers.
+. *_Run_* the command below to check current data footprint between your performance and capacity pool tiers. Repeat the command below to monitor the change in space between performance and capacity tiers.  Continue running the command until you no longer see the capacities changing on the performance and capacity pool tiers.
 +
 [source,bash]
 ----

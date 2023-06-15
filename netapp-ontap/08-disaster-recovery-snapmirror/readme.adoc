@@ -143,7 +143,7 @@ snapmirror show -instance
 +
 . Was your SnapMirror transfer bandwidth throttled?
 +
-TIP: You can configure per-relationship throttle to restrict amount of bandwidth used. 
+TIP: To identify if a SnapMirror relationship is throttled, review the *Current Throttle* value.  You can configure per-relationship throttle to restrict amount of bandwidth used. 
 +
 . *Create* a *_Junction Path_* for the destination volume using *ONTAP CLI*. 
 +

@@ -100,7 +100,7 @@ volume snapshot create -vserver svm01-primary -volume vol1_primary -snapshot vol
 ----
 +
 
-. *_Run_* command below to list the snapshots.
+. *_Run_* command below to list the snapshots.  You should now see the manually created snapshot named vol1_primary_FSxOntapWorkshop in the list of snapshots on the volume.
 +
 [source,bash]
 ----
@@ -134,7 +134,7 @@ quit
 ----
 +
 
-. Next, lets make some changes to the text file created in the multiprotocol access section of the workshop. *_Run_* the below command to make the changes to the text file. 
+. Next, lets make some changes to the text file created in the multiprotocol access section of the workshop. *_Run_* the below commands to make the changes to the text file. 
 +
 [source,bash]
 ----
@@ -216,9 +216,9 @@ quit
 . Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
 
 
-. *_Click_* on the *volumes* tab. *_Select_* *vol1_primary* and *_click_* *Actions* -> *Create backup*. Input a name for your backup (Ex: FSxONTAP-workshop-backup) and *_click_* *Create backup*.
+. *_Click_* on the *Volumes* tab. *_Select_* *vol1_primary* and *_click_* *Actions* -> *Create backup*. Input a name for your backup (Ex: FSxONTAP-workshop-backup) and *_click_* *Create backup*.
 
-. *_Click_* on the *backups* section on the left and you can see the backup status as *Creating*. Once the backup is complete the status will show as *Available*.
+. *_Click_* on the *Backups* section on the left and you can see the backup status as *Creating*. Once the backup is complete the status will show as *Available*.
 NOTE: It can take several minutes for the backup status to change to complete.
 
 . *_Restore_* the backup to a new volume. *_Select_* the backup we created in the previous step, *_click_* *Actions* -> *Restore backup*. Input the following values:
@@ -235,20 +235,26 @@ a| Accept default
 | *Volume name*
 a| Input restorevol
 
+| *Volume size*
+a| Input 102400
+
+| *Volume type*
+a| Accept default
+
 | *Junction path*
 a| Input /restorevol
-
-| *Volume Size*
-a| Input 102400
 
 | *Storage efficiency*
 a| Select Disabled
 
-| *Capacity pool tiering policy*
-a| Accept Default
+| *Volume security style*
+a| Select Unix
 
 | *Snapshot policy*
 a| Select None
+
+| *Capacity pool tiering policy*
+a| Accept default
 |===
 +
 . After you have entered or accepted values for all parameters, *_click_* *Confirm*.
