@@ -9,7 +9,7 @@ This is a workshop designed for architects and engineers who would like to learn
 
 === Duration
 
-NOTE: It will take approximately 2 hours to complete this workshop and you will be charged approximately *$4.168* to run this environment for 2 hours (based on US East - N. Virginia pricing). After completing the workshop, follow the steps in the link:../08-tear-down-workshop-environment/[*Delete Workshop Environment*] section so you don't continue to incur charges.
+NOTE: It will take approximately 2 hours to complete this workshop and you will be charged approximately *$4.168* to run this environment for 2 hours (based on US East - N. Virginia pricing). After completing the workshop, follow the steps in the link:../lustre/08-tear-down-workshop-environment/[*Delete Workshop Environment*] section so you don't continue to incur charges.
 
 === Pricing
 
