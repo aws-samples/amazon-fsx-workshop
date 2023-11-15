@@ -58,7 +58,7 @@ Resources:
           !Select [ 1, !Ref AvailabilityZones ]
         VpcCidr:
           !Ref VpcCidr
-      TemplateURL: https://lustre-workshop-03filesystem.s3.us-east-1.amazonaws.com/01-vpc.yaml?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCpwHgZwYILT8sxP3Y3AyqlhuOQ%2F08Y7apsZkBtgcS6zgIhAJITz0WB%2F8VnxsHjj26joG76IHSKNO%2Fwz4fkZ0yRKrW2KuUCCGoQABoMNjQ5NjYwMjQ4NTEyIgw9yRairzmgKaXFdW0qwgJL0ZYNDYhhjSqBEJoBr9PMv1Y7V%2Fp%2BW%2B84xWChw947Mytb62j%2Bi6HcCez%2B3DjQwcOc8ulmYY4NP4T2VuFPJO7WnLDOXZGaFtL16djXllZjOelMJhaHIa8H716ZFaDs6%2Fyid8tCv0IO1L5mHMfRcTLhT2kwp%2FJNkNWRXflvwudtFq5EfdfrfrExwZWMiXhGBtTH19QjRS4JN4EGSgTM3DTGHTr2fKlR8fbCTxJW14PPulZf01xUNDNUoYpVPNW8Dw6pbuOCtfy4tfsjijY0VUZmlMDGBZ3ZFA7LsE7Qf2ZRQYnmMr78Dpjc5jcL8mioyZ0G1gpGkGJuKFzX8JazEHfb77VpZ23LtdyBlO7anKkjrn5TKI4l4Rt%2Fdzjvw0tOOo8ZFx5RsrD0oEQHaV9jsosOpZIvH%2Fw0kFTLv1h68BgFhgX%2FMIbYi58GOoYC84kASEwYcjMNh69wRe7bldowY2n4UYDp7kFrbVQtBoa%2BDYsUNsO6DQYazsNNwew3RSrn29f7vUHgchvNDKTRArG05pBbaKbRwpNRC%2BwlZDWsUW9vfjRLrLH3GagvpizbAr8XjDNlImNre9aYVbHiPI0kxuvoGZ4Ae%2FjskdxRA6GaYrVvBkukBdhiByIO90BuWQkeE4Tq%2FzhlVQ6CuS%2BC8nw%2BrNe%2F8lqMnUgJ3PAEK1zlJtmgAaa3sg1oyCrjD6Dhc442QIY5P2HU3QJ%2FWXH4Iu2ai4%2BDmSYgatqO9RmXSVjhgzXGIbpru9oXlzR1KTaIHWj8XBVL3wgFWU%2BD2Y5zrn1suq4YEw%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230208T004705Z&X-Amz-SignedHeaders=host&X-Amz-Expires=28800&X-Amz-Credential=ASIAZOQWEWHAL62KOBXK%2F20230208%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=04ef69306b2261deaae6b2cb8b7dfd58b9ac1ef7c4d860f0ee0f7fbe842096c1
+      TemplateURL: https://amazon-fsx.s3.amazonaws.com/workshop/lustre/templates/01-vpc.yaml
   FileSystem:
     DependsOn: [ Vpc ]
     Type: AWS::CloudFormation::Stack
@@ -68,7 +68,7 @@ Resources:
           !GetAtt [ Vpc, Outputs.DefaultSecurityGroupId ]
         SubnetId:
           !GetAtt [ Vpc, Outputs.PrivateSubnetId0 ]
-      TemplateURL: https://lustre-workshop-03filesystem.s3.us-east-1.amazonaws.com/02-file-system.yaml?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCpwHgZwYILT8sxP3Y3AyqlhuOQ%2F08Y7apsZkBtgcS6zgIhAJITz0WB%2F8VnxsHjj26joG76IHSKNO%2Fwz4fkZ0yRKrW2KuUCCGoQABoMNjQ5NjYwMjQ4NTEyIgw9yRairzmgKaXFdW0qwgJL0ZYNDYhhjSqBEJoBr9PMv1Y7V%2Fp%2BW%2B84xWChw947Mytb62j%2Bi6HcCez%2B3DjQwcOc8ulmYY4NP4T2VuFPJO7WnLDOXZGaFtL16djXllZjOelMJhaHIa8H716ZFaDs6%2Fyid8tCv0IO1L5mHMfRcTLhT2kwp%2FJNkNWRXflvwudtFq5EfdfrfrExwZWMiXhGBtTH19QjRS4JN4EGSgTM3DTGHTr2fKlR8fbCTxJW14PPulZf01xUNDNUoYpVPNW8Dw6pbuOCtfy4tfsjijY0VUZmlMDGBZ3ZFA7LsE7Qf2ZRQYnmMr78Dpjc5jcL8mioyZ0G1gpGkGJuKFzX8JazEHfb77VpZ23LtdyBlO7anKkjrn5TKI4l4Rt%2Fdzjvw0tOOo8ZFx5RsrD0oEQHaV9jsosOpZIvH%2Fw0kFTLv1h68BgFhgX%2FMIbYi58GOoYC84kASEwYcjMNh69wRe7bldowY2n4UYDp7kFrbVQtBoa%2BDYsUNsO6DQYazsNNwew3RSrn29f7vUHgchvNDKTRArG05pBbaKbRwpNRC%2BwlZDWsUW9vfjRLrLH3GagvpizbAr8XjDNlImNre9aYVbHiPI0kxuvoGZ4Ae%2FjskdxRA6GaYrVvBkukBdhiByIO90BuWQkeE4Tq%2FzhlVQ6CuS%2BC8nw%2BrNe%2F8lqMnUgJ3PAEK1zlJtmgAaa3sg1oyCrjD6Dhc442QIY5P2HU3QJ%2FWXH4Iu2ai4%2BDmSYgatqO9RmXSVjhgzXGIbpru9oXlzR1KTaIHWj8XBVL3wgFWU%2BD2Y5zrn1suq4YEw%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230208T004727Z&X-Amz-SignedHeaders=host&X-Amz-Expires=28800&X-Amz-Credential=ASIAZOQWEWHAL62KOBXK%2F20230208%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=815ef8ce7d17cc74ac0a241f6b8e507e660069c8f97c91b3d0d131a9f26f28cc
+      TemplateURL: https://amazon-fsx.s3.amazonaws.com/workshop/lustre/templates/02-file-system.yaml
   LinuxInstance:
     DependsOn: [ FileSystem ]
     Type: AWS::CloudFormation::Stack
@@ -84,7 +84,7 @@ Resources:
           !GetAtt [ Vpc, Outputs.DefaultSecurityGroupId ]
         SubnetId:
           !GetAtt [ Vpc, Outputs.PrivateSubnetId0 ]
-      TemplateURL: https://lustre-workshop-03filesystem.s3.us-east-1.amazonaws.com/03-linux-instance.yaml?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCpwHgZwYILT8sxP3Y3AyqlhuOQ%2F08Y7apsZkBtgcS6zgIhAJITz0WB%2F8VnxsHjj26joG76IHSKNO%2Fwz4fkZ0yRKrW2KuUCCGoQABoMNjQ5NjYwMjQ4NTEyIgw9yRairzmgKaXFdW0qwgJL0ZYNDYhhjSqBEJoBr9PMv1Y7V%2Fp%2BW%2B84xWChw947Mytb62j%2Bi6HcCez%2B3DjQwcOc8ulmYY4NP4T2VuFPJO7WnLDOXZGaFtL16djXllZjOelMJhaHIa8H716ZFaDs6%2Fyid8tCv0IO1L5mHMfRcTLhT2kwp%2FJNkNWRXflvwudtFq5EfdfrfrExwZWMiXhGBtTH19QjRS4JN4EGSgTM3DTGHTr2fKlR8fbCTxJW14PPulZf01xUNDNUoYpVPNW8Dw6pbuOCtfy4tfsjijY0VUZmlMDGBZ3ZFA7LsE7Qf2ZRQYnmMr78Dpjc5jcL8mioyZ0G1gpGkGJuKFzX8JazEHfb77VpZ23LtdyBlO7anKkjrn5TKI4l4Rt%2Fdzjvw0tOOo8ZFx5RsrD0oEQHaV9jsosOpZIvH%2Fw0kFTLv1h68BgFhgX%2FMIbYi58GOoYC84kASEwYcjMNh69wRe7bldowY2n4UYDp7kFrbVQtBoa%2BDYsUNsO6DQYazsNNwew3RSrn29f7vUHgchvNDKTRArG05pBbaKbRwpNRC%2BwlZDWsUW9vfjRLrLH3GagvpizbAr8XjDNlImNre9aYVbHiPI0kxuvoGZ4Ae%2FjskdxRA6GaYrVvBkukBdhiByIO90BuWQkeE4Tq%2FzhlVQ6CuS%2BC8nw%2BrNe%2F8lqMnUgJ3PAEK1zlJtmgAaa3sg1oyCrjD6Dhc442QIY5P2HU3QJ%2FWXH4Iu2ai4%2BDmSYgatqO9RmXSVjhgzXGIbpru9oXlzR1KTaIHWj8XBVL3wgFWU%2BD2Y5zrn1suq4YEw%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230208T004756Z&X-Amz-SignedHeaders=host&X-Amz-Expires=28800&X-Amz-Credential=ASIAZOQWEWHAL62KOBXK%2F20230208%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=a6c3fdd59db7c5739676a7071bd2bc43d9f0b0e69e72e886fc6989266b9b80a2
+      TemplateURL: https://amazon-fsx.s3.amazonaws.com/workshop/lustre/templates/03-linux-instance.yaml
   Dashboard:
     DependsOn: [ FileSystem ]
     Type: AWS::CloudFormation::Stack
@@ -94,7 +94,6 @@ Resources:
           !Ref EmailAddress
         FileSystemId:
           !GetAtt [ FileSystem, Outputs.FileSystemId ]
-      TemplateURL: https://lustre-workshop-03filesystem.s3.us-east-1.amazonaws.com/04-dashboard.yaml?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCpwHgZwYILT8sxP3Y3AyqlhuOQ%2F08Y7apsZkBtgcS6zgIhAJITz0WB%2F8VnxsHjj26joG76IHSKNO%2Fwz4fkZ0yRKrW2KuUCCGoQABoMNjQ5NjYwMjQ4NTEyIgw9yRairzmgKaXFdW0qwgJL0ZYNDYhhjSqBEJoBr9PMv1Y7V%2Fp%2BW%2B84xWChw947Mytb62j%2Bi6HcCez%2B3DjQwcOc8ulmYY4NP4T2VuFPJO7WnLDOXZGaFtL16djXllZjOelMJhaHIa8H716ZFaDs6%2Fyid8tCv0IO1L5mHMfRcTLhT2kwp%2FJNkNWRXflvwudtFq5EfdfrfrExwZWMiXhGBtTH19QjRS4JN4EGSgTM3DTGHTr2fKlR8fbCTxJW14PPulZf01xUNDNUoYpVPNW8Dw6pbuOCtfy4tfsjijY0VUZmlMDGBZ3ZFA7LsE7Qf2ZRQYnmMr78Dpjc5jcL8mioyZ0G1gpGkGJuKFzX8JazEHfb77VpZ23LtdyBlO7anKkjrn5TKI4l4Rt%2Fdzjvw0tOOo8ZFx5RsrD0oEQHaV9jsosOpZIvH%2Fw0kFTLv1h68BgFhgX%2FMIbYi58GOoYC84kASEwYcjMNh69wRe7bldowY2n4UYDp7kFrbVQtBoa%2BDYsUNsO6DQYazsNNwew3RSrn29f7vUHgchvNDKTRArG05pBbaKbRwpNRC%2BwlZDWsUW9vfjRLrLH3GagvpizbAr8XjDNlImNre9aYVbHiPI0kxuvoGZ4Ae%2FjskdxRA6GaYrVvBkukBdhiByIO90BuWQkeE4Tq%2FzhlVQ6CuS%2BC8nw%2BrNe%2F8lqMnUgJ3PAEK1zlJtmgAaa3sg1oyCrjD6Dhc442QIY5P2HU3QJ%2FWXH4Iu2ai4%2BDmSYgatqO9RmXSVjhgzXGIbpru9oXlzR1KTaIHWj8XBVL3wgFWU%2BD2Y5zrn1suq4YEw%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230208T004820Z&X-Amz-SignedHeaders=host&X-Amz-Expires=28800&X-Amz-Credential=ASIAZOQWEWHAL62KOBXK%2F20230208%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=52056f3753b48901e0d18764ed6a4324a3880d0cd65312099f69a9846a868a43
-
+      TemplateURL: https://amazon-fsx.s3.amazonaws.com/workshop/lustre/templates/04-dashboard.yaml
 
 
