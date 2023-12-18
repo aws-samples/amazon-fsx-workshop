@@ -62,10 +62,10 @@ NOTE: The specific level of performance a file system can provide is defined by 
 
 ==== FIO write test 
 
-. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance*
+. *_Return_* to the *Session Manager* connection of your *FSx for ONTAP Workshop Linux Instance*
 
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 . *_Write_* 1MB blocks to two 16MB files for 60 seconds using fio.
@@ -223,9 +223,9 @@ cd
 sudo umount ${MOUNTPOINT}
 ----
 +
-. *_Return_* to the Session Manager connection of the *FSx for NetApp ONTAP Workshop Linux Instance*. *_Run_* below commands to mount the volume with NFS mount option *nconnect=16* and *vers=3*.
+. *_Return_* to the *Session Manager* connection of the *FSx for NetApp ONTAP Workshop Linux Instance*. *_Run_* below commands to mount the volume with NFS mount option *nconnect=16* and *vers=3*.
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 [source,bash]
 ----
@@ -276,7 +276,7 @@ TIP: NFSv3 can perform better compared to NFSv4 when working with small block IO
 
 Click the button below to go to the next section.
 
-image::monitor-performance.jpg[link=../11-monitor performance/, align="left",width=420]
+image::monitor-performance.jpg[link=../10-monitor performance/, align="left",width=420]
 
 
 

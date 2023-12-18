@@ -19,11 +19,11 @@ Even when a volume uses UNIX security style, SMB clients can still access data d
 * If you are administering your volumes from Windows or if the data is primarily used by Windows applications set the security style to *NTFS*.  The data will remain accessible to Unix based clients.
 * If the security style is set to *mixed*, then either Unix or NTFS permissions can be used on files and directories. The effective permissions are based on whichever type of client last modified the permissions.
 
-IMPORTANT: Mixed security style is not required for multi-protocol access or needed in most scenarios.
+IMPORTANT: Mixed security style is not required for multi-protocol access or recommended in most scenarios..
 
 == Duration
 
-NOTE: It will take approximately 5 minutes to complete this section.
+NOTE: It will take approximately 25 minutes to complete this section.
 
 == Diagram 
 
@@ -39,10 +39,10 @@ IMPORTANT: Read through all steps below before continuing.
 
 //image::xxx.gif[align="left", width=600]
 
-. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance*.
+. *_Return_* to the *Session Manager* connection of your *FSx for ONTAP Workshop Linux Instance*.
 
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 . *_Run_* the following command to see if any NFS volumes have been mounted.
@@ -59,7 +59,7 @@ mount | grep  nfs
 NOTE: No volumes should be mounted at this time.
 +
 
-. *_Run_* the below commands to mount the NFS export. Replace the mount point if needed.
+. *_Run_* the script below to mount the NFS export. Replace the mount point if needed.
 +
 [source,bash]
 ----
@@ -95,7 +95,7 @@ echo "This file is used for multi-protocol access demo" >> ${MOUNTPOINT}/${DIRNA
 cat ${MOUNTPOINT}/${DIRNAME}/multiprotocol-demo.txt
 ----
 
-== Step-by-step Guide (Create a CIFS share)
+== Step-by-step Guide (Create an SMB share)
 
 IMPORTANT: Read through all steps below and watch the quick video if available before continuing.
 
@@ -108,7 +108,7 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 ----
 +
 
-. *_Create_* a *CIFS share* to share the *multiprotocol* directory using CIFS/SMB protocol with Windows Clients. 
+. *_Create_* a *CIFS share* to share the *multiprotocol* directory using the SMB protocol with Windows Clients. 
 +
 [source,bash]
 ----
@@ -141,29 +141,26 @@ quit
 
 === Map share to Windows Instance
 
-==== Connect to the Windows instance via the Network Load Balancer
+==== Connect to the Windows instance via Systems Manager Fleet Manager
 
-. Go to the link:https://console.aws.amazon.com/ec2/home?#LoadBalancers[AWS Load Balancers] console and *_click_* on the name of the Network Load Balancer *WinRDPNLB*.
-
-. Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
-
-. *_Click_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the *DNS Name* of the *WinRDPNLB* Network Load Balancer under the *Details* section. 
-
-. *_Launch_* your remote desktop application and create a new connection to the Network Load Balancer *DNS name* copied earlier as the host name of the new connection.
+. Go to the link:https://console.aws.amazon.com/systems-manager/fleet-manager/managed-nodes[Systems Manager Fleet Manager] console.
 +
-Tip: Windows users can use the built-in *Remote Desktop Connection* tool and Mac users can download the *Microsoft Remote Desktop* app available from the Mac App Store.  If you're unfamiliar with *Remote Desktop* you can go to the link:https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients[Microsoft Remote Desktop client] page. 
-+
+TIP: Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
+
+. *_Check_* the checkbox next to the *Node ID* of the *FSx for ONTAP Workshop Windows Instance*.
+
+. *_Click_* the *Node actions* drop down, select *Connect*, and then *_click_* on the *Connect with Remote Desktop* option.
 
 . Open the link:https://console.aws.amazon.com/secretsmanager/[AWS Secrets Manager] console.
 +
 TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this GitHub workshop and AWS console.
 +
 
-. *_Click_* the *Secret name* link for *ADPassword-<StackInfo>*.
+. *_Click_* the *Secret name* link for *ADPassword-<StackName>*.
 
 . *_Scroll_* to the *Secret value* section and *_click_* the *Retrieve secret value* button.
 
-. Use the *Secret key/value* pairs of *username* and *password* as the credentials to authenticate to the *FSx for ONTAP Workshop Windows Instance* for the remote desktop session.
+. Use the *Secret key/value* pairs of *username* and *password* as the credentials to authenticate to the *FSx for ONTAP Workshop Windows Instance* for the remote desktop session opened through the *Systems Manager Fleet Manager*.
 
 . Once connected to the Windows instance *_launch_* *File Explorer*.
 
@@ -177,7 +174,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 a| Z:
 
 | *Folder*
-a| This is the UNC path of *multiprotocol* share. Return to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the link to the *Primary* file system and *_select_* the *Storage virtual machines* tab. *_Click_* the link to the SVM name *svm01-primary* and then *_click_* the image:copy-to-clipboard.png[align="left",width=20] shortcut next to the *SMB DNS name* to *_copy_* the *SMB DNS Name* to the clipboard.  Add the \\ to the first part of the UNC path and then paste in the *SMB DNS name* from the clipboard. *_Add_* *\multiprotocol* to the end of the *SMB DNS Name* to complete the UNC path to the multiprotocol share. (e.g. \\SVM01-PRIMARY.EXAMPLE.COM\multiprotocol).
+a| This is the UNC path of the *multiprotocol* share. Return to the link:https://console.aws.amazon.com/fsx/home[Amazon FSx] console, *_click_* the link to the *Primary* file system and *_select_* the *Storage virtual machines* tab. *_Click_* the link of the SVM name *svm01-primary*, go to the *Endpoints* tab, and locate the *SMB DNS name* for your file systems SMB endpoint.  Add the \\ to the first part of the UNC path and then type in the *SMB DNS name*. *_Add_* *\multiprotocol* to the end of the *SMB DNS Name* to complete the UNC path to the multiprotocol share. (e.g. \\SVM01-PRIMARY.EXAMPLE.COM\multiprotocol).
 
 | *Reconnect at sign-in*
 a| Leave checked

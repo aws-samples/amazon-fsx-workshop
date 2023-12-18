@@ -252,7 +252,6 @@ Resources:
         PrimaryAZ1:
           !Select [ 1, !Ref PrimaryAvailabilityZones ]
         PrimaryVpcCidr: !Ref PrimaryVpcCidr
-        ParentStackName: !Ref AWS::StackName
       TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/01-primary-vpc.yaml
   
   DRVpc:
@@ -262,7 +261,6 @@ Resources:
         DRAZ:
           !Select [ 0, !Ref DRAvailabilityZones ]
         DRVpcCidr: !Ref DRVpcCidr
-        ParentStackName: !Ref AWS::StackName
       TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/02-dr-vpc.yaml
   
   VpcPeering:
@@ -270,7 +268,6 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        ParentStackName: !Ref AWS::StackName
         PrimaryVpcId:
           Fn::GetAtt:
           - PrimaryVpc

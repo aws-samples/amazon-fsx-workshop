@@ -28,9 +28,9 @@ image::primary-architecture.png[align="center"]
 
 === FlexClone steps
 
-. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance* and *_run_* the below script to generate data (10 x 128 MB files) on your source volume.
+. *_Return_* to the *Session Manager* connection of your *FSx for ONTAP Workshop Linux Instance* and *_run_* the below script to generate data (10 x 128 MB files) on your source volume.
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -43,7 +43,7 @@ blockSize=16M
 blockCount=8
 
 mkdir ${MOUNTPOINT}/128MB
-seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/random of=${MOUNTPOINT}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
+seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/zero of=${MOUNTPOINT}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
 ----
 +
 
@@ -114,7 +114,7 @@ quit
 ----
 +
 
-. *_Run_* the below commands from the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance*.
+. *_Run_* the below script from the *Session Manager* connection of your *FSx for ONTAP Workshop Linux Instance*.
 +
 [source,bash]
 ----
@@ -140,7 +140,7 @@ df -h ${MOUNTPOINT} ${CLONEDIR}
 ----
 +
 
-TIP: You should see nearly identical contents and space usage reported for both volumes.
+TIP: You should see identical contents and space usage reported for both volumes.
 
 . *_Run_* the below command to create a new file on the FlexClone volume.
 +
@@ -159,7 +159,7 @@ threads=1
 blockSize=16M
 blockCount=8
 
-seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/random of=${CLONEDIR}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
+seq 1 ${count} | parallel --will-cite -j ${threads} time dd if=/dev/zero of=${CLONEDIR}/128MB/dd-${jobName}-{} bs=${blockSize} count=${blockCount}
 ----
 +
 . *_Run_* the below commands to compare the contents of of your source and FlexClone volume. 
@@ -171,7 +171,6 @@ df -h ${MOUNTPOINT} ${CLONEDIR}
 ----
 +
 . Are the contents still identical?
-TIP: You will see that the contents and capacity of the FlexClone directory have changed from the source as we've written data directly to the FlexClone volume.
 +
 . *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 +
@@ -192,10 +191,6 @@ volume show -vserver svm01-primary -volume vol1_primary_clone1 -fields size,used
 
 . Did the physical-used space change on your FlexClone volume?
 
-+
-
-TIP: You should see the physical capacity of the FlexClone volume increase.  This is because we've written data blocks to the FlexClone which aren't shared with the parent volume.
-
 . *_Run_* the command below to quit the ONTAP CLI session.
 +
 [source,bash]
@@ -207,4 +202,8 @@ quit
 
 Click the button below to go to the next section.
 
-image::elastic-tiering.png[link=../06-tiering/, align="left",width=420]
+image::storage-efficiency.png[link=../06-storage-efficiency/, align="left",width=420]
+
+
+
+

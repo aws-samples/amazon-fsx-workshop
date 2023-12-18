@@ -42,7 +42,7 @@ image::primary-architecture.png[align="center"]
 
 . *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -84,7 +84,7 @@ quit
 ----
 +
 
-.On the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance* *_run_* the script below to create some test data on the volume.
+.On the *Session Manager* connection of your *FSx for ONTAP Workshop Linux Instance* *_run_* the script below to create some test data on the volume.
 +
 [source,bash]
 ----
@@ -113,7 +113,7 @@ vol show -volume vol1_primary -fields tiering-policy
 ----
 +
 
-. *_Run_* the command below to check current data footprint between your performance and capacity pool tiers. Repeat the command below to monitor the change in space between performance and capacity tiers.  Continue running the command until you no longer see the capacities changing on the performance and capacity pool tiers.
+. *_Run_* the command below to check current data footprint between your performance and capacity pool tiers. Repeat command to monitor the change in space between performance and capacity tiers.
 +
 [source,bash]
 ----
@@ -121,21 +121,11 @@ volume show-footprint -volume vol1_primary
 ----
 +
 
-. Did the data foot-print change?
+. Did the data foot-print change? 
 
-+
-TIP: You should now see the data on the file system has been moved to the capacity pool tier labeled on the CLI as the "FSxFabircpoolObjectStore."  The remaining capacity on the performance tier is metadata for the file system.
-+
-
-. *_Run_* the command below to modify the tiering policy of the volume to *none*.  This will not move any data already tiered to the capacity pool tier back to the performance tier, but will allow future data to be written to the performance tier.
-+
-[source,bash]
-----
-volume modify -volume vol1_primary -vserver svm01-primary -tiering-policy none
-----
 
 == Next section
 
 Click the button below to go to the next section.
 
-image::storage-efficiency.png[link=../07-storage-efficiency/, align="left",width=420]
+image::tear-down-workshop.png[link=../12-tear-down-workshop/, align="left",width=420]

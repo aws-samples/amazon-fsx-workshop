@@ -11,10 +11,15 @@
 NOTE: It will take approximately 10 minutes to complete this section.
 
 === Delete Resources Created During Workshop
+
++
+WARNING: You will be unable to delete the FSx for NetApp ONTAP file system if you completed the SnapLock portion of the Data Protection section and 2 hours have not past.  This is because this portion protected several files with WORM (Write Once Read Many) capability making them immutable.  Once 2 hours have past since the comletion of that portion of the workshop you can proceed with deleting the file system.
++
+
 . *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +

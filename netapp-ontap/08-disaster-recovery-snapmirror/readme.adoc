@@ -59,9 +59,9 @@ IMPORTANT: Read through all steps before continuing.
 
 NOTE: If you are creating a SnapMirror relationship between FSx file systems in a different accounts or different region you will need to establish VPC communication using link:https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html[VPC peering] or link:https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html[Transit gateway]. Once the VPC communication is in place, you will need to create cluster and SVM peering between your FSx file systems. The workshop environment has already created VPC peering between the Primary VPC and Secondary VPC along with Cluster peering between the two FSx file systems and SVM peering between SVM in the Primary VPC and SVM in the Secondary VPC.
 
-. *_Return_* to the Session Manager connection of the *FSx for ONTAP Workshop Linux Instance* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
+. *_Return_* to the *Session Manager* connection of the *FSx for ONTAP Workshop Linux Instance* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -98,7 +98,7 @@ quit
 ssh ${ADMINUSER}@${DRMGMTENDPOINT}
 ----
 +
-. *_Enter_* *yes*, if you get the authenticity warning to trust the host on the SSH connection. At the *_Password_* prompt, Enter the password for your file system; in this workshop the password is the same for the Primary and DR/Secondary FSx file systems. You can retrieve the password using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* the secret name *FSxadmin-<StackInfo>>* and *_Click_* on *Retrieve Secret value* to get the fsxadmin user password. Upon successful login you will see the prompt as shown below:
+. *_Enter_* *yes*, if you get the authenticity warning to trust the host on the SSH connection. At the *_Password_* prompt, Enter the password for your file system; in this workshop the password is the same for the Primary and DR/Secondary FSx file systems. You can retrieve the password using link:https://console.aws.amazon.com/secretsmanager[AWS Secrets Manager]. *_Select_* the secret name *FSxadmin-<StackName>>* and *_Click_* on *Retrieve Secret value* to get the fsxadmin user password. Upon successful login you will see the prompt as shown below:
 
 +
 NOTE: The passwords are the same between the **Primary** and **DR/Secondary** file systems in the workshop.
@@ -143,7 +143,7 @@ snapmirror show -instance
 +
 . Was your SnapMirror transfer bandwidth throttled?
 +
-TIP: To identify if a SnapMirror relationship is throttled, review the *Current Throttle* value.  You can configure per-relationship throttle to restrict amount of bandwidth used. 
+TIP: You can configure per-relationship throttle to restrict amount of bandwidth used. 
 +
 . *Create* a *_Junction Path_* for the destination volume using *ONTAP CLI*. 
 +
@@ -223,7 +223,7 @@ cat ${SMMOUNT}/snapmirror.txt
 
 Click the button below to go to the next section.
 
-image::flexcache.png[link=../09-flexcache/, align="left",width=420]
+image::flexcache.png[link=../08-flexcache/, align="left",width=420]
 
 
 

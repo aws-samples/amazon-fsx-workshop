@@ -76,4 +76,8 @@ TIP: SNS topic confirmation can be done on your laptop or mobile device.
 
 Click the button below to go to the next section.
 
-image::tear-down-workshop.png[link=../12-tear-down-workshop/, align="left",width=420]
+image::elastic-tiering.png[link=../11-tiering/, align="left",width=420]
+
+
+
+

@@ -12,6 +12,7 @@ This section will cover the data protection technologies available with *Amazon 
 . *Amazon FSx Backups*: A cost-efficient offsite backup of your volume that is stored in highly durable storage within the same region. 
 . *SnapMirror Vault*: Disk based backup technology for performing offsite backups of your volume snapshots to a *secondary* file system in the same or different region.
 . *SnapMirror*: Native block level replication technology for disaster recovery and data migrations. We will cover this feature in our disaster recovery section of this workshop.
+. *SnapLock*: Built-in write once, read many (WORM) capability allowing organizations to retain files in non-modifiable and non-erasable state for regulatory and governance compliance.
 
 === Snapshots Overview
 
@@ -35,11 +36,17 @@ SnapMirror Vault can be used to backup volumes from multiple source file systems
 
 SnapMirror Vault uses the SnapMirror engine, so replication works exactly the same way. 
 
-Note: SnapMirror Vault will not be covered in this workshop.
+NOTE: SnapMirror Vault will not be covered in this workshop.
+
+=== SnapLock Overview
+
+SnapLock is the write once, read many (WORM) capability built into the ONTAP operating system.  SnapLock can be used to meet regulatory compliance, help protect business-critical data from ransomware attacks, and provide an additional layer of protection for your data against alteration or deletion.  With SnapLock you can protect your files by transitioning them to a WORM state making them immutable for a specified retention period.  You can either accept the default SnapLock retention period for the volume or you can manually set a retention period on a per file basis by updating the atime of the file between the minimum and maximum retention periods for the volume.  Your files can be committed to WORM protection automatically by FSx for NetApp ONTAP or manually on a per file basis.  Both the Compliance and Enterprise modes of SnapLock are supported with FSx for NetApp ONTAP.  Tiering of SnapLock protected data to the capacity pool is also supported.
+
+NOTE: When you close an AWS account that contains SnapLock Enterprise or Compliance volumes, AWS and FSx for ONTAP suspend your account for 90 days with your data intact. If you don't reopen your account during those 90 days, AWS deletes your data including data in SnapLock volumes regardless of your retention settings.
 
 == Duration
 
-NOTE: It will take approximately 20 minutes to complete this section.
+NOTE: It will take approximately 45 minutes to complete this section.
 
 == Diagram 
 
@@ -54,7 +61,7 @@ image::primary-architecture.png[align="center"]
 . *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -91,7 +98,6 @@ job schedule cron show
 +
 NOTE: As you can see the hourly snapshots happen 5 mins past the hour, the daily snapshots 10 mins past midnight and weekly snapshots 15 mins past midnight on Sunday.
 
-
 . *_Run_* command below to trigger a *manual* snapshot for your volume. Provide a snapshot name *vol1_primary_FSxOntapWorkshop*  and a comment as shown below.
 +
 [source,bash]
@@ -100,7 +106,7 @@ volume snapshot create -vserver svm01-primary -volume vol1_primary -snapshot vol
 ----
 +
 
-. *_Run_* command below to list the snapshots.  You should now see the manually created snapshot named vol1_primary_FSxOntapWorkshop in the list of snapshots on the volume.
+. *_Run_* command below to list the snapshots.
 +
 [source,bash]
 ----
@@ -134,7 +140,7 @@ quit
 ----
 +
 
-. Next, lets make some changes to the text file created in the multiprotocol access section of the workshop. *_Run_* the below commands to make the changes to the text file. 
+. Next, lets make some changes to the text file created in the multiprotocol access section of the workshop. *_Run_* the below command to make the changes to the text file. 
 +
 [source,bash]
 ----
@@ -176,16 +182,13 @@ cat ${MOUNTPOINT}/${DIRNAME}/restore/multiprotocol-demo.txt
 +
 TIP: To *perform* an entire volume restore from snapshot you can run *volume snapshot restore -vserver <SVM> -volume <Volume> -snapshot <snapshot name>* from your ONTAP CLI session. 
 
-. *_Return_* to the RDP to your Windows instance with name *FSx for ONTAP Workshop Windows Instance*
+.  *_Return_* to the RDP session to your Windows instance opened through *Systems Manager Fleet Manager*.
 
-. Using *File explorer*  *_Right-click_* on the file *multiprotocol-demo.txt*, *_Select_* *properties* -> *_click_* on *Previous Versions* tab to browse for available snapshots.  *_Double-Click_* on the version of the file shown under *File versions:* to view the contents.  *_click_* *Restore* to restore to a previous point in time.
+. Using *File explorer*, *_right-click_* on the file *multiprotocol-demo.txt*, *_select_* *properties*, and *_click_* on *Previous Versions* tab to browse for available snapshots.  *_Double-click_* on the version of the file shown under *File versions:* to view the contents.  *_Click_* *Restore* to restore to a previous point in time.
 
 . Were you able to restore the file?
 
-+
-NOTE: Your volume inherited the *Unix* security style from the SVM and enforces Unix style permissions. ONTAP performs name mapping between Windows and Unix users to authorize access. If a Windows user tries to access a Unix security style volume their Windows username will be mapped to Unix UID because a Unix security style volume will not understand its Windows username. The Unix user will be verified by /etc/password files, NIS or LDAP.  Administrators can configure explicit manual mapping from a Windows user to Unix user. For example a windows user "john" is mapped to Unix user "john" to identify the permissions and authorize access. if no mappings are found then its mapped to *pcuser* with UID and GID 65634.  You were denied access because you were trying overwrite a file owned by Unix user *ssm-user* as *admin* user from Windows. To learn more about user mapping and multiprotocol best practices refer link:https://www.netapp.com/pdf.html?item=/media/27436-tr-4887.pdf[Multiprotocol NAS in NetApp ONTAP]
-
-. *_Return_* to the Session Manager connection of your *FSx for ONTAP Workshop Linux Instance* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
+. *_Return_* to the *Session* Manager connection of your *FSx for ONTAP Workshop Linux Instance* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
 +
 [source,bash]
 ----
@@ -199,6 +202,9 @@ ssh ${ADMINUSER}@${MGMTENDPOINT}
 ----
 volume show -volume vol1_primary -fields security-style
 ----
++
+
+NOTE: Your volume inherited the *Unix* security style from the SVM and enforces Unix style permissions. ONTAP performs name mapping between Windows and Unix users to authorize access. If a Windows user tries to access a Unix security style volume their Windows username will be mapped to Unix UID because a Unix security style volume will not understand its Windows username. The Unix user will be verified by /etc/password files, NIS or LDAP.  Administrators can configure explicit manual mapping from a Windows user to Unix user. For example a windows user "john" is mapped to Unix user "john" to identify the permissions and authorize access. if no mappings are found then its mapped to *pcuser* with UID and GID 65634.  You were denied access because you were trying overwrite a file owned by Unix user *ssm-user* as *admin* user from Windows. To learn more about user mapping and multiprotocol best practices refer link:https://www.netapp.com/pdf.html?item=/media/27436-tr-4887.pdf[Multiprotocol NAS in NetApp ONTAP]
 
 . *_Run_* the command below to quit the ONTAP CLI session.
 +
@@ -216,9 +222,9 @@ quit
 . Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon FSx console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
 
 
-. *_Click_* on the *Volumes* tab. *_Select_* *vol1_primary* and *_click_* *Actions* -> *Create backup*. Input a name for your backup (Ex: FSxONTAP-workshop-backup) and *_click_* *Create backup*.
+. *_Click_* on the *volumes* tab. *_Select_* *vol1_primary* and *_click_* *Actions* -> *Create backup*. Input a name for your backup (Ex: FSxONTAP-workshop-backup) and *_click_* *Create backup*.
 
-. *_Click_* on the *Backups* section on the left and you can see the backup status as *Creating*. Once the backup is complete the status will show as *Available*.
+. *_Click_* on the *backups* section on the left and you can see the backup status as *Creating*. Once the backup is complete the status will show as *Available*.
 NOTE: It can take several minutes for the backup status to change to complete.
 
 . *_Restore_* the backup to a new volume. *_Select_* the backup we created in the previous step, *_click_* *Actions* -> *Restore backup*. Input the following values:
@@ -235,26 +241,20 @@ a| Accept default
 | *Volume name*
 a| Input restorevol
 
-| *Volume size*
-a| Input 102400
-
-| *Volume type*
-a| Accept default
-
 | *Junction path*
 a| Input /restorevol
+
+| *Volume Size*
+a| Input 102400
 
 | *Storage efficiency*
 a| Select Disabled
 
-| *Volume security style*
-a| Select Unix
+| *Capacity pool tiering policy*
+a| Accept Default
 
 | *Snapshot policy*
 a| Select None
-
-| *Capacity pool tiering policy*
-a| Accept default
 |===
 +
 . After you have entered or accepted values for all parameters, *_click_* *Confirm*.
@@ -263,13 +263,147 @@ a| Accept default
 
 . Were you able to modify any volume configuration parameters during the restore when compared to your source volume?
 
+== Step-by-step Guide (SnapLock)
+
+WARNING: Continuing with this section will prohibit you from deleting the environment before 2 hours have past.  If you need to clean this environment up prior to 2 hours from now do not follow this sections steps in your environment.
+
+. *_Return_* to the *Session Manager* connection of your *FSx for ONTAP Workshop Linux Instance* and *_run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
+
++
+IMPORTANT: Make sure you are in the *AWS Region* of your workshop environment. If you need to change the *AWS Region* of the Amazon EC2 console, in the top right corner of the browser window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
++
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
+
+. *_Run_* the command below to review the SnapLock configuration of the two SnapLock volumes on the *Primary* FSx for ONTAP file system.  Make note of the auto commit period, minimum retention period, default retention period, and maximum retention period for both volumes.
++
+[source,bash]
+----
+volume snaplock show -vserver svm01-primary -volume vol_sl_* -instance
+----
+
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
+
+. On the *FSx for ONTAP Workshop Linux Instance*, *_run_* the commands below to make the local directories and mount the SnapLock volumes.
++
+[source,bash]
+----
+sudo mkdir $SLAUTO $SLMANUAL
+sudo mount -t nfs ${NFSENDPOINT}:/vol_sl_auto ${SLAUTO}
+sudo mount -t nfs ${NFSENDPOINT}:/vol_sl_manual ${SLMANUAL}
+sudo chown ssm-user:ssm-user /sl_auto
+sudo chown ssm-user:ssm-user /sl_manual
+----
+
+. *_Run_* the commands below to create a file that will be automatically committed to WORM protection and made immutable on the vol_sl_auto volume.  SnapLock will automatically commit the file to WORM protection within the *Autocommit Period* for this volume you observed in the earlier step.  Make note of the output from the date command to ensure 5 minutes have passed in a later step.
++
+[source,bash]
+----
+cd /sl_auto
+echo "This file will be automatically WORM protected via SnapLock after 5 minutes due to the Autocommit Period on the vol_sl_auto volume being set to 5 minutes." >> auto.txt
+date
+----
+
+. Next create some files which will be manually committed to WORM protection.  *_Run_* the commands below to create two files.
++
+[source,bash]
+----
+cd /sl_manual
+echo "This file will be manually WORM protected via SnapLock accepting the default retention period on the volume." >> manual_default.txt
+echo "This file will be manually WORM protected via SnapLock with a custom retention period." >> manual_custom.txt
+----
+
+. *_Run_* the command below to update the atime of the manual_custom.txt file and manually set the WORM retention period to 1 hour from now.
++
+[source,bash]
+----
+touch -a -d '1 hour' /sl_manual/manual_custom.txt
+----
+
+. *_Run_* the commands below to mark the files as read-only and commit them to WORM protection.  The manual_custom.txt file will use the retention period of one hour from now as it was manually set by updating the atime in the previous step.  The manual_default.txt file will receive the default retention period of the volume.
++
+[source,bash]
+----
+chmod 444 /sl_manual/manual_custom.txt
+chmod 444 /sl_manual/manual_default.txt
+----
+
+. Now that the files have been committed to WORM protection and made immutable, *_run_* the commands below to try and change the permissions back to read/write.
++
+[source,bash]
+----
+chmod 755 /sl_manual/manual_custom.txt
+chmod 755 /sl_manual/manual_default.txt
+----
++
+These commands fail as these files are immutable until their retention periods have expired and the WORM protection is removed.
+
+. *_Run_* the commands below to try and append additional data to the end of these files.
++
+[source,bash]
+----
+echo "Trying to append data to the WORM protected file." >> /sl_manual/manual_custom.txt
+echo "Trying to append data to the WORM protected file." >> /sl_manual/manual_default.txt
+----
++
+These commands also fail as the files still contain read-only permissions which can't be changed until the retention periods have expired and the WORM protection is removed.
+
+. *_Run_* the commands below to try and remove the SnapLock protected files from the file system.
++
+[source,bash]
+----
+rm -f /sl_manual/manual_custom.txt
+rm -f /sl_manual/manual_default.txt
+----
++
+These commands also fail as the files are WORM protected and can not be deleted from the file system until the retention period has been met.
+
+. *_Run_* the command below to SSH to the cluster management endpoint of your **Primary** FSx for ONTAP file system.
++
+[source,bash]
+----
+ssh ${ADMINUSER}@${MGMTENDPOINT}
+----
+
+. *_Run_* the command below to view the retention period expiration for the file which was manually committed to WORM protection, and accepted the default retention period for the volume.
++
+[source,bash]
+----
+volume file retention show -vserver svm01-primary -file /vol/vol_sl_manual/manual_default.txt
+----
+
+. *_Run_* the command below to view the retention period expiration for the file which was manually committed to WORM protection, and the retention period was manually set for 1 hour from now.
++
+[source,bash]
+----
+volume file retention show -vserver svm01-primary -file /vol/vol_sl_manual/manual_custom.txt
+----
+
+. *_Run_* the command below to view the retention period expiration for the file which was automatically committed to WORM protection without any interaction on our part.  If the file does not yet show a retention period ensure that 5 minutes have past since the output of the date command in a previous step.
++
+[source,bash]
+----
+volume file retention show -vserver svm01-primary -file /vol/vol_sl_auto/auto.txt
+----
+
+. *_Run_* the command below to quit the ONTAP CLI session.
++
+[source,bash]
+----
+quit
+----
 
 == Next section
 
 Click the button below to go to the next section.
 
 image::flexclone.png[link=../05-flexclone/, align="left",width=420]
-
-
-
-

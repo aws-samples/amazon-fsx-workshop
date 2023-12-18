@@ -42,9 +42,9 @@ NOTE: If you are creating a FlexCache between FSx file systems in a different ac
 
 === Generate Test data
 
-. *_Return_* to the Session Manager session of your *FSx for ONTAP Workshop Linux Instance* and run the script below to create a 1 GB file.
+. *_Return_* to the *Session Manager* session of your *FSx for ONTAP Workshop Linux Instance* and run the script below to create a 1 GB file.
 +
-TIP: If the Session Manager window has timed out, e.g. the session is unresponsive, close the  session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
+TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
 +
@@ -180,10 +180,7 @@ ssh ${ADMINUSER}@${DRMGMTENDPOINT}
 vol show -volume cachevol -fields logical-used,physical-used
 ----
 +
-. Are the logical and physical capacities of the FlexCache volume the same as the source volume?
-+
-TIP: FlexCache is a sparse caching technology so only the metadata is initially loaded into the cache.
-+
+. Are they identical?
 
 . *_Run_* the command below to quit the ONTAP CLI session.
 +
@@ -234,4 +231,4 @@ quit
 
 Click the button below to go to the next section.
 
-image::test-performance.jpg[link=../10-test-performance/, align="left",width=420]
+image::test-performance.jpg[link=../09-test-performance/, align="left",width=420]
