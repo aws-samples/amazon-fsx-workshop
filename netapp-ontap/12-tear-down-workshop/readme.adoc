@@ -102,19 +102,19 @@ volume flexcache delete -vserver svm01-dr -volume cachevol
 ----
 +
 
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary*.
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary*.
 
-. *_Click_* on the *Volumes* tab and *if* still present select the restorevol volume, click the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and click the delete volume(s) button.
+. *_Click_* on the *Volumes* tab and *if* still present select the restorevol volume, *_click_* the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and *_click_* the delete volume(s) button.
 
-. *If* still present select the vol1_primary_clone1 volume, click the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and click the delete volume(s) button.
+. *If* still present select the vol1_primary_clone1 volume, *_click_* the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and *_click_* the delete volume(s) button.
 
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* the *File system ID* of your *DR/secondary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-DR*.
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the *File system ID* of your *DR/secondary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-DR*.
 
-. *_Click_* on the *Volumes* tab and if still present select the cachevol volume, click the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and click the delete volume(s) button.
+. *_Click_* on the *Volumes* tab and if still present select the cachevol volume, *_click_* the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and *_click_* the delete volume(s) button.
 
-. *If* still present select the vol1_dr volume, click the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and click the delete volume(s) button.
+. *If* still present select the vol1_dr volume, *_click_* the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and *_click_* the delete volume(s) button.
 
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_Click_* *Backups* on the left, and delete any remaining backups which were created during the workshop.
+. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* *Backups* on the left, and delete any remaining backups which were created during the workshop.
 
 
 === Delete *Workshop Environment* via CloudFormation
