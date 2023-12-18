@@ -174,7 +174,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 a| Z:
 
 | *Folder*
-a| This is the UNC path of the *multiprotocol* share. Return to the link:https://console.aws.amazon.com/fsx/home[Amazon FSx] console, *_click_* the link to the *Primary* file system and *_select_* the *Storage virtual machines* tab. *_Click_* the link of the SVM name *svm01-primary*, go to the *Endpoints* tab, and locate the *SMB DNS name* for your file systems SMB endpoint.  Add the \\ to the first part of the UNC path and then type in the *SMB DNS name*. *_Add_* *\multiprotocol* to the end of the *SMB DNS Name* to complete the UNC path to the multiprotocol share. (e.g. \\SVM01-PRIMARY.EXAMPLE.COM\multiprotocol).
+a| This is the UNC path of the *multiprotocol* share. Return to the link:https://console.aws.amazon.com/fsx/home[Amazon FSx] console, *_click_* the link to the *Primary* file system and *_select_* the *Storage virtual machines* tab. *_Click_* the link of the SVM name *svm01-primary*, go to the *Endpoints* tab, and locate the *SMB DNS name* for your file systems SMB endpoint.  *_Add_* the *\\* to the first part of the UNC path and then type in the *SMB DNS name*. *_Add_* the share name *\multiprotocol* to the end of the *SMB DNS Name* to complete the UNC path to the multiprotocol share. (e.g. \\SVM01-PRIMARY.EXAMPLE.COM\multiprotocol).
 
 | *Reconnect at sign-in*
 a| Leave checked
