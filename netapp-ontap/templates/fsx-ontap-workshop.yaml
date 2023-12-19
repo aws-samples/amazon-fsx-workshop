@@ -287,7 +287,11 @@ Resources:
         PrimaryPrivateSubnet1Cidr:
           Fn::GetAtt:
           - PrimaryVpc
-          - Outputs.PrimaryPrivateSubnet1Cidr   
+          - Outputs.PrimaryPrivateSubnet1Cidr
+        PrimaryDefaultSecurityGroupId:
+          Fn::GetAtt:
+          - PrimaryVpc
+          - Outputs.PrimaryDefaultSecurityGroupId 
         DRVpcId:
           Fn::GetAtt:
           - DRVpc
@@ -295,11 +299,15 @@ Resources:
         DRPrivateRouteTable:
           Fn::GetAtt:
           - DRVpc
-          - Outputs.DRPrivateRouteTable  
+          - Outputs.DRPrivateRouteTable
         DRPrivateSubnetCidr:
           Fn::GetAtt:
           - DRVpc
-          - Outputs.DRPrivateSubnetCidr  
+          - Outputs.DRPrivateSubnetCidr
+        DRDefaultSecurityGroupId:
+          Fn::GetAtt:
+          - DRVpc
+          - Outputs.DRDefaultSecurityGroupId
       TemplateURL: https://s3.amazonaws.com/amazon-fsx/workshop/ontap/templates/03-vpc-peering.yaml
   
   Directory:
