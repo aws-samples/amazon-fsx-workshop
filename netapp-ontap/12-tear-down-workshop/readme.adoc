@@ -8,7 +8,7 @@
 
 == Duration
 
-NOTE: It will take approximately 10 minutes to complete this section.
+NOTE: It will take approximately 15 minutes to complete this section.  If the SnapLock portion of the Data Protection section was done, you must wait 2 hours after completing those steps before proceeding.  This allows enough time for the SnapLock retention periods to expire and the file systems to be deleted.
 
 === Delete Resources Created During Workshop
 

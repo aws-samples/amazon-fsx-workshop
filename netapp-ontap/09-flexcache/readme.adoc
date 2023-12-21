@@ -231,4 +231,4 @@ quit
 
 Click the button below to go to the next section.
 
-image::test-performance.jpg[link=../09-test-performance/, align="left",width=420]
+image::test-performance.jpg[link=../10-test-performance/, align="left",width=420]

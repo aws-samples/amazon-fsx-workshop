@@ -241,20 +241,32 @@ a| Accept default
 | *Volume name*
 a| Input restorevol
 
+| *Volume size*
+a| Input 102400 Mbibytes
+
+| *Volume type*
+a| Select Read-Write
+
 | *Junction path*
 a| Input /restorevol
-
-| *Volume Size*
-a| Input 102400
 
 | *Storage efficiency*
 a| Select Disabled
 
-| *Capacity pool tiering policy*
-a| Accept Default
+| *Volume security style
+a| Select Unix
 
 | *Snapshot policy*
 a| Select None
+
+| *Capacity pool tiering policy*
+a| Accept Default
+
+| *Tiering policy cooling period*
+a| Accept Default
+
+| *SnapLock Configuration*
+a| Select Disabled
 |===
 +
 . After you have entered or accepted values for all parameters, *_click_* *Confirm*.

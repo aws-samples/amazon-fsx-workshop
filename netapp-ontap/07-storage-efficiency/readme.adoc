@@ -105,8 +105,4 @@ quit
 
 Click the button below to go to the next section.
 
-image::snapmirror.png[link=../07-disaster-recovery-snapmirror/, align="left",width=420]
-
-
-
-
+image::snapmirror.png[link=../08-disaster-recovery-snapmirror/, align="left",width=420]

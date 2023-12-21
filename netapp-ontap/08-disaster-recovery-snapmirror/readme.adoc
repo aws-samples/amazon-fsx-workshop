@@ -104,12 +104,6 @@ ssh ${ADMINUSER}@${DRMGMTENDPOINT}
 NOTE: The passwords are the same between the **Primary** and **DR/Secondary** file systems in the workshop.
 +
 
-+
-[source,bash]
-----
-FsxId08361928e949c6b55::>
-----
-+
 . *_Verify_* the Cluster Peer Relationship created by the workshop environment between your *Primary* FSx file system and *DR/Secondary* FSx file system.
 +
 [source,bash]
@@ -223,7 +217,4 @@ cat ${SMMOUNT}/snapmirror.txt
 
 Click the button below to go to the next section.
 
-image::flexcache.png[link=../08-flexcache/, align="left",width=420]
-
-
-
+image::flexcache.png[link=../09-flexcache/, align="left",width=420]
