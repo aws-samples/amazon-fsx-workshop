@@ -81,17 +81,6 @@ set -confirmations off
 ----
 +
 
-. *_Run_* the below command to delete the volume created during the SnapMirror section of the workshop.
-+
-[source,bash]
-----
-snapmirror delete -destination-path svm01-dr:vol1_dr
-volume unmount -vserver svm01-dr -volume vol1_dr
-volume offline -vserver svm01-dr -volume vol1_dr
-volume delete -vserver svm01-dr -volume vol1_dr
-----
-+
-
 . *_Run_* the below command to delete the volume created during the FlexCache section of the workshop.
 +
 [source,bash]
