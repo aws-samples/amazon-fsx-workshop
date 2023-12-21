@@ -253,7 +253,7 @@ a| Input /restorevol
 | *Storage efficiency*
 a| Select Disabled
 
-| *Volume security style
+| *Volume security style*
 a| Select Unix
 
 | *Snapshot policy*
