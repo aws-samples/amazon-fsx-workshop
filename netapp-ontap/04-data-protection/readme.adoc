@@ -242,7 +242,7 @@ a| Accept default
 a| Input restorevol
 
 | *Volume size*
-a| Input 102400 Mbibytes
+a| Input 102400 Mebibytes
 
 | *Volume type*
 a| Select Read-Write
