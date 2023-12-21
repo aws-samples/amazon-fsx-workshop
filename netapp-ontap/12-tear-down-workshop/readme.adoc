@@ -5,67 +5,20 @@
 
 *Congratulation!* You have completed the Amazon FSx for NetApp ONTAP Workshop.
 
-
 == Duration
 
 NOTE: It will take approximately 15 minutes to complete this section.  If the SnapLock portion of the Data Protection section was done, you must wait 2 hours after completing those steps before proceeding.  This allows enough time for the SnapLock retention periods to expire and the file systems to be deleted.
 
 === Delete Resources Created During Workshop
 
-+
 WARNING: You will be unable to delete the FSx for NetApp ONTAP file system if you completed the SnapLock portion of the Data Protection section and 2 hours have not past.  This is because this portion protected several files with WORM (Write Once Read Many) capability making them immutable.  Once 2 hours have past since the comletion of that portion of the workshop you can proceed with deleting the file system.
-+
 
-. *_Run_* the command below to SSH to the cluster management endpoint of your *Primary* FSx for ONTAP file system.
+. *_Run_* the command below to SSH to the cluster management endpoint of your *DR/Secondary* FSx for ONTAP file system.
 
 +
 TIP: If the *Session Manager* window has timed out, e.g. the session is unresponsive, close the session window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *FSx for ONTAP Workshop Linux Instance*. *_Click_* the *Connect* button. Connect using AWS Systems Manager - *_Select_* *Session Manager* tab and *_click_* the Connect button to open a session in your browser.  Change the shell back to bash by typing the command ***bash*** and then return.
 +
 
-+
-[source,bash]
-----
-ssh ${ADMINUSER}@${MGMTENDPOINT}
-----
-+
-
-. *_Run_* the below command to turn off ONTAP CLI confirmations
-+
-[source,bash]
-----
-set -confirmations off
-----
-+
-
-. *_Run_* the below commands to delete the *restorevol* volume created during the data protection section of the workshop.
-+
-[source,bash]
-----
-volume unmount -vserver svm01-primary -volume restorevol
-volume offline -vserver svm01-primary -volume restorevol
-volume delete -vserver svm01-primary -volume restorevol
-----
-+
-
-. *_Run_* the below commands to delete the *vol1_primary_clone1* volume created during the FlexClone section of the workshop.
-+
-[source,bash]
-----
-volume unmount -vserver svm01-primary -volume vol1_primary_clone1
-volume offline -vserver svm01-primary -volume vol1_primary_clone1
-volume delete -vserver svm01-primary -volume vol1_primary_clone1
-----
-+
-
-. *_Run_* the below command to exit the SSH connection to the *Primary* FSx for ONTAP file system.
-+
-[source,bash]
-----
-quit
-----
-+
-
-. *_Run_* the command below to SSH to the cluster management endpoint of your *DR/Secondary* FSx for ONTAP file system.
 +
 [source,bash]
 ----
@@ -91,20 +44,7 @@ volume flexcache delete -vserver svm01-dr -volume cachevol
 ----
 +
 
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the *File system ID* of your *Primary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-Primary*.
-
-. *_Click_* on the *Volumes* tab and *if* still present select the restorevol volume, *_click_* the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and *_click_* the delete volume(s) button.
-
-. *If* still present select the vol1_primary_clone1 volume, *_click_* the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and *_click_* the delete volume(s) button.
-
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* the *File system ID* of your *DR/secondary* Amazon FSx for NetApp ONTAP file system with name *FSxNetAppOntap-DR*.
-
-. *_Click_* on the *Volumes* tab and if still present select the cachevol volume, *_click_* the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and *_click_* the delete volume(s) button.
-
-. *If* still present select the vol1_dr volume, *_click_* the Actions drop-down, and select delete.  Choose not to create a final volume backup, acknowledge you accpet this, type *delete* in the box, and *_click_* the delete volume(s) button.
-
 . *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* *Backups* on the left, and delete any remaining backups which were created during the workshop.
-
 
 === Delete *Workshop Environment* via CloudFormation
 
@@ -120,5 +60,3 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 . *_Click_* *Yes, Delete* to delete the workshop environment.
 
 IMPORTANT: It may take approximately 90 minutes to delete all AWS resources created by the CloudFormation template. Check the status periodically to verify all resources have been delete.
-
-
