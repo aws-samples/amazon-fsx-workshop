@@ -42,7 +42,6 @@ volume unmount -vserver svm01-dr -volume cachevol
 volume offline -vserver svm01-dr -volume cachevol
 volume flexcache delete -vserver svm01-dr -volume cachevol
 ----
-+
 
 === Delete Workshop Environment via CloudFormation
 
