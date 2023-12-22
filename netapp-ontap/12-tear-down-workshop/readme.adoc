@@ -11,7 +11,7 @@ NOTE: It will take approximately 15 minutes to complete this section.  If the Sn
 
 === Delete Resources Created During Workshop
 
-WARNING: You will be unable to delete the FSx for NetApp ONTAP file system if you completed the SnapLock portion of the Data Protection section and 2 hours have not past.  This is because this portion protected several files with WORM (Write Once Read Many) capability making them immutable.  Once 2 hours have past since the comletion of that portion of the workshop you can proceed with deleting the file system.
+WARNING: You will be unable to delete the FSx for NetApp ONTAP file system for 2 hours if you completed the SnapLock portion of the Data Protection section.  This is because this portion protected several files with WORM (Write Once Read Many) capability making them immutable.  Once 2 hours have past since the completion of that portion of the workshop, you can proceed with deleting the file system and other resources following the steps below.
 
 . *_Run_* the command below to SSH to the cluster management endpoint of your *DR/Secondary* FSx for ONTAP file system.
 
@@ -44,9 +44,7 @@ volume flexcache delete -vserver svm01-dr -volume cachevol
 ----
 +
 
-. *_Return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console, *_click_* *Backups* on the left, and delete any remaining backups which were created during the workshop.
-
-=== Delete *Workshop Environment* via CloudFormation
+=== Delete Workshop Environment via CloudFormation
 
 IMPORTANT: Read through all steps below before continuing.  Ensure that all of the volume deletes above have completed and are not still in a status of deleting.
 
@@ -58,5 +56,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 . *_Click_* the *radio button* next to the *ontap* stack.
 . *_Click_* the *Actions* button then *Delete stack*.
 . *_Click_* *Yes, Delete* to delete the workshop environment.
-
++
 IMPORTANT: It may take approximately 90 minutes to delete all AWS resources created by the CloudFormation template. Check the status periodically to verify all resources have been delete.
++
+. Once CloudFormation has successfully deleted the parent and nested stacks for the workshop, *_return_* to the link:https://console.aws.amazon.com/fsx/[Amazon FSx] console in the region you deployed the workshop.  *_Click_* *Backups* on the left, and delete any remaining backups which were created during the workshop which will be of type *User-Initiated*.
