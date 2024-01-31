@@ -110,8 +110,8 @@ sudo umount ${CLONEDIR}
 +
 [source,bash]
 ----
-sudo mount -t nfs -o nconnect=16 ${NFSENDPOINT}:/vol1_primary ${MOUNTPOINT}
-sudo mount -t nfs -o nconnect=16 ${NFSENDPOINT}:/vol1_primary_clone1 ${CLONEDIR}
+sudo mount -t nfs -o vers=4.2,nconnect=16 ${NFSENDPOINT}:/vol1_primary ${MOUNTPOINT}
+sudo mount -t nfs -o vers=4.2,nconnect=16 ${NFSENDPOINT}:/vol1_primary_clone1 ${CLONEDIR}
 ----
 +
 
