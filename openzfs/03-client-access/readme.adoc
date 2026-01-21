@@ -122,9 +122,9 @@ IMPORTANT: Read through all steps below before continuing.
 
 === Access data on Windows Instance
 
-. *_Return_* to the browser tab for your for Amazon FSx for OpenZFS volume with name *async_vol* and *_Click_* *Attach* on the top right corner. On the *Attach file system* window, *_Click_* on *From Windows instances*, copy the *mount* command listed under *_Attach instruction_*
+. *_Return_* to the browser tab for your for Amazon FSx for OpenZFS volume with name *sync_vol* and *_Click_* *Attach* on the top right corner. On the *Attach file system* window, *_Click_* on *From Windows instances*, copy the *mount* command listed under *_Attach instruction_*
 
-. *_Return_* to the remote desktop session of the *FSx for OpenZFS Workshop Linux Instance*. *_Open_* a *command prompt* and paste the mount command you copied in previous step. 
+. *_Return_* to the remote desktop session of the *FSx for OpenZFS Workshop Windows Instance*. *_Open_* a *command prompt* and paste the mount command you copied in previous step. 
 +
 NOTE: The NFS client has already been installed by the workshop environment.
 +
